@@ -10,6 +10,7 @@ class SettingBaseModel(BaseModel):
 
 class Settings(SettingBaseModel):
     """Settings for the application."""
+    model_config = ConfigDict(validate_default=True)
 
     schema_: str = Field(None, alias="$schema")
     app_root_path: str = ""
