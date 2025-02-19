@@ -109,7 +109,7 @@ async def telegram_widget(request: Request):
     <script>
         function onTelegramAuth(user) {{
             console.log(user);
-            fetch("{callback_url}" + "?" + new URLSearchParams(user), {{"method": "POST"}})
+            fetch("{callback_url}" + "?" + new URLSearchParams(user), {{"method": "POST", credentials: "include"}})
                 .then(response => response.json())
                 .then(data => {{
                     if (data.success) {{
