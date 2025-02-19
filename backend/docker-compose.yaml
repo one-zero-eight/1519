@@ -6,7 +6,7 @@ services:
       - "data:/app/data"
     restart: always
     ports:
-      - "8000:8000"
+      - "8888:8000"
     environment:
       FORWARDED_ALLOW_IPS: "*"
       TZ: "Europe/Moscow"
