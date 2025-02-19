@@ -126,8 +126,8 @@ async def telegram_widget(request: Request):
 </body>
 </html>
 """
-
-    return HTMLResponse(content)
+    # allow embed on any site
+    return HTMLResponse(content, headers={"Content-Security-Policy": "frame-ancestors *"})
 
 
 @app.post("/telegram-callback/")
