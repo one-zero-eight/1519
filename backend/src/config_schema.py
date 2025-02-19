@@ -10,6 +10,7 @@ class SettingBaseModel(BaseModel):
 
 class Settings(SettingBaseModel):
     """Settings for the application."""
+
     model_config = ConfigDict(validate_default=True)
 
     schema_: str = Field(None, alias="$schema")
@@ -29,6 +30,8 @@ class Settings(SettingBaseModel):
     "Telegram bot username"
     superadmin_telegram_id: str
     "Telegram ID of the first superadmin"
+    default_patrons: list[str] = []
+    "List of Telegram IDs of default patrons"
 
     @classmethod
     def from_yaml(cls, path: Path) -> "Settings":

@@ -50,6 +50,13 @@ properties:
     description: Telegram ID of the first superadmin
     title: Superadmin Telegram Id
     type: string
+  default_patrons:
+    default: []
+    description: List of Telegram IDs of default patrons
+    items:
+      type: string
+    title: Default Patrons
+    type: array
 required:
 - session_secret_key
 - bot_token

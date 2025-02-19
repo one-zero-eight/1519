@@ -28,6 +28,16 @@ async def lifespan(_):
         superadmin = Patron(telegram_id=settings.superadmin_telegram_id, id_admin=True)
         session.add(superadmin)
         session.commit()
+
+    if settings.default_patrons:
+        existent_patrons = session.query(Patron).filter(Patron.telegram_id.in_(settings.default_patrons)).all()
+        nonexistent_patrons = set(settings.default_patrons) - {p.telegram_id for p in existent_patrons}
+        if nonexistent_patrons:
+            logger.info("Creating default patrons")
+            for telegram_id in nonexistent_patrons:
+                patron = Patron(telegram_id=telegram_id)
+                session.add(patron)
+            session.commit()
     yield
 
 

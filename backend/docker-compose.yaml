@@ -10,6 +10,7 @@ services:
     environment:
       FORWARDED_ALLOW_IPS: "*"
       TZ: "Europe/Moscow"
+      RECREATE_DATABASE: ${RECREATE_DATABASE:-false}
 
 volumes:
   data:

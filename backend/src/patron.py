@@ -1,9 +1,9 @@
-from fastapi import APIRouter, Depends, HTTPException, Request
+from fastapi import APIRouter, Body, Depends, HTTPException, Request
 from fastapi_derive_responses import AutoDeriveResponsesAPIRoute
 from sqlalchemy.orm import Session
 
-from src.models import Application, Patron, PatronRateApplication, get_db_session
-from src.schemas import ApplicationResponse, Docs, PatronRateApplicationResponse, PatronResponse
+from src.models import Application, Patron, PatronRanking, PatronRateApplication, get_db_session
+from src.schemas import ApplicationResponse, Docs, PatronRankingResponse, PatronRateApplicationResponse, PatronResponse
 
 router = APIRouter(
     prefix="/patron",
@@ -89,3 +89,46 @@ def rate_application_route(
 
     session.commit()
     return PatronRateApplicationResponse.model_validate(rate_obj, from_attributes=True)
+
+
+@router.get("/ranking")
+def get_ranking_route(
+    patron: Patron = Depends(patron_auth), session: Session = Depends(get_db_session)
+) -> PatronRankingResponse:
+    ranked_applications = (
+        session.query(PatronRanking)
+        .filter_by(patron_id=patron.id)
+        .order_by(PatronRanking.rank)  # Ensure order is preserved
+        .all()
+    )
+    if not ranked_applications:
+        return PatronRankingResponse(patron_id=patron.id, applications=[])
+
+    application_ids = [r.application_id for r in ranked_applications]
+    db_applications = session.query(Application).filter(Application.id.in_(application_ids)).all()
+    applications = [ApplicationResponse.model_validate(a, from_attributes=True) for a in db_applications]
+    id_x_application = {a.id: a for a in applications}
+    return PatronRankingResponse(
+        patron_id=patron.id,
+        applications=[id_x_application[app_id] for app_id in application_ids],
+    )
+
+
+@router.put("/ranking")
+def put_ranking_route(
+    application_ids: list[int] = Body(embed=True),
+    patron: Patron = Depends(patron_auth),
+    session: Session = Depends(get_db_session),
+) -> PatronRankingResponse:
+    # check for existence of applications
+    existing_applications = session.query(Application).filter(Application.id.in_(application_ids)).all()
+    if len(existing_applications) != len(application_ids):
+        nonexistent = set(application_ids) - {a.id for a in existing_applications}
+        raise HTTPException(status_code=400, detail=f"Some applications do not exist: {nonexistent}")
+
+    session.query(PatronRanking).filter(PatronRanking.patron_id == patron.id).delete()
+    for rank, application_id in enumerate(application_ids):
+        session.add(PatronRanking(patron_id=patron.id, application_id=application_id, rank=rank))
+    session.commit()
+
+    return get_ranking_route(patron, session)

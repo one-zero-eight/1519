@@ -1,14 +1,19 @@
 import datetime
+from os import environ
 
-from sqlalchemy import JSON, ForeignKey, create_engine, func
+from sqlalchemy import JSON, ForeignKey, create_engine, func, text
 from sqlalchemy.orm import Mapped, declarative_base, mapped_column, relationship, sessionmaker
 
 from src.config import settings
+from src.logging_ import logger
 
 engine = create_engine(settings.database_uri.get_secret_value(), connect_args={"check_same_thread": False})
 SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
 
 Base = declarative_base()
+
+with engine.connect() as conn:
+    conn.execute(text("PRAGMA foreign_keys = ON"))
 
 
 def get_db_session():
@@ -62,8 +67,10 @@ class PatronRateApplication(Base):
 
     __tablename__ = "patron_x_application"
 
-    patron_id: Mapped[int] = mapped_column(ForeignKey("patron.id"), primary_key=True)  # who rated
-    application_id: Mapped[int] = mapped_column(ForeignKey("applications.id"), primary_key=True)  # who was rated
+    patron_id: Mapped[int] = mapped_column(ForeignKey("patron.id", ondelete="CASCADE"), primary_key=True)  # who rated
+    application_id: Mapped[int] = mapped_column(
+        ForeignKey("applications.id", ondelete="CASCADE"), primary_key=True
+    )  # who was rated
     docs: Mapped[dict] = mapped_column(JSON, default={})
     "Comments and seen flags for documents"
     rate: Mapped[int] = mapped_column(default=0)
@@ -74,5 +81,24 @@ class PatronRateApplication(Base):
     application: Mapped[Application] = relationship("Application", backref="patron_x_application", viewonly=True)
     patron: Mapped[Patron] = relationship("Patron", backref="patron_x_application", viewonly=True)
 
+
+class PatronRanking(Base):
+    """
+    Model representing a patron ranking of an applications
+    """
+
+    __tablename__ = "patron_ranking"
+
+    patron_id: Mapped[int] = mapped_column(ForeignKey("patron.id", ondelete="CASCADE"), primary_key=True)
+    application_id: Mapped[int] = mapped_column(ForeignKey("applications.id", ondelete="CASCADE"), primary_key=True)
+    rank: Mapped[int] = mapped_column()
+
+    application: Mapped[Application] = relationship("Application", backref="patron_rankings", viewonly=True)
+    patron: Mapped[Patron] = relationship("Patron", backref="patron_rankings", viewonly=True)
+
+
+if environ.get("RECREATE_DATABASE") == "true":
+    logger.warning("Recreating database")
+    Base.metadata.drop_all(bind=engine)
 
 Base.metadata.create_all(bind=engine)

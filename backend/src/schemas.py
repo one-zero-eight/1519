@@ -60,3 +60,10 @@ class PatronRateApplicationResponse(BaseSchema):
     "Comments and seen flags for documents"
     rate: int
     "Rating value"
+
+
+class PatronRankingResponse(BaseSchema):
+    patron_id: int
+    "Who ranked"
+    applications: list[ApplicationResponse]
+    "Who was ranked, in order"
