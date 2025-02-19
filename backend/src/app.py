@@ -1,5 +1,6 @@
 import os
 import uuid
+from contextlib import asynccontextmanager
 from pathlib import Path
 
 from fastapi import Depends, FastAPI, HTTPException, Request
@@ -17,11 +18,19 @@ from src.models import Patron, get_db_session
 from src.patron import patron_auth
 from src.telegram import telegram_check
 
-app = FastAPI(
-    docs_url=None,
-    swagger_ui_oauth2_redirect_url=None,
-    root_path=settings.app_root_path,
-)
+
+@asynccontextmanager
+async def lifespan(_):
+    session = next(get_db_session())
+    if not session.query(Patron).filter(Patron.telegram_id == settings.superadmin_telegram_id).first():
+        logger.info("Creating superadmin")
+        superadmin = Patron(telegram_id=settings.superadmin_telegram_id, id_admin=True)
+        session.add(superadmin)
+        session.commit()
+    yield
+
+
+app = FastAPI(docs_url=None, swagger_ui_oauth2_redirect_url=None, root_path=settings.app_root_path, lifespan=lifespan)
 app.router.route_class = AutoDeriveResponsesAPIRoute
 patch_fastapi(app)
 

@@ -129,11 +129,42 @@ def check_and_generate_session_secret_key():
         print("✅ `session_secret_key` is specified.")
 
 
+def check_and_promt_superadmin_id():
+    """
+    Ensure the superadmin_telegram_id is set in `settings.yaml`. If missing, request id from user.
+    """
+    settings = get_settings()
+    superadmin_telegram_id = settings.get("superadmin_telegram_id")
+
+    if not superadmin_telegram_id or superadmin_telegram_id == "...":
+        print("⚠️ `superadmin_telegram_id` is missing in `settings.yaml`.")
+        print("  ➡️ Get your Telegram ID from @userinfobot")
+        webbrowser.open("https://t.me/userinfobot")
+        id = input("  🔑 Please paste your Telegram ID below (or press Enter to skip):\n  > ").strip()
+
+        if id:
+            try:
+                with open(SETTINGS_FILE) as f:
+                    as_text = f.read()
+                as_text = as_text.replace("superadmin_telegram_id: null", f"superadmin_telegram_id: '{id}'")
+                as_text = as_text.replace("superadmin_telegram_id: ...", f"superadmin_telegram_id: '{id}'")
+                with open(SETTINGS_FILE, "w") as f:
+                    f.write(as_text)
+                print("  ✅ `superadmin_telegram_id` has been updated in `settings.yaml`.")
+            except Exception as e:
+                print(f"  ❌ Error updating `settings.yaml`: {e}")
+        else:
+            print("  ⚠️ ID was not provided. Please manually update `settings.yaml` later.")
+    else:
+        print("✅ `superadmin_telegram_id` is specified.")
+
+
 def prepare():
     """
     Prepare the project for the first run.
     """
     ensure_settings_file()
+    check_and_promt_superadmin_id()
     check_and_prompt_bot_token()
     check_and_prompt_bot_username()
     check_and_generate_session_secret_key()

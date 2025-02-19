@@ -12,11 +12,11 @@ Base = declarative_base()
 
 
 def get_db_session():
-    db = SessionLocal()
+    session = SessionLocal()
     try:
-        yield db
+        yield session
     finally:
-        db.close()
+        session.close()
 
 
 class Patron(Base):
