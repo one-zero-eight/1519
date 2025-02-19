@@ -158,14 +158,14 @@ wheels = [
 
 [[package]]
 name = "fastapi-swagger"
-version = "0.2.6"
+version = "0.2.7"
 source = { registry = "https://pypi.org/simple" }
 dependencies = [
     { name = "fastapi" },
 ]
-sdist = { url = "https://files.pythonhosted.org/packages/3c/dd/9bee349bc5e4b37f12eaad67dbb6924de1dbfdab29965356eb42066f6e09/fastapi_swagger-0.2.6.tar.gz", hash = "sha256:182b7ac6e2c815990d1d843edcb0d1bd16df245bba563061b654d11963856a33", size = 424964 }
+sdist = { url = "https://files.pythonhosted.org/packages/0b/00/1ff6089b3802b370c985463f418f29aab777b6c68eb9dfb09e8206c998b2/fastapi_swagger-0.2.7.tar.gz", hash = "sha256:3ce55882fcfcd89e4bf6077c68ea4957974729517bdc2d868409f3603431a8c6", size = 433000 }
 wheels = [
-    { url = "https://files.pythonhosted.org/packages/a0/e1/37aefb346fd7e5e29d8b3fe093256bd16b857ef53e927354a8b49c5f9c29/fastapi_swagger-0.2.6-py3-none-any.whl", hash = "sha256:6431383f7975db3190a45b00b990dd6e0589b940b0ecbb2806bded740ca6d692", size = 426759 },
+    { url = "https://files.pythonhosted.org/packages/b2/e9/1c8f5bdbb64d30db8d1e49c288f7b65a9e851c9442274fb852ff22a46e6d/fastapi_swagger-0.2.7-py3-none-any.whl", hash = "sha256:2e6782ecc0e9f02db5d6e84edf9c13c675687fad499649fa3a05fbdb68b9ffca", size = 434697 },
 ]
 
 [[package]]
@@ -199,6 +199,18 @@ wheels = [
     { url = "https://files.pythonhosted.org/packages/18/87/470e01a940307796f1d25f8167b551a968540fbe0551c0ebb853cb527dd6/greenlet-3.1.1-cp313-cp313t-manylinux_2_24_x86_64.manylinux_2_28_x86_64.whl", hash = "sha256:6510bf84a6b643dabba74d3049ead221257603a253d0a9873f55f6a59a65f822", size = 602753 },
     { url = "https://files.pythonhosted.org/packages/e2/72/576815ba674eddc3c25028238f74d7b8068902b3968cbe456771b166455e/greenlet-3.1.1-cp313-cp313t-musllinux_1_1_aarch64.whl", hash = "sha256:04b013dc07c96f83134b1e99888e7a79979f1a247e2a9f59697fa14b5862ed01", size = 1122731 },
     { url = "https://files.pythonhosted.org/packages/ac/38/08cc303ddddc4b3d7c628c3039a61a3aae36c241ed01393d00c2fd663473/greenlet-3.1.1-cp313-cp313t-musllinux_1_1_x86_64.whl", hash = "sha256:411f015496fec93c1c8cd4e5238da364e1da7a124bcb293f085bf2860c32c6f6", size = 1142112 },
+]
+
+[[package]]
+name = "gunicorn"
+version = "23.0.0"
+source = { registry = "https://pypi.org/simple" }
+dependencies = [
+    { name = "packaging" },
+]
+sdist = { url = "https://files.pythonhosted.org/packages/34/72/9614c465dc206155d93eff0ca20d42e1e35afc533971379482de953521a4/gunicorn-23.0.0.tar.gz", hash = "sha256:f014447a0101dc57e294f6c18ca6b40227a4c90e9bdb586042628030cba004ec", size = 375031 }
+wheels = [
+    { url = "https://files.pythonhosted.org/packages/cb/7d/6dac2a6e1eba33ee43f318edbed4ff29151a49b5d37f080aad1e6469bca4/gunicorn-23.0.0-py3-none-any.whl", hash = "sha256:ec400d38950de4dfd418cff8328b2c8faed0edb0d517d3394e457c317908ca4d", size = 85029 },
 ]
 
 [[package]]
@@ -695,6 +707,7 @@ dependencies = [
     { name = "fastapi", extra = ["standard"] },
     { name = "fastapi-derive-responses" },
     { name = "fastapi-swagger" },
+    { name = "gunicorn" },
     { name = "itsdangerous" },
     { name = "pandas" },
     { name = "python-multipart" },
@@ -708,6 +721,7 @@ requires-dist = [
     { name = "fastapi", extras = ["standard"], specifier = ">=0.115.8" },
     { name = "fastapi-derive-responses", specifier = ">=0.1.3" },
     { name = "fastapi-swagger", specifier = ">=0.2.6" },
+    { name = "gunicorn", specifier = ">=23.0.0" },
     { name = "itsdangerous", specifier = ">=2.2.0" },
     { name = "pandas", specifier = ">=2.2.3" },
     { name = "python-multipart", specifier = ">=0.0.20" },
