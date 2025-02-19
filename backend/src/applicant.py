@@ -4,9 +4,9 @@ from typing import Annotated
 
 from fastapi import APIRouter, Depends, Form, HTTPException, Request, UploadFile
 from fastapi_derive_responses import AutoDeriveResponsesAPIRoute
-from pydantic import BaseModel
 from sqlalchemy.orm import Session
 
+from pydantic_base import BaseSchema
 from src.config import settings
 from src.models import Application, get_db_session
 from src.schemas import ApplicationResponse
@@ -14,7 +14,7 @@ from src.schemas import ApplicationResponse
 router = APIRouter(prefix="/applicant", tags=["Applicant"], route_class=AutoDeriveResponsesAPIRoute)
 
 
-class SubmitForm(BaseModel):
+class SubmitForm(BaseSchema):
     email: str = Form(
         ...,
         description="Innopolis email of the participant (...@innopolis.university or ...@innopolis.ru)",

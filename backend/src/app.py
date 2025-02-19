@@ -16,6 +16,7 @@ from src.config import settings
 from src.logging_ import logger
 from src.models import Patron, get_db_session
 from src.patron import patron_auth
+from src.schemas import PatronResponse
 from src.telegram import telegram_check
 
 
@@ -131,7 +132,7 @@ async def telegram_widget(request: Request):
 
 
 @app.post("/telegram-callback/")
-async def telegram_callback(request: Request, session: Session = Depends(get_db_session)):
+async def telegram_callback(request: Request, session: Session = Depends(get_db_session)) -> PatronResponse | None:
     result = telegram_check(request.query_params._dict)
     if not result.success:
         raise HTTPException(status_code=403, detail="Telegram data verification failed")
@@ -146,11 +147,11 @@ async def telegram_callback(request: Request, session: Session = Depends(get_db_
         # and set session cookie
         request.session["patron_id"] = existing_patron.id
 
-    return result
+    return PatronResponse.model_validate(existing_patron, from_attributes=True) if existing_patron else None
 
 
 @app.get("/session")
-def session_route(request: Request):
+def session_route(request: Request) -> dict:
     return request.session
 
 

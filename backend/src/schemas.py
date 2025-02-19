@@ -1,9 +1,9 @@
 import datetime
 
-from pydantic import BaseModel
+from src.pydantic_base import BaseSchema
 
 
-class PatronResponse(BaseModel):
+class PatronResponse(BaseSchema):
     telegram_id: str
     "Telegram ID of the patron"
     telegram_data: dict
@@ -12,7 +12,7 @@ class PatronResponse(BaseModel):
     "Is the patron an admin"
 
 
-class ApplicationResponse(BaseModel):
+class ApplicationResponse(BaseSchema):
     id: int
     submitted_at: datetime.datetime
     "Time when the application was submitted"
@@ -34,7 +34,11 @@ class ApplicationResponse(BaseModel):
     'Path to the "Almost A student" document of the participant'
 
 
-class Docs(BaseModel):
+class Docs(BaseSchema):
+    """
+    Comments and seen flags for patron process of application
+    """
+
     cv_comments: str = ""
     cv_seen: bool = False
     motivational_letter_comments: str = ""
@@ -47,7 +51,7 @@ class Docs(BaseModel):
     almost_a_student_seen: bool = False
 
 
-class PatronRateApplicationResponse(BaseModel):
+class PatronRateApplicationResponse(BaseSchema):
     patron_id: int
     "Who rated"
     application_id: int
