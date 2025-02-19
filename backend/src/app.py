@@ -53,11 +53,18 @@ async def ensure_session_middleware(request: Request, call_next):
     return response
 
 
+class PartitionedSessionMiddleware(SessionMiddleware):
+    def __init__(self, *args, **kwargs) -> None:
+        super().__init__(*args, **kwargs)
+        self.security_flags += "; partitioned"
+
+
 app.add_middleware(
-    SessionMiddleware,
+    PartitionedSessionMiddleware,
     secret_key=settings.session_secret_key.get_secret_value(),
     path="/",
     same_site="none",
+    https_only=True,
 )
 
 
