@@ -25,7 +25,7 @@ async def lifespan(_):
     session = next(get_db_session())
     if not session.query(Patron).filter(Patron.telegram_id == settings.superadmin_telegram_id).first():
         logger.info("Creating superadmin")
-        superadmin = Patron(telegram_id=settings.superadmin_telegram_id, id_admin=True)
+        superadmin = Patron(telegram_id=settings.superadmin_telegram_id, is_admin=True)
         session.add(superadmin)
         session.commit()
 

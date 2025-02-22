@@ -32,7 +32,7 @@ class Patron(Base):
     "Telegram ID of the patron"
     telegram_data: Mapped[dict] = mapped_column(JSON, server_default="{}")
     "Data from Telegram Login Widget"
-    id_admin: Mapped[bool] = mapped_column(default=False)
+    is_admin: Mapped[bool] = mapped_column(default=False)
     "Is the patron an admin"
 
 

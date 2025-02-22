@@ -8,7 +8,7 @@ class PatronResponse(BaseSchema):
     "Telegram ID of the patron"
     telegram_data: dict
     "Data from Telegram Login Widget"
-    id_admin: bool
+    is_admin: bool
     "Is the patron an admin"
 
 
