@@ -46,6 +46,10 @@ This is the API for 1519 stipend pipeline.
 > don't forget to run your app on **port 80** for that
 
 > [!TIP]
+> When testing authorization with your bot, don't forget to set its domain
+> with /setdomain [@BotFather](https://t.me/BotFather) command
+
+> [!TIP]
 > Edit `settings.yaml` according to your needs, you can view schema in
 > [config_schema.py](src/config_schema.py) and in [settings.schema.yaml](settings.schema.yaml)
 
