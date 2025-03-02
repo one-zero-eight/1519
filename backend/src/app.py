@@ -165,8 +165,10 @@ def session_route(request: Request) -> dict:
     return request.session
 
 
+from src.admin import router as admin_router  # noqa: E402
 from src.applicant import router as applicant_router  # noqa: E402
 from src.patron import router as patron_router  # noqa: E402
 
+app.include_router(admin_router)
 app.include_router(patron_router)
 app.include_router(applicant_router)
