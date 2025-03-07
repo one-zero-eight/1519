@@ -5,6 +5,9 @@
 :root {
   --background: #ededed;
   --foreground: #171717;
+  --red-choice: #c10007;
+  --yellow-choice: #d08700;
+  --green-choice: #5ea500;
 }
 
 html,
