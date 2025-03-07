@@ -1,8 +1,10 @@
+import Sidebar from '@/components/Sidebar'
+import { Container } from '@mui/material'
+
 export default function Page() {
   return (
-    <div>
-      <h1>Page</h1>
-      <p>Page content</p>
-    </div>
+    <main>
+      <Sidebar />
+    </main>
   )
 }
