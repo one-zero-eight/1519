@@ -19,8 +19,7 @@
     "prettier-plugin-organize-attributes": "^1.0.0",
     "prettier-plugin-tailwindcss": "^0.6.11",
     "react": "^19.0.0",
-    "react-dom": "^19.0.0",
-    "react-router": "^7.4.1"
+    "react-dom": "^19.0.0"
   },
   "devDependencies": {
     "typescript": "^5.8.2",

@@ -1,39 +1,34 @@
 'use client'
 import React, { useState } from 'react'
-import CheckboxFilter from '@/components/Checkbox-filter'
+import CheckboxFilter from '@/components/Checkbox-filter/Checkbox-filter'
 import DoneOutlineIcon from '@mui/icons-material/DoneOutline'
 import ClearIcon from '@mui/icons-material/Clear'
 import QuestionMarkIcon from '@mui/icons-material/QuestionMark'
 import { Stack } from '@mui/material'
+import { Student } from '@/types/Student'
 
-// interface SidebarProps {
-//   onItemClick: (name: string) => void
-// }
+interface SidebarProps {
+  students: Student[]
+  onSelected: (student: Student | null) => void
+  selectedId?: string
+}
 
-function Sidebar() {
+function Sidebar({ students, onSelected, selectedId }: SidebarProps) {
   const [selected, setSelected] = useState<string[]>([])
-  const [picked, setPicked] = useState<string | null>(null)
 
   const handleChange = (selected: string[]) => {
     setSelected(selected)
   }
 
-  const handlePick = (name: string) => {
-    setPicked(name === picked ? null : name)
+  const filteredItems =
+    selected.length > 0 ? students.filter((student) => selected.includes(student.status)) : students
+
+  const handlePickStudent = (student: Student) => {
+    onSelected(student.id === selectedId ? null : student)
   }
 
-  const items = [
-    { name: 'Item 1', status: 'V' },
-    { name: 'Item 2', status: 'X' },
-    { name: 'Item 3', status: '?' },
-    { name: 'Item 4', status: 'V' }
-  ]
-
-  const filteredItems =
-    selected.length > 0 ? items.filter((item) => selected.includes(item.status)) : items
-
   return (
-    <aside className="fixed h-full bg-gray-700 p-4 text-white">
+    <aside className="min-h-full bg-gray-700 p-4 text-white order-1 min-w-80">
       <CheckboxFilter
         options={[
           { icon: <ClearIcon />, name: 'X', color: '#c10007' },
@@ -55,15 +50,14 @@ function Sidebar() {
           justifyContent: 'center'
         }}
       >
-        {filteredItems.map((item) => (
-          <a
-            key={item.name}
-            className={`box-border flex w-full flex-row items-start rounded-xl bg-gray-600 pb-2 pt-2 ${picked === item.name ? `border-2 border-amber-50` : ''} `}
-            href="#"
-            onClick={() => handlePick(item.name)}
+        {filteredItems.map((student) => (
+          <div
+            key={student.id}
+            className={`box-border flex w-full flex-row items-start rounded-xl bg-gray-600 pb-2 pt-2 ${selectedId === student.id ? `border-2 border-amber-50` : ''} `}
+            onClick={() => handlePickStudent(student)}
           >
-            <span className="ml-8">{item.name}</span>
-          </a>
+            <span className="ml-8">{student.name}</span>
+          </div>
         ))}
       </Stack>
     </aside>
