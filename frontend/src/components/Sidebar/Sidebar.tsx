@@ -6,11 +6,11 @@ import ClearIcon from '@mui/icons-material/Clear'
 import QuestionMarkIcon from '@mui/icons-material/QuestionMark'
 import { Stack } from '@mui/material'
 
-interface SidebarProps {
-  onItemClick: (name: string) => void
-}
+// interface SidebarProps {
+//   onItemClick: (name: string) => void
+// }
 
-function Sidebar({ onItemClick }: SidebarProps) {
+function Sidebar() {
   const [selected, setSelected] = useState<string[]>([])
   const [picked, setPicked] = useState<string | null>(null)
 
