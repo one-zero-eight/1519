@@ -7,8 +7,8 @@ const InnoButton = styled(Button)(({ theme }) => ({
   color: 'white',
   '&:hover': {
     backgroundColor: '#40BA21',
-    opacity: 0.8,
-  },
+    opacity: 0.8
+  }
 }))
 
 export default InnoButton

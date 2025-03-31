@@ -28,7 +28,7 @@ function Sidebar({ students, onSelected, selectedId }: SidebarProps) {
   }
 
   return (
-    <aside className="min-h-full bg-gray-700 p-4 text-white order-1 min-w-80">
+    <aside className="order-1 min-h-full min-w-80 bg-gray-700 p-4 text-white">
       <CheckboxFilter
         options={[
           { icon: <ClearIcon />, name: 'X', color: '#c10007' },

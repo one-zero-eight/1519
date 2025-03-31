@@ -1,6 +1,14 @@
 'use client'
 import React, { useState } from 'react'
-import { Button, TextField, Checkbox, FormControlLabel, RadioGroup, Radio, SvgIcon } from '@mui/material'
+import {
+  Button,
+  TextField,
+  Checkbox,
+  FormControlLabel,
+  RadioGroup,
+  Radio,
+  SvgIcon
+} from '@mui/material'
 import { Student } from '@/types/Student'
 import DoneOutlineIcon from '@mui/icons-material/DoneOutline'
 import ClearIcon from '@mui/icons-material/Clear'
@@ -9,7 +17,7 @@ import InnoCheckbox from '@/components/shared/InnoCheckbox'
 import InnoButton from '@/components/shared/InnoButton'
 
 interface StudentDetailsProps {
-  student: Student,
+  student: Student
   onSave: (student: Student) => void
 }
 
@@ -25,7 +33,7 @@ export default function StudentDetails({ student, onSave }: StudentDetailsProps)
 
   return (
     <div className="space-y-4">
-      <div className="flex flex-row space-x-2 items-center">
+      <div className="flex flex-row items-center space-x-2">
         <RadioGroup
           aria-labelledby="student-status-radio-group"
           value={edit.status}
@@ -39,27 +47,33 @@ export default function StudentDetails({ student, onSave }: StudentDetailsProps)
         >
           <FormControlLabel
             value="V"
-            control={
-              <Radio sx={{ color: '#5ea500', '&.Mui-checked': { color: '#5ea500' } }} />
+            control={<Radio sx={{ color: '#5ea500', '&.Mui-checked': { color: '#5ea500' } }} />}
+            label={
+              <SvgIcon>
+                <DoneOutlineIcon sx={{ color: '#5ea500' }} />
+              </SvgIcon>
             }
-            label={<SvgIcon><DoneOutlineIcon sx={{ color: '#5ea500' }} /></SvgIcon>}
           />
           <FormControlLabel
             value="X"
-            control={
-              <Radio sx={{ color: '#c10007', '&.Mui-checked': { color: '#c10007' } }} />
+            control={<Radio sx={{ color: '#c10007', '&.Mui-checked': { color: '#c10007' } }} />}
+            label={
+              <SvgIcon>
+                <ClearIcon sx={{ color: '#c10007' }} />
+              </SvgIcon>
             }
-            label={<SvgIcon><ClearIcon sx={{ color: '#c10007' }} /></SvgIcon>}
           />
           <FormControlLabel
             value="?"
-            control={
-              <Radio sx={{ color: '#d08700', '&.Mui-checked': { color: '#d08700' } }} />
+            control={<Radio sx={{ color: '#d08700', '&.Mui-checked': { color: '#d08700' } }} />}
+            label={
+              <SvgIcon>
+                <QuestionMarkIcon sx={{ color: '#d08700' }} />
+              </SvgIcon>
             }
-            label={<SvgIcon><QuestionMarkIcon sx={{ color: '#d08700' }} /></SvgIcon>}
           />
         </RadioGroup>
-        <h4 className="text-lg ">{student.name}</h4>
+        <h4 className="text-lg">{student.name}</h4>
       </div>
       <TextField
         fullWidth
@@ -67,7 +81,9 @@ export default function StudentDetails({ student, onSave }: StudentDetailsProps)
         variant="outlined"
         multiline
         value={edit.details.comment}
-        onChange={(e) => setEdit({ ...edit, details: { ...edit.details, comment: e.target.value } })}
+        onChange={(e) =>
+          setEdit({ ...edit, details: { ...edit.details, comment: e.target.value } })
+        }
       />
 
       <div className="space-y-2">
@@ -76,16 +92,18 @@ export default function StudentDetails({ student, onSave }: StudentDetailsProps)
             <div className="flex flex-col space-y-2">
               <InnoCheckbox
                 checked={edit.details.documents.motivationalLetter}
-                onChange={(e) => setEdit({
-                  ...edit,
-                  details: {
-                    ...edit.details,
-                    documents: {
-                      ...edit.details.documents,
-                      motivationalLetter: e.target.checked
+                onChange={(e) =>
+                  setEdit({
+                    ...edit,
+                    details: {
+                      ...edit.details,
+                      documents: {
+                        ...edit.details.documents,
+                        motivationalLetter: e.target.checked
+                      }
                     }
-                  }
-                })}
+                  })
+                }
               />
             </div>
           }
@@ -97,16 +115,18 @@ export default function StudentDetails({ student, onSave }: StudentDetailsProps)
             <div className="flex flex-col space-y-2">
               <InnoCheckbox
                 checked={edit.details.documents.recommendationLetter}
-                onChange={(e) => setEdit({
-                  ...edit,
-                  details: {
-                    ...edit.details,
-                    documents: {
-                      ...edit.details.documents,
-                      recommendationLetter: e.target.checked
+                onChange={(e) =>
+                  setEdit({
+                    ...edit,
+                    details: {
+                      ...edit.details,
+                      documents: {
+                        ...edit.details.documents,
+                        recommendationLetter: e.target.checked
+                      }
                     }
-                  }
-                })}
+                  })
+                }
               />
             </div>
           }
@@ -117,18 +137,20 @@ export default function StudentDetails({ student, onSave }: StudentDetailsProps)
           control={
             <div className="flex flex-col space-y-2">
               <InnoCheckbox
-              checked={edit.details.documents.almostAStudent}
-              onChange={(e) => setEdit({
-                ...edit,
-                details: {
-                  ...edit.details,
-                  documents: {
-                    ...edit.details.documents,
-                    almostAStudent: e.target.checked
-                  }
+                checked={edit.details.documents.almostAStudent}
+                onChange={(e) =>
+                  setEdit({
+                    ...edit,
+                    details: {
+                      ...edit.details,
+                      documents: {
+                        ...edit.details.documents,
+                        almostAStudent: e.target.checked
+                      }
+                    }
+                  })
                 }
-              })}
-            />
+              />
             </div>
           }
           label="Транскрипт"
@@ -137,21 +159,23 @@ export default function StudentDetails({ student, onSave }: StudentDetailsProps)
 
       <FormControlLabel
         control={
-        <div className="flex flex-col space-y-2">
-          <InnoCheckbox
-            checked={edit.details.documents.transcript}
-            onChange={(e) => setEdit({
-              ...edit,
-              details: {
-                ...edit.details,
-                documents: {
-                  ...edit.details.documents,
-                  transcript: e.target.checked
-                }
+          <div className="flex flex-col space-y-2">
+            <InnoCheckbox
+              checked={edit.details.documents.transcript}
+              onChange={(e) =>
+                setEdit({
+                  ...edit,
+                  details: {
+                    ...edit.details,
+                    documents: {
+                      ...edit.details.documents,
+                      transcript: e.target.checked
+                    }
+                  }
+                })
               }
-            })}
-          />
-        </div>
+            />
+          </div>
         }
         label="Almost A Student"
       />
