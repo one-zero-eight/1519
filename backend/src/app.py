@@ -121,9 +121,8 @@ async def telegram_widget(request: Request):
         function onTelegramAuth(user) {{
             console.log(user);
             fetch("{callback_url}" + "?" + new URLSearchParams(user), {{"method": "POST", credentials: "include"}})
-                .then(response => response.json())
-                .then(data => {{
-                    if (data.success) {{
+                .then(response => {{
+                    if (response.status == 200) {{
                         alert("Telegram data verified successfully");
                     }} else {{
                         alert("Telegram data verification failed");
