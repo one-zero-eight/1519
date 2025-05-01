@@ -56,6 +56,8 @@ class PatronRateApplicationResponse(BaseSchema):
     "Who rated"
     application_id: int
     "Who was rated"
+    comment: str = ""
+    "Comment for whole application"
     docs: Docs = Docs()
     "Comments and seen flags for documents"
     rate: int

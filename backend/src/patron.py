@@ -57,6 +57,7 @@ def get_application_route(
 @router.post("/rate-application/{application_id}/", generate_unique_id_function=lambda _: "rate_application")
 def rate_application_route(
     application_id: int,
+    comment: str = "",
     docs: Docs = Docs(),
     rate: int = 0,
     patron: Patron = Depends(patron_auth),
@@ -82,6 +83,7 @@ def rate_application_route(
         rate_obj = PatronRateApplication(
             application_id=application_id,
             patron_id=patron.id,
+            comment=comment,
             rate=rate,
             docs=docs.model_dump(exclude_defaults=True),
         )
