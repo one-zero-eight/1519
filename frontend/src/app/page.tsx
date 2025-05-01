@@ -1,8 +1,8 @@
 'use client'
 import { useState } from 'react'
-import Sidebar from '@/components/Sidebar/Sidebar'
+import Sidebar from '@/components/ui/Sidebar'
 import { Student } from '@/types/Student'
-import StudentDetails from '@/components/StudentDetails/StudentDetails'
+import StudentDetails from '@/components/ui/StudentDetails'
 
 export default function Page() {
   const [students] = useState<Student[]>([

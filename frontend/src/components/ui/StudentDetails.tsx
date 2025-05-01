@@ -13,8 +13,8 @@ import { Student } from '@/types/Student'
 import DoneOutlineIcon from '@mui/icons-material/DoneOutline'
 import ClearIcon from '@mui/icons-material/Clear'
 import QuestionMarkIcon from '@mui/icons-material/QuestionMark'
-import InnoCheckbox from '@/components/shared/InnoCheckbox'
-import InnoButton from '@/components/shared/InnoButton'
+import InnoCheckbox from '@/components/ui/shared/InnoCheckbox'
+import InnoButton from '@/components/ui/shared/InnoButton'
 
 interface StudentDetailsProps {
   student: Student

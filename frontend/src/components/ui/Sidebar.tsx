@@ -1,6 +1,6 @@
 'use client'
 import React, { useState } from 'react'
-import CheckboxFilter from '@/components/Checkbox-filter/Checkbox-filter'
+import CheckboxFilter from '@/components/ui/Checkbox-filter'
 import DoneOutlineIcon from '@mui/icons-material/DoneOutline'
 import ClearIcon from '@mui/icons-material/Clear'
 import QuestionMarkIcon from '@mui/icons-material/QuestionMark'
