@@ -67,7 +67,7 @@ def rate_application_route(
     if application is None:
         raise HTTPException(status_code=404, detail="Application not found")
 
-    existing_rate = (
+    existing_rate: PatronRateApplication | None = (
         session.query(PatronRateApplication)
         .filter(
             PatronRateApplication.application_id == application_id,
@@ -77,6 +77,7 @@ def rate_application_route(
     )
     if existing_rate is not None:
         existing_rate.rate = rate
+        existing_rate.comment = comment
         existing_rate.docs = docs.model_dump(exclude_defaults=True)
         rate_obj = existing_rate
     else:
