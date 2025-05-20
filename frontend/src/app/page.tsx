@@ -1,41 +1,57 @@
 'use client'
 import { useState } from 'react'
 import Sidebar from '@/components/ui/Sidebar'
-import { Student } from '@/types/Student'
+import { PatronApplication } from '@/types/types'
 import StudentDetails from '@/components/ui/StudentDetails'
 
 export default function Page() {
-  const [students] = useState<Student[]>([
+  const [patrons, setPatrons] = useState<PatronApplication[]>([
     {
-      id: '1',
-      name: 'Василиса Премудрая',
-      status: 'V',
-      details: {
-        comment: '',
-        documents: {
-          motivationalLetter: true,
-          recommendationLetter: false,
-          transcript: true,
-          almostAStudent: false
-        }
+      patron_id: 1,
+      application_id: 1,
+      full_name: 'Василиса Премудрая',
+      rate: 1,
+      application_comment: '',
+      docs: {
+        cv_comments: '',
+        // cv_seen: true,
+
+        motivational_letter_comments: '',
+        // motivational_letter_seen: true,
+
+        recommendation_letter_comments: '',
+        // recommendation_letter_seen: true,
+
+        transcript_comments: '',
+        // transcript_seen: true,
+
+        almost_a_student_comments: ''
+        // almost_a_student_seen: true,
       }
     }
   ])
 
-  const [selected, setSelected] = useState<Student | null>(null)
+  const [selected, setSelected] = useState<PatronApplication | null>(null)
+
+  const handleSave = (updated: PatronApplication) => {
+    setSelected(updated)
+
+    setPatrons((prevState) =>
+      prevState.map((p) => (p.patron_id === updated.patron_id ? updated : p))
+    )
+  }
 
   return (
     <main className="min-w-screen flex min-h-screen flex-row">
-      <Sidebar students={students} onSelected={setSelected} selectedId={selected?.id} />
+      <Sidebar
+        patrons={patrons}
+        onSelected={setSelected}
+        selectedId={String(selected?.patron_id)}
+      />
 
       <aside className="order-2 flex min-h-full min-w-80 flex-col self-stretch bg-gray-300 p-4 text-black">
         {selected ? (
-          <StudentDetails
-            student={selected}
-            onSave={(updated) => {
-              const updatedStudents = students.map((s) => (s.id === updated.id ? updated : s))
-            }}
-          />
+          <StudentDetails patron={selected} onSave={handleSave} />
         ) : (
           <div className="text-black">Not selected</div>
         )}

@@ -1,41 +1,44 @@
 'use client'
-import React, { useState } from 'react'
+import React, { useMemo, useState } from 'react'
 import CheckboxFilter from '@/components/ui/Checkbox-filter'
 import DoneOutlineIcon from '@mui/icons-material/DoneOutline'
 import ClearIcon from '@mui/icons-material/Clear'
 import QuestionMarkIcon from '@mui/icons-material/QuestionMark'
 import { Stack } from '@mui/material'
-import { Student } from '@/types/Student'
+import { PatronApplication } from '@/types/types'
 
 interface SidebarProps {
-  students: Student[]
-  onSelected: (student: Student | null) => void
+  patrons: PatronApplication[]
+  onSelected: (patron: PatronApplication | null) => void
   selectedId?: string
 }
 
-function Sidebar({ students, onSelected, selectedId }: SidebarProps) {
-  const [selected, setSelected] = useState<string[]>([])
+function Sidebar({ patrons, onSelected, selectedId }: SidebarProps) {
+  const [selectedFilters, setSelectedFilters] = useState<string[]>([])
 
-  const handleChange = (selected: string[]) => {
-    setSelected(selected)
+  const handleFilterChange = (selected: string[]) => {
+    setSelectedFilters(selected)
   }
 
-  const filteredItems =
-    selected.length > 0 ? students.filter((student) => selected.includes(student.status)) : students
+  const filteredItems = useMemo(() => {
+    if (selectedFilters.length === 0) return patrons
 
-  const handlePickStudent = (student: Student) => {
-    onSelected(student.id === selectedId ? null : student)
+    return patrons.filter((patron) => selectedFilters.includes(String(patron.rate)))
+  }, [patrons, selectedFilters])
+
+  const handlePickStudent = (patron: PatronApplication) => {
+    onSelected(patron)
   }
 
   return (
     <aside className="order-1 min-h-full min-w-80 bg-gray-700 p-4 text-white">
       <CheckboxFilter
         options={[
-          { icon: <ClearIcon />, name: 'X', color: '#c10007' },
-          { icon: <QuestionMarkIcon />, name: '?', color: '#d08700' },
-          { icon: <DoneOutlineIcon />, name: 'V', color: '#5ea500' }
+          { icon: <ClearIcon />, name: -1, color: '#c10007' },
+          { icon: <QuestionMarkIcon />, name: 0, color: '#d08700' },
+          { icon: <DoneOutlineIcon />, name: 1, color: '#5ea500' }
         ]}
-        onChange={handleChange}
+        onChange={handleFilterChange}
       />
       <hr className="mt-4 font-bold text-white" />
       <h4 className="mb-1 mt-3 w-full text-start text-2xl font-normal">Student list</h4>
@@ -50,13 +53,13 @@ function Sidebar({ students, onSelected, selectedId }: SidebarProps) {
           justifyContent: 'center'
         }}
       >
-        {filteredItems.map((student) => (
+        {filteredItems.map((patron) => (
           <div
-            key={student.id}
-            className={`box-border flex w-full flex-row items-start rounded-xl bg-gray-600 pb-2 pt-2 ${selectedId === student.id ? `border-2 border-amber-50` : ''} `}
-            onClick={() => handlePickStudent(student)}
+            key={patron.patron_id}
+            className={`box-border flex w-full flex-row items-start rounded-xl bg-gray-600 pb-2 pt-2 ${String(patron.patron_id) === selectedId ? `border-2 border-amber-50` : ''} `}
+            onClick={() => handlePickStudent(patron)}
           >
-            <span className="ml-8">{student.name}</span>
+            <span className="ml-8">{patron.full_name}</span>
           </div>
         ))}
       </Stack>
