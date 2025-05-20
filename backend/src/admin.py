@@ -9,7 +9,7 @@ from sqlalchemy import func
 from sqlalchemy.orm import Session
 
 from src.config import settings
-from src.models import Application, Patron, PatronRanking, PatronRateApplication, get_db_session
+from src.models import Application, Patron, PatronDailyStats, PatronRanking, PatronRateApplication, get_db_session
 from src.schemas import (
     AddPatronRequest,
     ApplicationRankingStats,
@@ -234,58 +234,41 @@ def get_statistics(
     total_applications = session.query(Application).filter(Application.submitted_at >= start_date).count()
 
     applications_query = (
-        session.query(
-            func.date(Application.submitted_at).label('date'),
-            func.count(Application.id).label('count')
-        )
+        session.query(func.date(Application.submitted_at).label("date"), func.count(Application.id).label("count"))
         .filter(func.date(Application.submitted_at) >= start_date)
         .group_by(func.date(Application.submitted_at))
         .order_by(func.date(Application.submitted_at))
     )
 
     applications_by_day = [
-        DailyApplicationStats(date=row.date, applications_received=row.count)
-        for row in applications_query
+        DailyApplicationStats(date=row.date, applications_received=row.count) for row in applications_query
     ]
 
-    patron_rating_activity = (
+    patron_activity_query = (
         session.query(
-            func.date(PatronRateApplication.updated_at).label('date'),
-            func.count().label('count')
+            PatronDailyStats.date,
+            func.sum(PatronDailyStats.rating_count).label("rating_count"),
+            func.sum(PatronDailyStats.ranking_count).label("ranking_count"),
         )
-        .filter(func.date(PatronRateApplication.updated_at) >= start_date)
-        .group_by(func.date(PatronRateApplication.updated_at))
+        .filter(PatronDailyStats.date >= start_date.date())
+        .group_by(PatronDailyStats.date)
+        .order_by(PatronDailyStats.date)
     )
-
-    rating_counts = {row.date: row.count for row in patron_rating_activity}
-
-    patron_ranking_activity = (
-        session.query(
-            func.date(PatronRanking.updated_at).label('date'),
-            func.count(func.distinct(PatronRanking.patron_id)).label('count')
-        )
-        .filter(func.date(PatronRanking.updated_at) >= start_date)
-        .group_by(func.date(PatronRanking.updated_at))
-    )
-
-    ranking_counts = {row.date: row.count for row in patron_ranking_activity}
-
-    all_dates = set(rating_counts.keys()) | set(ranking_counts.keys())
 
     patron_activity_by_day = [
         DailyPatronStats(
-            date=date,
-            rating_count=rating_counts.get(date, 0),
-            ranking_count=ranking_counts.get(date, 0)
+            date=row.date,
+            rating_count=row.rating_count,
+            ranking_count=row.ranking_count
         )
-        for date in sorted(all_dates)
+        for row in patron_activity_query
     ]
 
     stats = OverallStats(
         total_patrons=total_patrons,
         total_applications=total_applications,
         patron_activity_by_day=patron_activity_by_day,
-        applications_by_day=applications_by_day
+        applications_by_day=applications_by_day,
     )
 
     return OverallStats.model_validate(stats, from_attributes=True)
@@ -293,10 +276,10 @@ def get_statistics(
 
 @router.get("/patron-stats/{telegram_id}")
 def get_patron_stats_route(
-        telegram_id: int,
-        _: Patron = Depends(admin_auth),
-        session: Session = Depends(get_db_session),
-        days: int = Query(30, description="Number of days to include in the activity charts")
+    telegram_id: int,
+    _: Patron = Depends(admin_auth),
+    session: Session = Depends(get_db_session),
+    days: int = Query(30, description="Number of days to include in the activity charts"),
 ) -> PatronStats:
     patron = session.query(Patron).filter(Patron.telegram_id == telegram_id).first()
     if not patron:
@@ -307,43 +290,15 @@ def get_patron_stats_route(
     end_date = datetime.now().date()
     start_date = end_date - timedelta(days=days)
 
-    patron_rating_activity = (
-        session.query(
-            func.date(PatronRateApplication.updated_at).label('date'),
-            func.count().label('count')
-        )
-        .filter(
-            PatronRateApplication.patron_id == patron.id,
-            func.date(PatronRateApplication.updated_at) >= start_date
-        )
-        .group_by(func.date(PatronRateApplication.updated_at))
+    activity_query = (
+        session.query(PatronDailyStats.date, PatronDailyStats.rating_count, PatronDailyStats.ranking_count)
+        .filter(PatronDailyStats.patron_id == patron.id, PatronDailyStats.date >= start_date)
+        .order_by(PatronDailyStats.date)
     )
-
-    rating_counts = {row.date: row.count for row in patron_rating_activity}
-
-    patron_ranking_activity = (
-        session.query(
-            func.date(PatronRanking.updated_at).label('date'),
-            func.count(func.distinct(PatronRanking.patron_id)).label('count')
-        )
-        .filter(
-            PatronRanking.patron_id == patron.id,
-            func.date(PatronRanking.updated_at) >= start_date
-        )
-        .group_by(func.date(PatronRanking.updated_at))
-    )
-
-    ranking_counts = {row.date: row.count for row in patron_ranking_activity}
-
-    all_dates = set(rating_counts.keys()) | set(ranking_counts.keys())
 
     activity_by_day = [
-        DailyPatronStats(
-            date=date,
-            rating_count=rating_counts.get(date, 0),
-            ranking_count=ranking_counts.get(date, 0) # since each patron has only one current rating, 1 here means that it's the date of the last ranking
-        )
-        for date in sorted(all_dates)
+        DailyPatronStats(date=row.date, rating_count=row.rating_count, ranking_count=row.ranking_count)
+        for row in activity_query
     ]
 
     stats = PatronStats(
