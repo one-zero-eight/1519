@@ -1,7 +1,7 @@
 'use client'
 import { useState } from 'react'
 import Sidebar from '@/components/ui/Sidebar'
-import { PatronApplication } from '@/types/types'
+import {FieldNames, PatronApplication} from '@/types/types'
 import StudentDetails from '@/components/ui/StudentDetails'
 
 export default function Page() {
@@ -32,6 +32,7 @@ export default function Page() {
   ])
 
   const [selected, setSelected] = useState<PatronApplication | null>(null)
+  const [selectedDoc, setSelectedDoc] = useState<FieldNames | null>(null)
 
   const handleSave = (updated: PatronApplication) => {
     setSelected(updated)
@@ -51,12 +52,29 @@ export default function Page() {
 
       <aside className="order-2 flex min-h-full min-w-80 flex-col self-stretch bg-gray-300 p-4 text-black">
         {selected ? (
-          <StudentDetails patron={selected} onSave={handleSave} />
+          <StudentDetails patron={selected} onSelectedDoc={setSelectedDoc} onSave={handleSave} />
         ) : (
           <div className="text-black">Not selected</div>
         )}
-      </aside>
-      <section className="order-3 min-h-full w-full self-stretch bg-white"></section>
+        </aside>
+      <section className="order-3 min-h-full w-full self-stretch bg-white">
+        { selectedDoc ? (
+                <>
+                  <div className="preview-header flex flex-col items-start space-y-1 p-4 bg-gray-100 border-b">
+                    <span>Preview: {selected?.full_name} - {FieldNames[selectedDoc]}</span>
+                    <button onClick={() => setSelectedDoc(null)}>Close Preview</button>
+                  </div>
+                  <iframe
+                      src="/test.pdf" // Change to request to find real document
+                      style={{width: "100%", height: "90%", border: "none"}}/>
+                </>
+          ) :
+          (
+            <div>
+              No documents selected.
+            </div>
+        )}
+      </section>
     </main>
   )
 }
