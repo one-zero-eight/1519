@@ -10,11 +10,16 @@ import InnoButton from '@/components/ui/shared/InnoButton'
 
 interface StudentDetailsProps {
   patron: PatronApplication
+  onSelectedDoc: (field: FieldNames | null) => void
   onSave: (patron: PatronApplication) => void
 }
 
-export default function StudentDetails({ patron, onSave }: StudentDetailsProps) {
-  const [edit, setEdit] = useState<PatronApplication>(patron)
+export default function StudentDetails({ patron, onSelectedDoc, onSave }: StudentDetailsProps) {
+  const [edit, setEdit] = useState<PatronApplication>(patron);
+
+    const handlePickDocument = (doc: FieldNames) => {
+        onSelectedDoc(doc)
+    }
 
   return (
     <div className="space-y-2">
@@ -101,7 +106,15 @@ export default function StudentDetails({ patron, onSave }: StudentDetailsProps) 
                     })
                   }
                 />
-                <Link href="#" underline="hover" sx={{ minWidth: 180, fontWeight: 500 }}>
+                <Link
+                    href="#"
+                    underline="hover"
+                    sx={{ minWidth: 180, fontWeight: 500 }}
+                    onClick={e => {
+                        e.preventDefault();
+                        handlePickDocument(key as FieldNames)
+                        }}
+                >
                   {label}
                 </Link>
               </div>
