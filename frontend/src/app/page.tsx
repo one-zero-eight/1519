@@ -1,7 +1,7 @@
 'use client'
 import { useState } from 'react'
 import Sidebar from '@/components/ui/Sidebar'
-import {FieldNames, PatronApplication} from '@/types/types'
+import { FieldNames, PatronApplication } from '@/types/types'
 import StudentDetails from '@/components/ui/StudentDetails'
 
 export default function Page() {
@@ -14,25 +14,25 @@ export default function Page() {
       application_comment: '',
       docs: {
         cv_comments: '',
-        // cv_seen: true,
+        cv_seen: true,
 
         motivational_letter_comments: '',
-        // motivational_letter_seen: true,
+        motivational_letter_seen: true,
 
         recommendation_letter_comments: '',
-        // recommendation_letter_seen: true,
+        recommendation_letter_seen: true,
 
         transcript_comments: '',
-        // transcript_seen: true,
+        transcript_seen: true,
 
-        almost_a_student_comments: ''
-        // almost_a_student_seen: true,
+        almost_a_student_comments: '',
+        almost_a_student_seen: true,
       }
     }
   ])
 
   const [selected, setSelected] = useState<PatronApplication | null>(null)
-  const [selectedDoc, setSelectedDoc] = useState<FieldNames | null>(null)
+  const [selectedDoc, setSelectedDoc] = useState<keyof typeof FieldNames | null>(null)
 
   const handleSave = (updated: PatronApplication) => {
     setSelected(updated)
@@ -60,9 +60,14 @@ export default function Page() {
       <section className="order-3 min-h-full w-full self-stretch bg-white">
         { selectedDoc ? (
                 <>
-                  <div className="preview-header flex flex-col items-start space-y-1 p-4 bg-gray-100 border-b">
-                    <span>Preview: {selected?.full_name} - {FieldNames[selectedDoc]}</span>
-                    <button onClick={() => setSelectedDoc(null)}>Close Preview</button>
+                  <div className="preview-header flex flex-row justify-between items-center p-4 bg-gray-100 border-b">
+                    <span className="font-semibold">{FieldNames[selectedDoc]}</span>
+                    <button
+                      className="rounded-3xl bg-[var(--red-choice)] text-white p-4 font-medium"
+                      onClick={() => setSelectedDoc(null)}
+                    >
+                      Close Preview
+                    </button>
                   </div>
                   <iframe
                       src="/test.pdf" // Change to request to find real document
@@ -70,7 +75,7 @@ export default function Page() {
                 </>
           ) :
           (
-            <div>
+            <div className="font-semibold flex justify-center items-center w-auto h-full">
               No documents selected.
             </div>
         )}

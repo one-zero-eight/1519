@@ -10,14 +10,14 @@ import InnoButton from '@/components/ui/shared/InnoButton'
 
 interface StudentDetailsProps {
   patron: PatronApplication
-  onSelectedDoc: (field: FieldNames | null) => void
+  onSelectedDoc: (field: keyof typeof FieldNames | null) => void
   onSave: (patron: PatronApplication) => void
 }
 
 export default function StudentDetails({ patron, onSelectedDoc, onSave }: StudentDetailsProps) {
   const [edit, setEdit] = useState<PatronApplication>(patron);
 
-    const handlePickDocument = (doc: FieldNames) => {
+    const handlePickDocument = (doc: keyof typeof FieldNames) => {
         onSelectedDoc(doc)
     }
 
@@ -112,7 +112,7 @@ export default function StudentDetails({ patron, onSelectedDoc, onSave }: Studen
                     sx={{ minWidth: 180, fontWeight: 500 }}
                     onClick={e => {
                         e.preventDefault();
-                        handlePickDocument(key as FieldNames)
+                        handlePickDocument(key as keyof typeof FieldNames)
                         }}
                 >
                   {label}
