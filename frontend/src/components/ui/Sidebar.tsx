@@ -56,7 +56,7 @@ function Sidebar({ patrons, onSelected, selectedId }: SidebarProps) {
         {filteredItems.map((patron) => (
           <div
             key={patron.patron_id}
-            className={`box-border flex w-full flex-row items-start rounded-xl bg-gray-600 pb-2 pt-2 ${String(patron.patron_id) === selectedId ? `border-2 border-amber-50` : ''} `}
+            className={`box-border flex w-full flex-row items-start rounded-xl border-2 bg-gray-600 py-2 ${String(patron.patron_id) === selectedId ? `border-4` : ''} ${patron.rate === 0 ? `border-[#d08700]` : patron.rate === 1 ? `border-[#5ea500]` : `border-[#c10007]`}`}
             onClick={() => handlePickStudent(patron)}
           >
             <span className="ml-8">{patron.full_name}</span>

@@ -1,5 +1,5 @@
 'use client'
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import { TextField, FormControlLabel, RadioGroup, Radio, SvgIcon, Link } from '@mui/material'
 import { FieldNames, PatronApplication } from '@/types/types'
 import DoneOutlineIcon from '@mui/icons-material/DoneOutline'
@@ -15,11 +15,15 @@ interface StudentDetailsProps {
 }
 
 export default function StudentDetails({ patron, onSelectedDoc, onSave }: StudentDetailsProps) {
-  const [edit, setEdit] = useState<PatronApplication>(patron);
+  const [edit, setEdit] = useState<PatronApplication>(patron)
 
-    const handlePickDocument = (doc: keyof typeof FieldNames) => {
-        onSelectedDoc(doc)
-    }
+  useEffect(() => {
+    setEdit(patron)
+  }, [patron])
+
+  const handlePickDocument = (doc: keyof typeof FieldNames) => {
+    onSelectedDoc(doc)
+  }
 
   return (
     <div className="space-y-2">
@@ -85,7 +89,7 @@ export default function StudentDetails({ patron, onSelectedDoc, onSave }: Studen
 
       <section className="space-y-2">
         {Object.entries(FieldNames).map(([key, label]) => {
-          const baseKey = key.replace(/([A-Z])/g, '_$1').toLowerCase() // например, motivationalLetter -> motivational_letter
+          const baseKey = key.replace(/([A-Z])/g, '_$1').toLowerCase()
           const seenKey = `${baseKey}_seen` as keyof typeof edit.docs
           const commentsKey = `${baseKey}_comments` as keyof typeof edit.docs
 
@@ -107,13 +111,13 @@ export default function StudentDetails({ patron, onSelectedDoc, onSave }: Studen
                   }
                 />
                 <Link
-                    href="#"
-                    underline="hover"
-                    sx={{ minWidth: 180, fontWeight: 500 }}
-                    onClick={e => {
-                        e.preventDefault();
-                        handlePickDocument(key as keyof typeof FieldNames)
-                        }}
+                  href="#"
+                  underline="hover"
+                  sx={{ minWidth: 180, fontWeight: 500 }}
+                  onClick={(e) => {
+                    e.preventDefault()
+                    handlePickDocument(key as keyof typeof FieldNames)
+                  }}
                 >
                   {label}
                 </Link>
@@ -143,6 +147,24 @@ export default function StudentDetails({ patron, onSelectedDoc, onSave }: Studen
       </section>
 
       <InnoButton onClick={() => onSave(edit)}>Save</InnoButton>
+
+      <hr className="border border-dashed border-gray-400" />
+
+      <section className="flex flex-col space-y-4">
+        <h4 className="mt-4 text-xl">Not provided docs:</h4>
+        {Object.entries(FieldNames).map(([key, label]) => {
+          const baseKey = key.replace(/([A-Z])/g, '_$1').toLowerCase()
+          const commentsKey = `${baseKey}_comments` as keyof typeof edit.docs
+
+          if (edit.docs[commentsKey] !== undefined) return null
+
+          return (
+            <div key={key} className="space-н-2 flex flex-col">
+              <p className="text-lg text-yellow-600">&bull; {label}</p>
+            </div>
+          )
+        })}
+      </section>
     </div>
   )
 }
