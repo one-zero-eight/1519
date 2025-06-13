@@ -39,4 +39,4 @@ ENV PATH="/app/.venv/bin:$PATH"
 COPY --chown=uv:uv . /app
 
 EXPOSE 8000
-CMD ["gunicorn", "--worker-class", "uvicorn.workers.UvicornWorker", "--bind", "0.0.0.0:8000", "--workers", "1", "src.app:app", "--timeout", "300"]
+CMD ["gunicorn", "--worker-class", "uvicorn.workers.UvicornWorker", "--bind", "0.0.0.0:8080", "--workers", "1", "src.app:app", "--timeout", "300"]
