@@ -1,90 +1,109 @@
 'use client'
-import { useState } from 'react'
+import { useState, useEffect, useMemo } from 'react'
 import Sidebar from '@/components/ui/Sidebar'
-import { FieldNames, PatronApplication } from '@/types/types'
+import { Application, FieldNames, PatronApplication, StudentListItem } from '@/types/types'
 import StudentDetails from '@/components/ui/StudentDetails'
+import { getAllApplications, getRatedApplications, rateApplication, whoami } from '@/lib/api/patron'
+
+const apiServer = process.env.NEXT_PUBLIC_SERVER
 
 export default function Page() {
-  const [patrons, setPatrons] = useState<PatronApplication[]>([
-    {
-      patron_id: 1,
-      application_id: 1,
-      full_name: 'Василиса Премудрая',
-      rate: 0,
-      application_comment: '',
-      docs: {
-        cv_comments: '',
-        cv_seen: true,
+  const [applications, setApplications] = useState<Application[]>([])
+  const [ratedApplications, setRatedApplications] = useState<PatronApplication[]>([])
 
-        motivational_letter_comments: '',
-        motivational_letter_seen: true,
-
-        recommendation_letter_comments: '',
-        recommendation_letter_seen: true,
-
-        transcript_comments: '',
-        transcript_seen: true,
-
-        almost_a_student_comments: '',
-        almost_a_student_seen: true
-      }
-    },
-    {
-      patron_id: 2,
-      application_id: 2,
-      full_name: 'Иван Дурак',
-      rate: 0,
-      application_comment: '',
-      docs: {
-        cv_comments: '',
-        // cv_seen: false,
-
-        // motivational_letter_comments: '',
-        // motivational_letter_seen: false,
-
-        recommendation_letter_comments: '',
-        // recommendation_letter_seen: false,
-
-        transcript_comments: '',
-        // transcript_seen: false,
-
-        almost_a_student_comments: '',
-        almost_a_student_seen: true
-      }
-    }
-  ])
-
-  const [selected, setSelected] = useState<PatronApplication | null>(null)
+  const [selectedApplicationId, setSelectedApplicationId] = useState<number | null>(null)
   const [selectedDoc, setSelectedDoc] = useState<keyof typeof FieldNames | null>(null)
 
-  const handleSave = (updated: PatronApplication) => {
-    setSelected(updated)
+  useEffect(() => {
+    Promise.all([getAllApplications(), getRatedApplications()])
+      .then(([allApps, ratedApps]) => {
+        setApplications(allApps)
+        // The ratedApps from API don't have full_name, let's add it.
+        const ratedWithData = ratedApps.map((rated) => {
+          const app = allApps.find((a) => a.id === rated.application_id)
+          return { ...rated, full_name: app?.full_name || 'Unknown' }
+        })
+        setRatedApplications(ratedWithData)
+      })
+      .catch(console.error)
+  }, [])
 
-    setPatrons((prevState) =>
-      prevState.map((p) => (p.patron_id === updated.patron_id ? updated : p))
-    )
+  const studentListItems = useMemo((): StudentListItem[] => {
+    return applications.map((app) => {
+      const rated = ratedApplications.find((r) => r.application_id === app.id)
+      return {
+        application_id: app.id,
+        full_name: app.full_name,
+        rate: rated ? rated.rate : null
+      }
+    })
+  }, [applications, ratedApplications])
+
+  const selectedApplication = useMemo((): Application | null => {
+    if (!selectedApplicationId) return null
+    return applications.find((app) => app.id === selectedApplicationId) || null
+  }, [applications, selectedApplicationId])
+
+  const selectedRating = useMemo((): PatronApplication | null => {
+    if (!selectedApplicationId) return null
+    return ratedApplications.find((r) => r.application_id === selectedApplicationId) || null
+  }, [ratedApplications, selectedApplicationId])
+
+  const handleSave = (updated: PatronApplication) => {
+    rateApplication(updated.application_id, updated.rate, updated.comment, updated.docs)
+      .then((newRating) => {
+        const newRatingWithFullName = {
+          ...newRating,
+          full_name: selectedApplication?.full_name || 'Unknown'
+        }
+        setRatedApplications((prev) => {
+          const index = prev.findIndex((r) => r.application_id === updated.application_id)
+          if (index !== -1) {
+            const newRated = [...prev]
+            newRated[index] = newRatingWithFullName
+            return newRated
+          } else {
+            return [...prev, newRatingWithFullName]
+          }
+        })
+        setSelectedApplicationId(updated.application_id) // Keep selection
+      })
+      .catch(console.error)
   }
+
+  const selectedDocPath = useMemo(() => {
+    if (!selectedDoc || !selectedApplication) return null
+    const docKey = selectedDoc.replace(/([A-Z])/g, '_$1').toLowerCase() as keyof Application
+    const path = selectedApplication[docKey]
+    if (!path) return null
+    return `${apiServer}/files/${path}`
+  }, [selectedDoc, selectedApplication])
 
   return (
     <main className="min-w-screen flex min-h-screen flex-row">
       <Sidebar
-        patrons={patrons}
-        onSelected={setSelected}
-        selectedId={String(selected?.patron_id)}
+        items={studentListItems}
+        onSelected={setSelectedApplicationId}
+        selectedId={selectedApplicationId}
       />
 
       <aside className="order-2 flex min-h-full min-w-80 flex-col self-stretch bg-gray-300 p-4 text-black">
-        {selected ? (
-          <StudentDetails patron={selected} onSelectedDoc={setSelectedDoc} onSave={handleSave} />
+        {selectedApplication ? (
+          <StudentDetails
+            application={selectedApplication}
+            rating={selectedRating}
+            onSelectedDoc={setSelectedDoc}
+            onSave={handleSave}
+          />
         ) : (
           <div className="text-black">Not selected</div>
         )}
       </aside>
       <section className="order-3 min-h-full w-full self-stretch bg-white">
-        {selectedDoc ? (
+        {selectedDocPath ? (
           <>
             <div className="preview-header flex flex-row items-center justify-between border-b bg-gray-100 p-4">
-              <span className="font-semibold">{FieldNames[selectedDoc]}</span>
+              <span className="font-semibold">{FieldNames[selectedDoc!]}</span>
               <button
                 className="rounded-3xl bg-[var(--red-choice)] p-4 font-medium text-white"
                 onClick={() => setSelectedDoc(null)}
@@ -93,7 +112,7 @@ export default function Page() {
               </button>
             </div>
             <iframe
-              src="/test.pdf" // Change to request to find real document
+              src={selectedDocPath}
               style={{ width: '100%', height: '90%', border: 'none' }}
             />
           </>

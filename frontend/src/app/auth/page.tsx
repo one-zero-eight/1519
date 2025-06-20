@@ -8,11 +8,19 @@ import Image from 'next/image'
 import OZE from 'public/assets/svg/108.svg'
 import FN from 'public/assets/svg/1519.svg'
 import IU from 'public/assets/svg/innopolis-university.svg'
+import { useRouter } from 'next/navigation'
 
 function Page() {
+  const router = useRouter()
   const onAuth = async (tgUser: TelegramUser) => {
-    const param = new URLSearchParams(objToString(tgUser))
-    await tgCallback(param)
+    try {
+      const param = new URLSearchParams(objToString(tgUser))
+      await tgCallback(param)
+      router.push('/')
+    } catch (error) {
+      console.error('Telegram auth failed:', error)
+      // TODO: show an error message to the user
+    }
   }
   return (
     <main className="min-w-screen background-radial flex min-h-screen items-center justify-center">

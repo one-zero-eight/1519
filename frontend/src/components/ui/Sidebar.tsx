@@ -5,15 +5,15 @@ import DoneOutlineIcon from '@mui/icons-material/DoneOutline'
 import ClearIcon from '@mui/icons-material/Clear'
 import QuestionMarkIcon from '@mui/icons-material/QuestionMark'
 import { Stack } from '@mui/material'
-import { PatronApplication } from '@/types/types'
+import { StudentListItem } from '@/types/types'
 
 interface SidebarProps {
-  patrons: PatronApplication[]
-  onSelected: (patron: PatronApplication | null) => void
-  selectedId?: string
+  items: StudentListItem[]
+  onSelected: (applicationId: number | null) => void
+  selectedId?: number | null
 }
 
-function Sidebar({ patrons, onSelected, selectedId }: SidebarProps) {
+function Sidebar({ items, onSelected, selectedId }: SidebarProps) {
   const [selectedFilters, setSelectedFilters] = useState<string[]>([])
 
   const handleFilterChange = (selected: string[]) => {
@@ -21,13 +21,13 @@ function Sidebar({ patrons, onSelected, selectedId }: SidebarProps) {
   }
 
   const filteredItems = useMemo(() => {
-    if (selectedFilters.length === 0) return patrons
+    if (selectedFilters.length === 0) return items
 
-    return patrons.filter((patron) => selectedFilters.includes(String(patron.rate)))
-  }, [patrons, selectedFilters])
+    return items.filter((item) => selectedFilters.includes(String(item.rate)))
+  }, [items, selectedFilters])
 
-  const handlePickStudent = (patron: PatronApplication) => {
-    onSelected(patron)
+  const handlePickStudent = (item: StudentListItem) => {
+    onSelected(item.application_id)
   }
 
   return (
@@ -53,13 +53,13 @@ function Sidebar({ patrons, onSelected, selectedId }: SidebarProps) {
           justifyContent: 'center'
         }}
       >
-        {filteredItems.map((patron) => (
+        {filteredItems.map((item) => (
           <div
-            key={patron.patron_id}
-            className={`box-border flex w-full flex-row items-start rounded-xl border-2 bg-gray-600 py-2 ${String(patron.patron_id) === selectedId ? `border-4` : ''} ${patron.rate === 0 ? `border-[#d08700]` : patron.rate === 1 ? `border-[#5ea500]` : `border-[#c10007]`}`}
-            onClick={() => handlePickStudent(patron)}
+            key={item.application_id}
+            className={`box-border flex w-full flex-row items-start rounded-xl border-2 bg-gray-600 py-2 ${item.application_id === selectedId ? `border-4` : ''} ${item.rate === 0 ? `border-[#d08700]` : item.rate === 1 ? `border-[#5ea500]` : item.rate === -1 ? `border-[#c10007]` : 'border-gray-500'}`}
+            onClick={() => handlePickStudent(item)}
           >
-            <span className="ml-8">{patron.full_name}</span>
+            <span className="ml-8">{item.full_name}</span>
           </div>
         ))}
       </Stack>

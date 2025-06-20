@@ -1,7 +1,7 @@
 'use client'
 import React, { useState, useEffect } from 'react'
 import { TextField, FormControlLabel, RadioGroup, Radio, SvgIcon, Link } from '@mui/material'
-import { FieldNames, PatronApplication } from '@/types/types'
+import { Application, FieldNames, PatronApplication } from '@/types/types'
 import DoneOutlineIcon from '@mui/icons-material/DoneOutline'
 import ClearIcon from '@mui/icons-material/Clear'
 import QuestionMarkIcon from '@mui/icons-material/QuestionMark'
@@ -9,20 +9,57 @@ import InnoCheckbox from '@/components/ui/shared/InnoCheckbox'
 import InnoButton from '@/components/ui/shared/InnoButton'
 
 interface StudentDetailsProps {
-  patron: PatronApplication
+  application: Application
+  rating: PatronApplication | null
   onSelectedDoc: (field: keyof typeof FieldNames | null) => void
   onSave: (patron: PatronApplication) => void
 }
 
-export default function StudentDetails({ patron, onSelectedDoc, onSave }: StudentDetailsProps) {
-  const [edit, setEdit] = useState<PatronApplication>(patron)
+export default function StudentDetails({
+  application,
+  rating,
+  onSelectedDoc,
+  onSave
+}: StudentDetailsProps) {
+  const [edit, setEdit] = useState<PatronApplication | null>(null)
 
   useEffect(() => {
-    setEdit(patron)
-  }, [patron])
+    if (rating) {
+      setEdit(rating)
+    } else {
+      setEdit({
+        application_id: application.id,
+        patron_id: -1, // This will be set on the backend, -1 is a placeholder
+        full_name: application.full_name,
+        rate: 0,
+        comment: '',
+        docs: {
+          cv_comments: '',
+          cv_seen: false,
+          motivational_letter_comments: '',
+          motivational_letter_seen: false,
+          recommendation_letter_comments: '',
+          recommendation_letter_seen: false,
+          transcript_comments: '',
+          transcript_seen: false,
+          almost_a_student_comments: '',
+          almost_a_student_seen: false
+        }
+      })
+    }
+  }, [application, rating])
 
   const handlePickDocument = (doc: keyof typeof FieldNames) => {
     onSelectedDoc(doc)
+  }
+
+  if (!edit) {
+    return <div>Loading...</div>
+  }
+
+  const documentExists = (key: string) => {
+    const docKey = key.replace(/([A-Z])/g, '_$1').toLowerCase() as keyof Application
+    return application[docKey] != null
   }
 
   return (
@@ -75,11 +112,11 @@ export default function StudentDetails({ patron, onSelectedDoc, onSave }: Studen
         label="User comment"
         variant="outlined"
         multiline
-        value={edit.application_comment}
+        value={edit.comment}
         onChange={(e) =>
           setEdit({
             ...edit,
-            application_comment: e.target.value
+            comment: e.target.value
           })
         }
         sx={{
@@ -93,7 +130,7 @@ export default function StudentDetails({ patron, onSelectedDoc, onSave }: Studen
           const seenKey = `${baseKey}_seen` as keyof typeof edit.docs
           const commentsKey = `${baseKey}_comments` as keyof typeof edit.docs
 
-          if (edit.docs[commentsKey] === undefined) return null
+          if (!documentExists(key)) return null
 
           return (
             <div key={key} className="space-y-w flex flex-col">
@@ -153,10 +190,7 @@ export default function StudentDetails({ patron, onSelectedDoc, onSave }: Studen
       <section className="flex flex-col space-y-4">
         <h4 className="mt-4 text-xl">Not provided docs:</h4>
         {Object.entries(FieldNames).map(([key, label]) => {
-          const baseKey = key.replace(/([A-Z])/g, '_$1').toLowerCase()
-          const commentsKey = `${baseKey}_comments` as keyof typeof edit.docs
-
-          if (edit.docs[commentsKey] !== undefined) return null
+          if (documentExists(key)) return null
 
           return (
             <div key={key} className="space-н-2 flex flex-col">
