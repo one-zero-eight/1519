@@ -6,7 +6,7 @@ export async function getRatedApplications(): Promise<PatronRating[]> {
   const res = await fetch(`${apiServer}/patron/me/rated-applications/`, {
     method: 'GET',
     headers: {
-      'Content-Type': 'applicant/json'
+      'Content-Type': 'application/json'
     },
     credentials: 'include'
   })
@@ -18,7 +18,7 @@ export async function getAllApplications(): Promise<Application[]> {
   const res = await fetch(`${apiServer}/patron/applications/`, {
     method: 'GET',
     headers: {
-      'Content-type': 'applicant/json'
+      'Content-Type': 'application/json'
     },
     credentials: 'include'
   })
@@ -33,20 +33,20 @@ export async function rateApplication(
   comment = '',
   docs: Docs
 ): Promise<PatronRating> {
-  const params = new URLSearchParams()
-  params.append('rate', rate.toString())
-  params.append('comment', comment)
-  const res = await fetch(
-    `${apiServer}/patron/rate-application/${application_id}/?${params.toString()}`,
-    {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'applicant/json'
-      },
-      body: JSON.stringify(docs),
-      credentials: 'include'
-    }
-  )
+  const requestBody = {
+    ...docs,
+    comment,
+    rate
+  }
+
+  const res = await fetch(`${apiServer}/patron/rate-application/${application_id}/`, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json'
+    },
+    body: JSON.stringify(requestBody),
+    credentials: 'include'
+  })
 
   if (!res.ok) {
     const text = await res.text()
@@ -60,7 +60,7 @@ export async function whoami(): Promise<PatronResponse> {
   const res = await fetch(`${apiServer}/patron/me`, {
     method: 'GET',
     headers: {
-      'Content-Type': 'applicant/json'
+      'Content-Type': 'application/json'
     },
     credentials: 'include'
   })
