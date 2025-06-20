@@ -3,3 +3,5 @@ session_secret_key: null # Secret key for session management, can be generated w
 bot_token: null # Telegram bot token, get it from @BotFather
 bot_username: null # Telegram bot username
 superadmin_telegram_id: null # Telegram ID of the superadmin user
+secret_key: "null"
+invite_secret_string: "null"

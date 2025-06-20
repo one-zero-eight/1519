@@ -19,7 +19,6 @@ class VerificationResult(BaseModel):
     success: bool
     telegram_user: dict | None = None
 
-
 def telegram_check(params: dict) -> VerificationResult:
     """
     Verify telegram data

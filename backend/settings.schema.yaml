@@ -57,10 +57,24 @@ properties:
       type: string
     title: Default Patrons
     type: array
+  secret_key:
+    description: Needed for password
+    format: password
+    title: Secret Key
+    type: string
+    writeOnly: true
+  invite_secret_string:
+    description: Needed for invite string
+    format: password
+    title: Invite Secret String
+    type: string
+    writeOnly: true
 required:
 - session_secret_key
 - bot_token
 - bot_username
 - superadmin_telegram_id
+- secret_key
+- invite_secret_string
 title: Settings
 type: object
