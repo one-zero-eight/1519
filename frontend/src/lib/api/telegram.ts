@@ -4,7 +4,7 @@ export async function tgCallback(param: URLSearchParams) {
     {
       method: 'POST',
       headers: {
-        'Content-Type': 'application/json'
+        'Content-Type': 'applicant/json'
       },
       credentials: 'include'
     }

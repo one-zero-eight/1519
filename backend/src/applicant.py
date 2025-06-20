@@ -37,20 +37,20 @@ async def submit_application_route(
     session: Session = Depends(get_db_session),
 ) -> ApplicationResponse:
     """
-    Submit an application or update an existing one (if the email is the same)
+    Submit an applicant or update an existing one (if the email is the same)
     """
 
-    # check if application with such email already exists
+    # check if applicant with such email already exists
     existing = session.query(Application).filter(Application.email == form.email).first()
     if existing is not None and existing.session_id != request.session.get("session_id"):
         raise HTTPException(400, f"Application with email {form.email} already exists and belongs to another user")
 
-    # check if applicant has already submitted an application
+    # check if applicant has already submitted an applicant
     application_same_sessions = (
         session.query(Application).filter(Application.session_id == request.session.get("session_id")).count()
     )
     if (application_same_sessions >= 1 and existing is None) or application_same_sessions > 1:
-        raise HTTPException(400, "You have already submitted an application")
+        raise HTTPException(400, "You have already submitted an applicant")
 
     on_fs_filenames = {
         "cv.pdf": None,
@@ -83,7 +83,7 @@ async def submit_application_route(
         uploaded.file.close()
         on_fs_filenames[filename_template] = file_path.relative_to(settings.files_dir).as_posix()
 
-    # save application to database
+    # save applicant to database
     if existing is None:
         application = Application(
             email=form.email,
@@ -115,7 +115,7 @@ async def submit_application_route(
     return ApplicationResponse.model_validate(application, from_attributes=True)
 
 
-@router.get("/my-application/")
+@router.get("/my-applicant/")
 async def my_application_route(request: Request, session: Session = Depends(get_db_session)) -> ApplicationResponse:
     """
     Get the applications of the current user

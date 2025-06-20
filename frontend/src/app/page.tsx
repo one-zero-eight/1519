@@ -3,7 +3,7 @@ import { useState, useEffect, useMemo } from 'react'
 import Sidebar from '@/components/ui/Sidebar'
 import { Application, FieldNames, PatronApplication, StudentListItem } from '@/types/types'
 import StudentDetails from '@/components/ui/StudentDetails'
-import { getAllApplications, getRatedApplications, rateApplication, whoami } from '@/lib/api/patron'
+import { getAllApplications, getRatedApplications, rateApplication } from '@/lib/api/patron'
 
 const apiServer = process.env.NEXT_PUBLIC_SERVER
 
@@ -18,7 +18,6 @@ export default function Page() {
     Promise.all([getAllApplications(), getRatedApplications()])
       .then(([allApps, ratedApps]) => {
         setApplications(allApps)
-        // The ratedApps from API don't have full_name, let's add it.
         const ratedWithData = ratedApps.map((rated) => {
           const app = allApps.find((a) => a.id === rated.application_id)
           return { ...rated, full_name: app?.full_name || 'Unknown' }
@@ -66,7 +65,7 @@ export default function Page() {
             return [...prev, newRatingWithFullName]
           }
         })
-        setSelectedApplicationId(updated.application_id) // Keep selection
+        setSelectedApplicationId(updated.application_id)
       })
       .catch(console.error)
   }

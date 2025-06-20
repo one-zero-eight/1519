@@ -15,9 +15,9 @@ class PatronResponse(BaseSchema):
 class ApplicationResponse(BaseSchema):
     id: int
     submitted_at: datetime.datetime
-    "Time when the application was submitted"
+    "Time when the applicant was submitted"
     session_id: str
-    "Session ID of user who created the application"
+    "Session ID of user who created the applicant"
     email: str
     "Innopolis email of the participant"
     full_name: str
@@ -36,7 +36,7 @@ class ApplicationResponse(BaseSchema):
 
 class Docs(BaseSchema):
     """
-    Comments and seen flags for patron process of application
+    Comments and seen flags for patron process of applicant
     """
 
     cv_comments: str = ""
@@ -57,7 +57,7 @@ class PatronRateApplicationResponse(BaseSchema):
     application_id: int
     "Who was rated"
     comment: str = ""
-    "Comment for whole application"
+    "Comment for whole applicant"
     docs: Docs = Docs()
     "Comments and seen flags for documents"
     rate: int

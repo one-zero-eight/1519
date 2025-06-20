@@ -217,7 +217,7 @@ def export_applications(
         'Content-Disposition': f'attachment; filename="{filename}"'
     }
 
-    return StreamingResponse(output, media_type="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+    return StreamingResponse(output, media_type="applicant/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
                              headers=headers)
 
 

@@ -6,7 +6,7 @@ export async function getRatedApplications(): Promise<PatronRating[]> {
   const res = await fetch(`${apiServer}/patron/me/rated-applications/`, {
     method: 'GET',
     headers: {
-      'Content-Type': 'application/json'
+      'Content-Type': 'applicant/json'
     },
     credentials: 'include'
   })
@@ -18,7 +18,7 @@ export async function getAllApplications(): Promise<Application[]> {
   const res = await fetch(`${apiServer}/patron/applications/`, {
     method: 'GET',
     headers: {
-      'Content-type': 'application/json'
+      'Content-type': 'applicant/json'
     },
     credentials: 'include'
   })
@@ -41,7 +41,7 @@ export async function rateApplication(
     {
       method: 'POST',
       headers: {
-        'Content-Type': 'application/json'
+        'Content-Type': 'applicant/json'
       },
       body: JSON.stringify(docs),
       credentials: 'include'
@@ -60,7 +60,7 @@ export async function whoami(): Promise<PatronResponse> {
   const res = await fetch(`${apiServer}/patron/me`, {
     method: 'GET',
     headers: {
-      'Content-Type': 'application/json'
+      'Content-Type': 'applicant/json'
     },
     credentials: 'include'
   })
