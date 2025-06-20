@@ -15,7 +15,7 @@ router = APIRouter(
 
 
 def update_daily_stats(session: Session, patron_id: int, rating_increment: int = 0, ranking_increment: int = 0):
-    today = datetime.date.today()
+    today = datetime.datetime.now(datetime.UTC).date()
 
     stats = (
         session.query(PatronDailyStats)

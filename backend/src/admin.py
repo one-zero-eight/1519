@@ -1,4 +1,4 @@
-from datetime import datetime, timedelta
+from datetime import UTC, datetime, timedelta
 from io import BytesIO
 
 import pandas as pd
@@ -212,7 +212,7 @@ def export_applications(
 
     output.seek(0)
 
-    filename = f"applications_ranking_{datetime.now().strftime('%Y_%m_%d__%H_%M_%S')}.xlsx"
+    filename = f"applications_ranking_{datetime.now(UTC).strftime('%Y_%m_%d__%H_%M_%S')}.xlsx"
     headers = {
         'Content-Disposition': f'attachment; filename="{filename}"'
     }
@@ -227,7 +227,7 @@ def get_statistics(
     session: Session = Depends(get_db_session),
     days: int = Query(30, description="Number of days to include in the activity charts")
 ) -> OverallStats:
-    end_date = datetime.now()
+    end_date = datetime.now(UTC)
     start_date = end_date - timedelta(days=days)
 
     total_patrons = session.query(Patron).count()
@@ -287,7 +287,7 @@ def get_patron_stats_route(
 
     total_ratings = session.query(PatronRateApplication).filter(PatronRateApplication.patron_id == patron.id).count()
 
-    end_date = datetime.now().date()
+    end_date = datetime.now(UTC).date()
     start_date = end_date - timedelta(days=days)
 
     activity_query = (
