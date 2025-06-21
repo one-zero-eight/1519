@@ -13,6 +13,7 @@ function Page() {
   const [application, setApplication] = useState<Application | null>(null)
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
+  const [editMode, setEditMode] = useState(false)
 
   useEffect(() => {
     checkExistingApplication()
@@ -35,6 +36,7 @@ function Page() {
 
   const handleApplicationSubmitted = (newApplication: Application) => {
     setApplication(newApplication)
+    setEditMode(false)
   }
 
   if (loading) {
@@ -64,14 +66,14 @@ function Page() {
         </Alert>
       )}
 
-      {application ? (
-        <ApplicationStatus application={application} />
+      {application && !editMode ? (
+        <ApplicationStatus application={application} onEdit={() => setEditMode(true)} />
       ) : (
         <div className="w-full max-w-4xl">
           <div className="mb-8 text-center">
-            <h2 className="mb-4 text-2xl font-semibold">Submit Your Application</h2>
+            <h2 className="mb-4 text-2xl font-semibold">{application ? 'Edit Your Application' : 'Submit Your Application'}</h2>
             <p className="mx-auto max-w-2xl text-gray-600">
-              Please fill out the form below to submit your scholarship application.
+              Please fill out the form below to {application ? 'edit' : 'submit'} your scholarship application.
               <br />
               <strong>File requirements:</strong>{' '}
               <u>
@@ -80,7 +82,20 @@ function Page() {
               </u>
             </p>
           </div>
-          <ApplicantForm onSuccess={handleApplicationSubmitted} />
+          <ApplicantForm
+            onSuccess={handleApplicationSubmitted}
+            initialValues={application ? {
+              email: application.email,
+              full_name: application.full_name
+            } : undefined}
+          />
+          {application && (
+            <div className="mt-4 flex justify-center">
+              <button className="text-blue-600 underline" onClick={() => setEditMode(false)}>
+                Cancel
+              </button>
+            </div>
+          )}
         </div>
       )}
     </main>

@@ -1,13 +1,14 @@
 'use client'
 import React from 'react'
-import { Card, CardContent, Typography, Chip, Box } from '@mui/material'
+import { Card, CardContent, Typography, Chip, Box, Button } from '@mui/material'
 import { Application } from '@/types/types'
 
 interface ApplicationStatusProps {
   application: Application
+  onEdit?: () => void
 }
 
-export default function ApplicationStatus({ application }: ApplicationStatusProps) {
+export default function ApplicationStatus({ application, onEdit }: ApplicationStatusProps) {
   const formatDate = (dateString: string) => {
     return new Date(dateString).toLocaleDateString('en-US', {
       year: 'numeric',
@@ -26,11 +27,18 @@ export default function ApplicationStatus({ application }: ApplicationStatusProp
   }
 
   return (
-    <Card className="mx-auto max-w-2xl">
+    <Card className="max-w-2xl mx-auto">
       <CardContent className="space-y-4">
-        <Typography variant="h5" component="h2" gutterBottom>
-          Application Status
-        </Typography>
+        <Box display="flex" justifyContent="space-between" alignItems="center">
+          <Typography variant="h5" component="h2" gutterBottom>
+            Application Status
+          </Typography>
+          {onEdit && (
+            <Button variant="outlined" onClick={onEdit} size="small">
+              Edit
+            </Button>
+          )}
+        </Box>
 
         <Box className="space-y-3">
           <div>

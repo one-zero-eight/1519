@@ -7,8 +7,9 @@ import { tgCallback } from '@/lib/api/telegram'
 import Image from 'next/image'
 import OZE from 'public/assets/svg/108.svg'
 import FN from 'public/assets/svg/1519.svg'
-import IU from 'public/assets/svg/innopolis-university.svg'
+import collab from 'public/assets/svg/x.svg'
 import { useRouter } from 'next/navigation'
+import { whoami } from '@/lib/api/patron'
 
 function Page() {
   const router = useRouter()
@@ -16,7 +17,12 @@ function Page() {
     try {
       const param = new URLSearchParams(objToString(tgUser))
       await tgCallback(param)
-      router.push('/')
+      const user = await whoami()
+      if (user.is_admin) {
+        router.push('/')
+      } else {
+        alert('You are not an admin')
+      }
     } catch (error) {
       console.error('Telegram auth failed:', error)
       // TODO: show an error message to the user
@@ -36,8 +42,8 @@ function Page() {
         />
         <div className="flex w-full flex-row items-center justify-center gap-10">
           <Image src={OZE} alt="108" className="w-16" draggable={false} />
-          <Image src={IU} alt="108" className="w-10" draggable={false} />
-          <Image src={FN} alt="108" className="w-16" draggable={false} />
+          <Image src={collab} alt="collab" className="w-4" draggable={false} />
+          <Image src={FN} alt="1519" className="w-20" draggable={false} />
         </div>
       </section>
     </main>

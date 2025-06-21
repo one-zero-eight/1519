@@ -1,17 +1,18 @@
 'use client'
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import { TextField, Button, Alert, CircularProgress } from '@mui/material'
 import { SubmitFormData, submitApplication } from '@/lib/api/applicant'
 import InnoButton from '@/components/ui/shared/InnoButton'
 
 interface ApplicantFormProps {
   onSuccess?: (application: any) => void
+  initialValues?: Partial<SubmitFormData>
 }
 
-export default function ApplicantForm({ onSuccess }: ApplicantFormProps) {
+export default function ApplicantForm({ onSuccess, initialValues }: ApplicantFormProps) {
   const [formData, setFormData] = useState<SubmitFormData>({
-    email: '',
-    full_name: ''
+    email: initialValues?.email || '',
+    full_name: initialValues?.full_name || ''
   })
 
   const [files, setFiles] = useState<{
@@ -26,14 +27,23 @@ export default function ApplicantForm({ onSuccess }: ApplicantFormProps) {
   const [error, setError] = useState<string | null>(null)
   const [success, setSuccess] = useState(false)
 
-  const handleInputChange =
-    (field: keyof Pick<SubmitFormData, 'email' | 'full_name'>) =>
-    (e: React.ChangeEvent<HTMLInputElement>) => {
+  useEffect(() => {
+    if (initialValues) {
       setFormData((prev) => ({
         ...prev,
-        [field]: e.target.value
+        ...initialValues
       }))
     }
+  }, [initialValues])
+
+  const handleInputChange =
+    (field: keyof Pick<SubmitFormData, 'email' | 'full_name'>) =>
+      (e: React.ChangeEvent<HTMLInputElement>) => {
+        setFormData((prev) => ({
+          ...prev,
+          [field]: e.target.value
+        }))
+      }
 
   const handleFileChange =
     (field: keyof typeof files) => (e: React.ChangeEvent<HTMLInputElement>) => {
