@@ -6,6 +6,8 @@ import ClearIcon from '@mui/icons-material/Clear'
 import QuestionMarkIcon from '@mui/icons-material/QuestionMark'
 import { Stack } from '@mui/material'
 import { StudentListItem } from '@/types/types'
+import InnoButton from '@/components/ui/shared/InnoButton'
+import Link from 'next/link'
 
 interface SidebarProps {
   items: StudentListItem[]
@@ -41,7 +43,7 @@ function Sidebar({ items, onSelected, selectedId }: SidebarProps) {
         onChange={handleFilterChange}
       />
       <hr className="mt-4 font-bold text-white" />
-      <h4 className="mb-1 mt-3 w-full text-start text-2xl font-normal">Student list</h4>
+      <h4 className="mb-1 mt-3 w-full text-center text-3xl font-normal">Student list</h4>
       <Stack
         className="mt-4"
         direction="column"
@@ -63,6 +65,13 @@ function Sidebar({ items, onSelected, selectedId }: SidebarProps) {
           </div>
         ))}
       </Stack>
+
+      <section className="flex flex-col">
+        <hr className="my-4 font-bold text-white" />
+        <Link href="/ranking" passHref>
+          <InnoButton className="w-full">Rank students</InnoButton>
+        </Link>
+      </section>
     </aside>
   )
 }

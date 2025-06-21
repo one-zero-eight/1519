@@ -77,7 +77,7 @@ export interface PatronResponse {
 
 export interface ApplicationRankingStats {
   application: Application
-  rff_score: number
+  rrf_score: number
   positive_votes: number
   negative_votes: number
   neutral_votes: number

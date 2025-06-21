@@ -73,9 +73,11 @@ function Page() {
             <p className="mx-auto max-w-2xl text-gray-600">
               Please fill out the form below to submit your scholarship application.
               <br />
-              <strong>File requirements:</strong> CV, Motivational Letter, Recommendation Letter,
-              and "Almost A Student" documents must be in PDF format. Transcript must be in Excel
-              format (XLSX/XLS).
+              <strong>File requirements:</strong>{' '}
+              <u>
+                CV, Motivational Letter, Recommendation Letter, and "Almost A Student" documents
+                must be in PDF format. Transcript must be in Excel format (XLSX/XLS).
+              </u>
             </p>
           </div>
           <ApplicantForm onSuccess={handleApplicationSubmitted} />
