@@ -4,6 +4,7 @@ import Sidebar from '@/components/ui/Sidebar'
 import { Application, FieldNames, PatronApplication, StudentListItem } from '@/types/types'
 import StudentDetails from '@/components/ui/StudentDetails'
 import { getAllApplications, getRatedApplications, rateApplication } from '@/lib/api/patron'
+import ExcelPreview from '@/components/ExcelPreview'
 
 const apiServer = process.env.NEXT_PUBLIC_SERVER
 
@@ -78,6 +79,10 @@ export default function Page() {
     return `${apiServer}/files/${path}`
   }, [selectedDoc, selectedApplication])
 
+  function isExcelFile(path: string | null) {
+    return path && (path.endsWith('.xlsx') || path.endsWith('.xls'))
+  }
+
   return (
     <main className="min-w-screen flex min-h-screen flex-row">
       <Sidebar
@@ -98,7 +103,7 @@ export default function Page() {
           <div className="text-black">Not selected</div>
         )}
       </aside>
-      <section className="order-3 min-h-full w-full self-stretch bg-white">
+      <section className="order-3 min-h-full w-full self-stretch overflow-x-auto bg-white">
         {selectedDocPath ? (
           <>
             <div className="preview-header flex flex-row items-center justify-between border-b bg-gray-100 p-4">
@@ -110,10 +115,14 @@ export default function Page() {
                 Close Preview
               </button>
             </div>
-            <iframe
-              src={selectedDocPath}
-              style={{ width: '100%', height: '90%', border: 'none' }}
-            />
+            {isExcelFile(selectedDocPath) ? (
+              <ExcelPreview fileUrl={selectedDocPath} />
+            ) : (
+              <iframe
+                src={selectedDocPath}
+                style={{ width: '100%', height: '90%', border: 'none' }}
+              />
+            )}
           </>
         ) : (
           <div className="flex h-full w-auto items-center justify-center font-semibold">
