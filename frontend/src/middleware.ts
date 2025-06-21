@@ -15,7 +15,7 @@ export async function middleware(request: NextRequest) {
   try {
     const whoamiRes = await fetch(`${apiServer}/patron/me`, {
       headers: { cookie },
-      credentials: 'include',
+      credentials: 'include'
     })
     if (whoamiRes.ok) {
       // Authorized
@@ -33,6 +33,6 @@ export async function middleware(request: NextRequest) {
 export const config = {
   matcher: [
     // All routes except /auth and static assets
-    '/((?!auth|_next|static|favicon.ico|assets|applicant).*)',
-  ],
-} 
+    '/((?!auth|_next|static|favicon.ico|assets|applicant).*)'
+  ]
+}

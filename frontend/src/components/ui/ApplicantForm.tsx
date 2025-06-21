@@ -38,12 +38,12 @@ export default function ApplicantForm({ onSuccess, initialValues }: ApplicantFor
 
   const handleInputChange =
     (field: keyof Pick<SubmitFormData, 'email' | 'full_name'>) =>
-      (e: React.ChangeEvent<HTMLInputElement>) => {
-        setFormData((prev) => ({
-          ...prev,
-          [field]: e.target.value
-        }))
-      }
+    (e: React.ChangeEvent<HTMLInputElement>) => {
+      setFormData((prev) => ({
+        ...prev,
+        [field]: e.target.value
+      }))
+    }
 
   const handleFileChange =
     (field: keyof typeof files) => (e: React.ChangeEvent<HTMLInputElement>) => {

@@ -71,9 +71,12 @@ function Page() {
       ) : (
         <div className="w-full max-w-4xl">
           <div className="mb-8 text-center">
-            <h2 className="mb-4 text-2xl font-semibold">{application ? 'Edit Your Application' : 'Submit Your Application'}</h2>
+            <h2 className="mb-4 text-2xl font-semibold">
+              {application ? 'Edit Your Application' : 'Submit Your Application'}
+            </h2>
             <p className="mx-auto max-w-2xl text-gray-600">
-              Please fill out the form below to {application ? 'edit' : 'submit'} your scholarship application.
+              Please fill out the form below to {application ? 'edit' : 'submit'} your scholarship
+              application.
               <br />
               <strong>File requirements:</strong>{' '}
               <u>
@@ -84,10 +87,14 @@ function Page() {
           </div>
           <ApplicantForm
             onSuccess={handleApplicationSubmitted}
-            initialValues={application ? {
-              email: application.email,
-              full_name: application.full_name
-            } : undefined}
+            initialValues={
+              application
+                ? {
+                    email: application.email,
+                    full_name: application.full_name
+                  }
+                : undefined
+            }
           />
           {application && (
             <div className="mt-4 flex justify-center">

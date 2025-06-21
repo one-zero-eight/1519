@@ -27,7 +27,7 @@ export default function ApplicationStatus({ application, onEdit }: ApplicationSt
   }
 
   return (
-    <Card className="max-w-2xl mx-auto">
+    <Card className="mx-auto max-w-2xl">
       <CardContent className="space-y-4">
         <Box display="flex" justifyContent="space-between" alignItems="center">
           <Typography variant="h5" component="h2" gutterBottom>
