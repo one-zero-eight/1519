@@ -1,6 +1,6 @@
 import datetime
 
-from fastapi import APIRouter, Body, Depends, HTTPException, Path, Request
+from fastapi import APIRouter, Body, Depends, HTTPException, Request
 from fastapi_derive_responses import AutoDeriveResponsesAPIRoute
 from sqlalchemy.orm import Session
 
@@ -75,9 +75,9 @@ def get_application_route(
     return ApplicationResponse.model_validate(application, from_attributes=True)
 
 
-@router.post("/rate-applicant/{application_id}/", generate_unique_id_function=lambda _: "rate_application")
+@router.post("/rate-application/{application_id}/", generate_unique_id_function=lambda _: "rate_application")
 def rate_application_route(
-    application_id: int = Path(),
+    application_id: int,
     comment: str = "",
     docs: Docs = Docs(),
     rate: int = 0,
