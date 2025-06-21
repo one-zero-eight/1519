@@ -1,6 +1,6 @@
-export async function tgCallback(param: URLSearchParams) {
+export async function tgCallback(param: URLSearchParams, inviteSecret: string) {
   const res = await fetch(
-    `${process.env.NEXT_PUBLIC_SERVER}/telegram-callback/?${param.toString()}`,
+    `${process.env.NEXT_PUBLIC_SERVER}/telegram-callback/?${param.toString()}&invite_secret=${inviteSecret}`,
     {
       method: 'POST',
       headers: {
