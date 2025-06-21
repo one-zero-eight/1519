@@ -103,7 +103,7 @@ export default function Page() {
           <div className="text-black">Not selected</div>
         )}
       </aside>
-      <section className="order-3 min-h-full w-full self-stretch overflow-x-auto bg-white">
+      <section className="order-3 w-full self-stretch overflow-auto bg-white">
         {selectedDocPath ? (
           <>
             <div className="preview-header flex flex-row items-center justify-between border-b bg-gray-100 p-4">

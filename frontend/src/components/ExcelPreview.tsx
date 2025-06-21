@@ -31,7 +31,7 @@ const ExcelPreview: React.FC<ExcelPreviewProps> = ({ fileUrl }) => {
   if (data.length === 0) return <div>No data in Excel file</div>
 
   return (
-    <div className="max-w-full overflow-auto">
+    <div className="max-h-screen max-w-full overflow-auto">
       <table className="min-w-max border border-gray-400">
         <tbody>
           {data.map((row, i) => (
