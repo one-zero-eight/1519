@@ -41,9 +41,9 @@ class Application(Base):
 
     id: Mapped[int] = mapped_column(primary_key=True, autoincrement=True)
     submitted_at: Mapped[datetime.datetime] = mapped_column(server_default=func.now())
-    "Time when the applicant was submitted"
+    "Time when the application was submitted"
     session_id: Mapped[str] = mapped_column()
-    "Session ID of user who created the applicant"
+    "Session ID of user who created the application"
     email: Mapped[str] = mapped_column(unique=True)
     "Innopolis email of the participant"
     full_name: Mapped[str]

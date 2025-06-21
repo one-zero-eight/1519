@@ -1,3 +1,4 @@
+# yaml-language-server: $schema=settings.schema.yaml
 $schema: "./settings.schema.yaml"
 session_secret_key: null # Secret key for session management, can be generated with `openssl rand -hex 32`
 bot_token: null # Telegram bot token, get it from @BotFather
