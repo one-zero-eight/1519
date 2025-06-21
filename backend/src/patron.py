@@ -1,8 +1,10 @@
+import datetime
+
 from fastapi import APIRouter, Body, Depends, HTTPException, Request
 from fastapi_derive_responses import AutoDeriveResponsesAPIRoute
 from sqlalchemy.orm import Session
 
-from src.models import Application, Patron, PatronRanking, PatronRateApplication, get_db_session
+from src.models import Application, Patron, PatronDailyStats, PatronRanking, PatronRateApplication, get_db_session
 from src.schemas import ApplicationResponse, Docs, PatronRankingResponse, PatronRateApplicationResponse, PatronResponse
 
 router = APIRouter(
@@ -10,6 +12,25 @@ router = APIRouter(
     tags=["Patron"],
     route_class=AutoDeriveResponsesAPIRoute,
 )
+
+
+def update_daily_stats(session: Session, patron_id: int, rating_increment: int = 0, ranking_increment: int = 0):
+    today = datetime.datetime.now(datetime.UTC).date()
+
+    stats = (
+        session.query(PatronDailyStats)
+        .filter(PatronDailyStats.patron_id == patron_id, PatronDailyStats.date == today)
+        .first()
+    )
+
+    if stats:
+        stats.rating_count += rating_increment
+        stats.ranking_count += ranking_increment
+    else:
+        stats = PatronDailyStats(
+            patron_id=patron_id, rating_count=rating_increment, ranking_count=ranking_increment
+        )
+        session.add(stats)
 
 
 async def patron_auth(request: Request, session: Session = Depends(get_db_session)) -> Patron:
@@ -57,6 +78,7 @@ def get_application_route(
 @router.post("/rate-application/{application_id}/", generate_unique_id_function=lambda _: "rate_application")
 def rate_application_route(
     application_id: int,
+    comment: str = "",
     docs: Docs = Docs(),
     rate: int = 0,
     patron: Patron = Depends(patron_auth),
@@ -66,7 +88,7 @@ def rate_application_route(
     if application is None:
         raise HTTPException(status_code=404, detail="Application not found")
 
-    existing_rate = (
+    existing_rate: PatronRateApplication | None = (
         session.query(PatronRateApplication)
         .filter(
             PatronRateApplication.application_id == application_id,
@@ -76,16 +98,20 @@ def rate_application_route(
     )
     if existing_rate is not None:
         existing_rate.rate = rate
+        existing_rate.comment = comment
         existing_rate.docs = docs.model_dump(exclude_defaults=True)
         rate_obj = existing_rate
     else:
         rate_obj = PatronRateApplication(
             application_id=application_id,
             patron_id=patron.id,
+            comment=comment,
             rate=rate,
             docs=docs.model_dump(exclude_defaults=True),
         )
         session.add(rate_obj)
+
+    update_daily_stats(session, patron.id, rating_increment=1)
 
     session.commit()
     return PatronRateApplicationResponse.model_validate(rate_obj, from_attributes=True)
@@ -129,6 +155,9 @@ def put_ranking_route(
     session.query(PatronRanking).filter(PatronRanking.patron_id == patron.id).delete()
     for rank, application_id in enumerate(application_ids):
         session.add(PatronRanking(patron_id=patron.id, application_id=application_id, rank=rank))
+
+    update_daily_stats(session, patron.id, ranking_increment=1)
+
     session.commit()
 
     return get_ranking_route(patron, session)

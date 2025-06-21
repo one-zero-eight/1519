@@ -3,7 +3,7 @@ import React, { useState } from 'react'
 import { FormGroup, Checkbox, FormControlLabel, SvgIcon } from '@mui/material'
 
 interface CheckboxFilterProps {
-  options: { icon: React.ReactNode; name: string; color: string }[]
+  options: { icon: React.ReactNode; name: number; color: string }[]
   onChange: (selected: string[]) => void
 }
 
@@ -40,9 +40,9 @@ function CheckboxFilter({ options, onChange }: CheckboxFilterProps) {
             key={option.name}
             control={
               <Checkbox
-                checked={selected.includes(option.name)}
-                onChange={() => handleChange(option.name)}
-                name={option.name}
+                checked={selected.includes(String(option.name))}
+                onChange={() => handleChange(String(option.name))}
+                name={String(option.name)}
                 sx={{
                   '&.MuiSvgIcon-root': { fontSize: 28 },
                   '&.Mui-checked': {

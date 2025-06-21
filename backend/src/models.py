@@ -1,7 +1,7 @@
 import datetime
 from os import environ
 
-from sqlalchemy import JSON, ForeignKey, create_engine, func, text
+from sqlalchemy import JSON, Date, ForeignKey, create_engine, func, text
 from sqlalchemy.orm import Mapped, declarative_base, mapped_column, relationship, sessionmaker
 
 from src.config import settings
@@ -99,6 +99,34 @@ class PatronRanking(Base):
 
     application: Mapped[Application] = relationship("Application", backref="patron_rankings", viewonly=True)
     patron: Mapped[Patron] = relationship("Patron", backref="patron_rankings", viewonly=True)
+
+
+class PatronDailyStats(Base):
+    """
+    Model representing a daily activity of a patron
+    """
+
+    __tablename__ = "patron_daily_stats"
+
+    date: Mapped[datetime.date] = mapped_column(
+        Date,
+        primary_key=True,
+        nullable=False,
+        server_default=func.current_date(),
+    )
+    patron_id: Mapped[int] = mapped_column(
+        ForeignKey("patron.id", ondelete="CASCADE"),
+        primary_key=True,
+        nullable=False,
+    )
+    rating_count: Mapped[int] = mapped_column(
+        default=0,
+        nullable=False,
+    )
+    ranking_count: Mapped[int] = mapped_column(
+        default=0,
+        nullable=False,
+    )
 
 
 if environ.get("RECREATE_DATABASE") == "true":

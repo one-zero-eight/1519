@@ -32,6 +32,10 @@ class Settings(SettingBaseModel):
     "Telegram ID of the first superadmin"
     default_patrons: list[str] = []
     "List of Telegram IDs of default patrons"
+    secret_key: SecretStr
+    "Needed for password"
+    invite_secret_string: SecretStr
+    "Needed for invite string"
 
     @classmethod
     def from_yaml(cls, path: Path) -> "Settings":
