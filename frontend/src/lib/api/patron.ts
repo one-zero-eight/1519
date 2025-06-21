@@ -33,20 +33,19 @@ export async function rateApplication(
   comment = '',
   docs: Docs
 ): Promise<PatronRating> {
-  const requestBody = {
-    ...docs,
-    comment,
-    rate
-  }
+  const params = new URLSearchParams()
+  params.append('comment', comment)
+  params.append('rate', rate.toString())
 
-  const res = await fetch(`${apiServer}/patron/rate-application/${application_id}/`, {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json'
-    },
-    body: JSON.stringify(requestBody),
-    credentials: 'include'
-  })
+  const res = await fetch(
+    `${apiServer}/patron/rate-application/${application_id}/?${params.toString()}`,
+    {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(docs),
+      credentials: 'include'
+    }
+  )
 
   if (!res.ok) {
     const text = await res.text()
