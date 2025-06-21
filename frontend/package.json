@@ -16,7 +16,7 @@
     "@mui/icons-material": "^6.4.7",
     "@mui/material": "^6.4.7",
     "dotenv": "^16.5.0",
-    "next": "15.2.3",
+    "next": "15.2.4",
     "openapi-fetch": "^0.14.0",
     "prettier-plugin-organize-attributes": "^1.0.0",
     "prettier-plugin-tailwindcss": "^0.6.11",
