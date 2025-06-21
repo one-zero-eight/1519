@@ -74,3 +74,12 @@ export interface PatronResponse {
   telegram_data: {}
   is_admin: boolean
 }
+
+export interface ApplicationRankingStats {
+  application: Application
+  rff_score: number
+  positive_votes: number
+  negative_votes: number
+  neutral_votes: number
+  total_votes: number
+}

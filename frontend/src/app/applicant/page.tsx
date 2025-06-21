@@ -24,7 +24,6 @@ function Page() {
       setApplication(existingApp)
     } catch (err) {
       if (err instanceof Error && err.message === 'Application not found') {
-        // No existing application, show form
         setApplication(null)
       } else {
         setError(err instanceof Error ? err.message : 'Failed to check application status')
