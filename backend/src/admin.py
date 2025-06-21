@@ -217,8 +217,26 @@ def export_applications(
         'Content-Disposition': f'attachment; filename="{filename}"'
     }
 
-    return StreamingResponse(output, media_type="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
-                             headers=headers)
+    return StreamingResponse(
+        output,
+        media_type="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+        headers=headers
+    )
+
+
+@router.delete("/applications/delete/{application_id}")
+def delete_application(
+    application_id: str,
+    session: Session = Depends(get_db_session),
+    _: Patron = Depends(admin_auth),
+):
+    application = session.query(Application).get(application_id)
+    if not application:
+        raise HTTPException(status_code=404, detail="Application not found")
+
+    session.delete(application)
+    session.commit()
+    return {"status": "success", "message": f"Application with ID {application_id} has been deleted"}
 
 
 @router.get("/stats")
