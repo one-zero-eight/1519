@@ -1,4 +1,3 @@
-import mimetypes
 import os
 from typing import Annotated
 
@@ -59,6 +58,13 @@ async def submit_application_route(
         "recommendation-letter.pdf": None,
         "almost-a-student.pdf": None,
     }
+    needed_content_types = {
+        "cv.pdf": "application/pdf",
+        "transcript.xlsx": "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+        "motivational-letter.pdf": "application/pdf",
+        "recommendation-letter.pdf": "application/pdf",
+        "almost-a-student.pdf": "application/pdf",
+    }
 
     for uploaded, filename_template in [
         (form.cv_file, "cv.pdf"),
@@ -71,7 +77,7 @@ async def submit_application_route(
             continue
         filename = filename_template.format(email=form.email)
         # check if file is in correct type
-        needed_content_type, _ = mimetypes.guess_type(filename)
+        needed_content_type = needed_content_types[filename_template]
         if uploaded.content_type != needed_content_type:
             raise HTTPException(
                 400, f"File {uploaded.filename} should be of type {needed_content_type} but is {uploaded.content_type}"
