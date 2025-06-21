@@ -1,0 +1,30 @@
+services:
+  nginx:
+    image: nginx
+    network_mode: host
+    restart: always
+    volumes:
+      - ./nginx-server.conf:/etc/nginx/conf.d/default.conf
+
+  api:
+    build: ../backend
+    volumes:
+      - "../backend/settings.yaml:/app/settings.yaml:ro" # Read-only settings file
+      - "data:/app/data"
+    restart: always
+    ports:
+      - "8000:8000"
+    environment:
+      FORWARDED_ALLOW_IPS: "*"
+      TZ: "Europe/Moscow"
+      RECREATE_DATABASE: ${RECREATE_DATABASE:-false}
+
+  frontend:
+    build: ../frontend
+    restart: always
+    ports:
+      - "3000:3000"
+
+volumes:
+  data:
+    driver: local

@@ -5,7 +5,8 @@ const nextConfig: NextConfig = {
   env: {
     NEXT_PUBLIC_SERVER: process.env.NEXT_PUBLIC_SERVER,
     NEXT_PUBLIC_BOT: process.env.NEXT_PUBLIC_BOT
-  }
+  },
+  output: "standalone",
 }
 
 export default nextConfig
