@@ -1,0 +1,9 @@
+# Run: docker compose up --detach
+# And visit http://127.0.0.1
+
+services:
+  nginx:
+    image: nginx
+    network_mode: host
+    volumes:
+      - ./nginx-server.conf:/etc/nginx/conf.d/default.conf
