@@ -1,4 +1,7 @@
 bun.lockb
 docker-compose.yaml
-next-env.d.ts
 .env.example
+.tanstack/
+node_modules/
+Dockerfile
+pnpm-lock.yaml

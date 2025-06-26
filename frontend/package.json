@@ -3,13 +3,12 @@
   "private": true,
   "type": "module",
   "scripts": {
-    "dev": "vite --port 3001",
-    "start": "vite --port 3001",
+    "dev": "vite --port 3000",
+    "start": "vite --port 3000",
     "build": "vite build && tsc",
     "serve": "vite preview",
     "test": "vitest run",
-    "lint": "eslint",
-    "format": "prettier --write . && eslint --fix",
+    "format": "prettier --write .",
     "check": "prettier --check ."
   },
   "dependencies": {
