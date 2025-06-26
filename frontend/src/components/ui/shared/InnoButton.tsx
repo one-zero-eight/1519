@@ -1,8 +1,7 @@
-'use client'
 import { Button } from '@mui/material'
 import { styled } from '@mui/system'
 
-const InnoButton = styled(Button)(({ theme }) => ({
+const InnoButton = styled(Button)(() => ({
   backgroundColor: '#40BA21',
   color: 'white',
   '&:hover': {

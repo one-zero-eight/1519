@@ -1,7 +1,5 @@
-'use client'
-import React from 'react'
-import { Card, CardContent, Typography, Chip, Box, Button } from '@mui/material'
-import { Application } from '@/types/types'
+import { type Application } from '@/lib/types/types'
+import { Box, Button, Card, CardContent, Chip, Typography } from '@mui/material'
 
 interface ApplicationStatusProps {
   application: Application

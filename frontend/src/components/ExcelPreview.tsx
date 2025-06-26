@@ -1,4 +1,3 @@
-'use client'
 import React, { useEffect, useState } from 'react'
 import * as XLSX from 'xlsx'
 
@@ -23,7 +22,7 @@ const ExcelPreview: React.FC<ExcelPreviewProps> = ({ fileUrl }) => {
         const json = XLSX.utils.sheet_to_json(worksheet, { header: 1 })
         setData(json as any[][])
       })
-      .catch((e) => setError('Failed to load or parse Excel file'))
+      .catch(() => setError('Failed to load or parse Excel file'))
   }, [fileUrl])
 
   if (error) return <div className="text-red-600">{error}</div>

@@ -1,8 +1,7 @@
-'use client'
-import React, { useState, useEffect } from 'react'
-import { TextField, Button, Alert, CircularProgress } from '@mui/material'
-import { SubmitFormData, submitApplication } from '@/lib/api/applicant'
 import InnoButton from '@/components/ui/shared/InnoButton'
+import { submitApplication, type SubmitFormData } from '@/lib/api/applicant'
+import { Alert, CircularProgress, TextField } from '@mui/material'
+import React, { useEffect, useState } from 'react'
 
 interface ApplicantFormProps {
   onSuccess?: (application: any) => void

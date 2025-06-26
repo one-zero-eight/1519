@@ -1,6 +1,6 @@
-import { ApplicationRankingStats } from '@/types/types'
+import { type ApplicationRankingStats } from '@/lib/types/types'
 
-const apiServer = process.env.NEXT_PUBLIC_SERVER
+const apiServer = import.meta.env.VITE_PUBLIC_API
 
 export async function getRanking(): Promise<ApplicationRankingStats[]> {
   const res = await fetch(`${apiServer}/admin/applications/ranking`, {

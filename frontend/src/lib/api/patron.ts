@@ -1,6 +1,6 @@
-import { Application, Docs, PatronApplication, PatronRating, PatronResponse } from '@/types/types'
+import type { Application, Docs, PatronRating, PatronResponse } from '@/lib/types/types'
 
-const apiServer = process.env.NEXT_PUBLIC_SERVER
+const apiServer = import.meta.env.VITE_PUBLIC_API
 
 export async function getRatedApplications(): Promise<PatronRating[]> {
   const res = await fetch(`${apiServer}/patron/me/rated-applications/`, {

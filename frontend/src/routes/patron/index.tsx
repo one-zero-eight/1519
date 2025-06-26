@@ -1,14 +1,19 @@
-'use client'
-import { useState, useEffect, useMemo } from 'react'
+import ExcelPreview from '@/components/ExcelPreview'
 import Sidebar from '@/components/ui/Sidebar'
-import { Application, FieldNames, PatronApplication, StudentListItem } from '@/types/types'
 import StudentDetails from '@/components/ui/StudentDetails'
 import { getAllApplications, getRatedApplications, rateApplication } from '@/lib/api/patron'
-import ExcelPreview from '@/components/ExcelPreview'
+import { Application, FieldNames, PatronApplication, StudentListItem } from '@/lib/types/types'
+import { createFileRoute } from '@tanstack/react-router'
+import { useEffect, useMemo, useState } from 'react'
 
-const apiServer = process.env.NEXT_PUBLIC_SERVER
+export const Route = createFileRoute('/patron/')({
+  component: RouteComponent
+})
 
-export default function Page() {
+function RouteComponent() {
+  // TODO: глобал константа
+  const apiServer = import.meta.env.VITE_PUBLIC_API
+
   const [applications, setApplications] = useState<Application[]>([])
   const [ratedApplications, setRatedApplications] = useState<PatronApplication[]>([])
 

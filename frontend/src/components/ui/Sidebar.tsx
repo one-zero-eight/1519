@@ -1,13 +1,12 @@
-'use client'
-import React, { useMemo, useState } from 'react'
 import CheckboxFilter from '@/components/ui/Checkbox-filter'
-import DoneOutlineIcon from '@mui/icons-material/DoneOutline'
+import InnoButton from '@/components/ui/shared/InnoButton'
+import { StudentListItem } from '@/lib/types/types'
 import ClearIcon from '@mui/icons-material/Clear'
+import DoneOutlineIcon from '@mui/icons-material/DoneOutline'
 import QuestionMarkIcon from '@mui/icons-material/QuestionMark'
 import { Stack } from '@mui/material'
-import { StudentListItem } from '@/types/types'
-import InnoButton from '@/components/ui/shared/InnoButton'
-import Link from 'next/link'
+import { Link } from '@tanstack/react-router'
+import { useMemo, useState } from 'react'
 
 interface SidebarProps {
   items: StudentListItem[]
@@ -66,10 +65,13 @@ function Sidebar({ items, onSelected, selectedId }: SidebarProps) {
         ))}
       </Stack>
 
-      <section className="flex flex-col">
+      <section className="flex flex-col gap-4">
         <hr className="my-4 font-bold text-white" />
-        <Link href="/ranking" passHref>
+        <Link to="/patron/ranking">
           <InnoButton className="w-full">Rank students</InnoButton>
+        </Link>
+        <Link to="/patron/admin-ranking">
+          <InnoButton className="w-full">See total ranking</InnoButton>
         </Link>
       </section>
     </aside>

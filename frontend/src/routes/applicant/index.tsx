@@ -1,15 +1,18 @@
-'use client'
-
-import React, { useState, useEffect } from 'react'
-import { Alert, CircularProgress } from '@mui/material'
-import FN from 'public/assets/svg/1519.svg'
-import Image from 'next/image'
+import FN from '@/assets/svg/1519.svg'
 import ApplicantForm from '@/components/ui/ApplicantForm'
 import ApplicationStatus from '@/components/ui/ApplicationStatus'
 import { getMyApplication } from '@/lib/api/applicant'
-import { Application } from '@/types/types'
+import { type Application } from '@/lib/types/types'
+import { Alert, CircularProgress } from '@mui/material'
+import { useEffect, useState } from 'react'
 
-function Page() {
+import { createFileRoute } from '@tanstack/react-router'
+
+export const Route = createFileRoute('/applicant/')({
+  component: RouteComponent
+})
+
+function RouteComponent() {
   const [application, setApplication] = useState<Application | null>(null)
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
@@ -43,7 +46,7 @@ function Page() {
     return (
       <main className="min-w-screen mx-8 mt-8 flex min-h-screen flex-col items-center">
         <div className="mb-8 flex flex-row items-center gap-4">
-          <Image src={FN} alt="108" className="w-20" draggable={false} />
+          <img src={FN} alt="108" className="w-20" draggable={false} />
           <h1 className="text-4xl font-semibold">Scholarship</h1>
         </div>
         <div className="flex items-center justify-center">
@@ -56,7 +59,7 @@ function Page() {
   return (
     <main className="min-w-screen mx-8 mt-8 flex min-h-screen flex-col items-center">
       <div className="mb-8 flex flex-row items-center gap-4">
-        <Image src={FN} alt="108" className="w-20" draggable={false} />
+        <img src={FN} alt="108" className="w-20" draggable={false} />
         <h1 className="text-4xl font-semibold">Scholarship Application</h1>
       </div>
 
@@ -108,5 +111,3 @@ function Page() {
     </main>
   )
 }
-
-export default Page

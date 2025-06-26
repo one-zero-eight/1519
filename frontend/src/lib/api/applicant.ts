@@ -1,6 +1,6 @@
-import { Application } from '@/types/types'
+import { type Application } from '@/lib/types/types'
 
-const apiServer = process.env.NEXT_PUBLIC_SERVER
+const apiServer = import.meta.env.VITE_PUBLIC_API
 
 export interface SubmitFormData {
   email: string

@@ -1,22 +1,25 @@
-'use client'
-import React, { useEffect, useState } from 'react'
+import InnoButton from '@/components/ui/shared/InnoButton'
+import { exportApplications, getRanking } from '@/lib/api/admin'
+import { ApplicationRankingStats } from '@/lib/types/types'
 import {
   Alert,
+  Box,
   CircularProgress,
+  Paper,
   Table,
   TableBody,
   TableCell,
   TableContainer,
   TableHead,
   TableRow,
-  Paper,
-  TableSortLabel,
-  Box
+  TableSortLabel
 } from '@mui/material'
-import { ApplicationRankingStats } from '@/types/types'
-import { getRanking, exportApplications } from '@/lib/api/admin'
-import InnoButton from '@/components/ui/shared/InnoButton'
-import { useRouter } from 'next/navigation'
+import { createFileRoute, useNavigate } from '@tanstack/react-router'
+import React, { useEffect, useState } from 'react'
+
+export const Route = createFileRoute('/patron/admin-ranking')({
+  component: RouteComponent
+})
 
 type Order = 'asc' | 'desc'
 type SortableKeys =
@@ -27,7 +30,7 @@ type SortableKeys =
   | 'neutral_votes'
   | 'total_votes'
 
-function Page() {
+function RouteComponent() {
   const [ranking, setRanking] = useState<ApplicationRankingStats[]>([])
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
@@ -65,7 +68,7 @@ function Page() {
     setOrderBy(property)
   }
 
-  const router = useRouter()
+  const navigate = useNavigate()
 
   const sortedRanking = React.useMemo(() => {
     const comparator = (a: ApplicationRankingStats, b: ApplicationRankingStats): number => {
@@ -125,7 +128,7 @@ function Page() {
       <div className="w-full max-w-7xl">
         <Box display="flex" justifyContent="space-between" alignItems="center" mb={4}>
           <h1 className="text-4xl font-semibold">Students Ranking</h1>
-          <div className="space-x-4">
+          <div className="flex gap-3">
             <InnoButton onClick={handleExport} disabled={exporting}>
               {exporting ? (
                 <div className="flex items-center space-x-2">
@@ -136,7 +139,7 @@ function Page() {
                 'Export to Excel'
               )}
             </InnoButton>
-            <InnoButton onClick={() => router.push('/')}>Back to main page</InnoButton>
+            <InnoButton onClick={() => navigate({ to: '/patron' })}>Back to main page</InnoButton>
           </div>
         </Box>
 
@@ -237,5 +240,3 @@ function Page() {
     </main>
   )
 }
-
-export default Page

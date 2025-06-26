@@ -1,0 +1,18 @@
+@import 'tailwindcss';
+
+@theme {
+  --color-foreground: #171717;
+  --color-background: #ededed;
+  --color-red-choice: #c10007;
+  --color-yellow-choice: #d08700;
+  --color-green-choice: #5ea500;
+}
+
+:root {
+  font-family: system-ui, Avenir, Helvetica, Arial, sans-serif;
+  @apply bg-background text-foreground;
+}
+
+.background-radial {
+  background: radial-gradient(circle at 50% 40%, #f9fafb 0%, #e5e7eb 50%, #9ca3af 100%);
+}

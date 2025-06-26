@@ -20,7 +20,7 @@ services:
       RECREATE_DATABASE: ${RECREATE_DATABASE:-false}
 
   frontend:
-    build: ../frontend
+    build: ../frontend-next
     restart: always
     ports:
       - "3000:3000"

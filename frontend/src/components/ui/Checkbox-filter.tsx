@@ -1,6 +1,5 @@
-'use client'
+import { Checkbox, FormControlLabel, FormGroup, SvgIcon } from '@mui/material'
 import React, { useState } from 'react'
-import { FormGroup, Checkbox, FormControlLabel, SvgIcon } from '@mui/material'
 
 interface CheckboxFilterProps {
   options: { icon: React.ReactNode; name: number; color: string }[]

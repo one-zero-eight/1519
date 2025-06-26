@@ -1,27 +1,28 @@
-'use client'
-import React, {useState} from 'react'
+import OZE from '@/assets/svg/108.svg'
+import FN from '@/assets/svg/1519.svg'
+import collab from '@/assets/svg/x.svg'
 import TelegramLoginButton from '@/components/ui/shared/TelegramLoginButton'
-import { TelegramUser } from '@/types/types'
-import { objToString } from '@/lib/functions/to-string'
-import { tgCallback } from '@/lib/api/telegram'
-import Image from 'next/image'
-import OZE from 'public/assets/svg/108.svg'
-import FN from 'public/assets/svg/1519.svg'
-import collab from 'public/assets/svg/x.svg'
-import { useRouter } from 'next/navigation'
 import { whoami } from '@/lib/api/patron'
+import { tgCallback } from '@/lib/api/telegram'
+import { objToString } from '@/lib/functions/to-string'
+import { TelegramUser } from '@/lib/types/types'
 import { TextField } from '@mui/material'
+import { createFileRoute, useNavigate } from '@tanstack/react-router'
+import { useState } from 'react'
 
-function Page() {
-  const router = useRouter()
+export const Route = createFileRoute('/auth/')({
+  component: RouteComponent
+})
+function RouteComponent() {
+  const navigate = useNavigate()
   const [inviteKey, setInviteKey] = useState<string>('')
   const onAuth = async (tgUser: TelegramUser) => {
     try {
       const param = new URLSearchParams(objToString(tgUser))
       await tgCallback(param, inviteKey)
-      const user = await whoami()
-      if (user.is_admin) {
-        router.push('/')
+      const patron = await whoami()
+      if (patron) {
+        navigate({ to: '/patron' })
       } else {
         alert('You are not an admin')
       }
@@ -42,21 +43,18 @@ function Page() {
           variant="outlined"
         />
         <TelegramLoginButton
-          botName={`${process.env.NEXT_PUBLIC_BOT}`}
+          botName={`${import.meta.env.VITE_PUBLIC_BOT}`}
           onAuth={onAuth}
-          className={'w-90 h-90'}
           usePic={true}
           buttonSize={'large'}
           requestAccess={true}
         />
         <div className="flex w-full flex-row items-center justify-center gap-10">
-          <Image src={OZE} alt="108" className="w-16" draggable={false} />
-          <Image src={collab} alt="collab" className="w-4" draggable={false} />
-          <Image src={FN} alt="1519" className="w-20" draggable={false} />
+          <img src={OZE} alt="108" className="w-16" draggable={false} />
+          <img src={collab} alt="collab" className="w-4" draggable={false} />
+          <img src={FN} alt="1519" className="w-20" draggable={false} />
         </div>
       </section>
     </main>
   )
 }
-
-export default Page

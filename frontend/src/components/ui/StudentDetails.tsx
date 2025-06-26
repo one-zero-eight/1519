@@ -1,12 +1,11 @@
-'use client'
-import React, { useState, useEffect } from 'react'
-import { TextField, FormControlLabel, RadioGroup, Radio, SvgIcon, Link } from '@mui/material'
-import { Application, FieldNames, PatronApplication } from '@/types/types'
-import DoneOutlineIcon from '@mui/icons-material/DoneOutline'
-import ClearIcon from '@mui/icons-material/Clear'
-import QuestionMarkIcon from '@mui/icons-material/QuestionMark'
-import InnoCheckbox from '@/components/ui/shared/InnoCheckbox'
 import InnoButton from '@/components/ui/shared/InnoButton'
+import InnoCheckbox from '@/components/ui/shared/InnoCheckbox'
+import { Application, FieldNames, PatronApplication } from '@/lib/types/types'
+import ClearIcon from '@mui/icons-material/Clear'
+import DoneOutlineIcon from '@mui/icons-material/DoneOutline'
+import QuestionMarkIcon from '@mui/icons-material/QuestionMark'
+import { FormControlLabel, Link, Radio, RadioGroup, SvgIcon, TextField } from '@mui/material'
+import { useEffect, useState } from 'react'
 
 interface StudentDetailsProps {
   application: Application
