@@ -90,7 +90,7 @@ jobs:
           username: ${{ secrets.FRONTEND_SSH_USERNAME }}
           key: ${{ secrets.FRONTEND_SSH_KEY }}
           fingerprint: ${{ secrets.FRONTEND_SSH_FINGERPRINT }}
-          source: "./frontend/dist/*"
+          source: "./dist/*"
           target: ${{ secrets.FRONTEND_SSH_TARGET_DIR }}
           strip_components: 2
           overwrite: true
