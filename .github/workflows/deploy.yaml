@@ -33,14 +33,12 @@ jobs:
 
       - name: Install pnpm
         uses: pnpm/action-setup@v4
-        working-directory: frontend
 
       - name: Set up Node
         uses: actions/setup-node@v4
         with:
           node-version: 20
           cache: pnpm
-        working-directory: frontend
 
       - name: Install dependencies
         run: pnpm install --frozen-lockfile --ignore-scripts
@@ -61,9 +59,8 @@ jobs:
       - uses: actions/upload-artifact@v4
         with:
           name: static-files
-          path: dist/
+          path: frontend/dist/
           if-no-files-found: error
-        working-directory: frontend
 
   frontend-deploy:
     if: github.repository_owner == 'one-zero-eight' && (github.event_name == 'workflow_dispatch' || (github.event_name == 'push' && github.ref == 'refs/heads/main'))
@@ -89,9 +86,9 @@ jobs:
           username: ${{ secrets.FRONTEND_SSH_USERNAME }}
           key: ${{ secrets.FRONTEND_SSH_KEY }}
           fingerprint: ${{ secrets.FRONTEND_SSH_FINGERPRINT }}
-          source: "./dist/*"
+          source: "./frontend/dist/*"
           target: ${{ secrets.FRONTEND_SSH_TARGET_DIR }}
-          strip_components: 1
+          strip_components: 2
           overwrite: true
           rm: true
 
@@ -126,9 +123,8 @@ jobs:
       - name: Build and push Docker image
         id: build
         uses: docker/build-push-action@v6
-        working-directory: backend
         with:
-          context: .
+          context: ./backend
           push: ${{ github.repository_owner == 'one-zero-eight' && 'true' || 'false' }}
           tags: ${{ steps.meta.outputs.tags }}
           labels: ${{ steps.meta.outputs.labels }}
