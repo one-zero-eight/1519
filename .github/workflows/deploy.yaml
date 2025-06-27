@@ -35,12 +35,14 @@ jobs:
         uses: pnpm/action-setup@v4
         with: 
           version: "10"
+          package_json_file: ./frontend/package.json
 
       - name: Set up Node
         uses: actions/setup-node@v4
         with:
           node-version: 20
           cache: pnpm
+          cache-dependency-path: ./frontend/pnpm-lock.yaml
 
       - name: Install dependencies
         run: pnpm install --frozen-lockfile --ignore-scripts
