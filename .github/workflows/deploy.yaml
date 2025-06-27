@@ -19,8 +19,8 @@ env:
   IMAGE_NAME: ${{ github.repository }}
 
 jobs:
-  frontend_build:
-    name: [Frontend] Build static files
+  frontend-build:
+    name: "[Frontend] Build static files"
     runs-on: ubuntu-latest
     environment: ${{ github.event.inputs.environment || 'staging' }}
     steps:
@@ -65,10 +65,10 @@ jobs:
           if-no-files-found: error
         working-directory: frontend
 
-  frontend_deploy:
+  frontend-deploy:
     if: github.repository_owner == 'one-zero-eight' && (github.event_name == 'workflow_dispatch' || (github.event_name == 'push' && github.ref == 'refs/heads/main'))
-    name: [Frontend] Deploy to ${{ github.event.inputs.environment || 'staging' }}
-    needs: frontend_build
+    name: "[Frontend] Deploy to ${{ github.event.inputs.environment || 'staging' }}"
+    needs: frontend-build
     runs-on: [self-hosted, innohassle]
     environment:
       name: ${{ github.event.inputs.environment || 'staging' }}
@@ -95,7 +95,8 @@ jobs:
           overwrite: true
           rm: true
 
-  backend_build:
+  backend-build:
+    name: "[Backend] Build Docker image"
     runs-on: ubuntu-latest
     permissions: # Permissions granted to the 'GITHUB_TOKEN'
       contents: read
@@ -133,12 +134,12 @@ jobs:
           labels: ${{ steps.meta.outputs.labels }}
           cache-from: type=gha
           cache-to: type=gha,mode=max
-
-  backend_deploy:
+  
+  backend-deploy:
     # Only on manual trigger or push to main
     if: github.repository_owner == 'one-zero-eight' && (github.event_name == 'workflow_dispatch' || (github.event_name == 'push' && github.ref == 'refs/heads/main'))
-    name: Deploy to server for ${{ github.event.inputs.environment || 'staging' }}
-    needs: backend_build
+    name: "[Backend] Deploy to ${{ github.event.inputs.environment || 'staging' }}"
+    needs: backend-build
     runs-on: [self-hosted, innohassle]
     environment:
       # Set the environment name and URL to be displayed in GitHub
