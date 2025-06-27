@@ -92,7 +92,7 @@ jobs:
           fingerprint: ${{ secrets.FRONTEND_SSH_FINGERPRINT }}
           source: "./dist/*"
           target: ${{ secrets.FRONTEND_SSH_TARGET_DIR }}
-          strip_components: 2
+          strip_components: 1
           overwrite: true
           rm: true
 
