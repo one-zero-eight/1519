@@ -83,3 +83,8 @@ export interface ApplicationRankingStats {
   neutral_votes: number
   total_votes: number
 }
+
+export interface PatronRankingResponse {
+  patron_id: number
+  applications: Application[]
+}

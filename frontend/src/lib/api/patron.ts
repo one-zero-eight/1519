@@ -1,6 +1,12 @@
 import { VITE_PUBLIC_API } from '@/lib/constants'
 import { HttpError } from '@/lib/types/errors.ts'
-import type { Application, Docs, PatronRating, PatronResponse } from '@/lib/types/types'
+import type {
+  Application,
+  Docs,
+  PatronRankingResponse,
+  PatronRating,
+  PatronResponse
+} from '@/lib/types/types'
 
 export async function getRatedApplications(): Promise<PatronRating[]> {
   const res = await fetch(`${VITE_PUBLIC_API}/patron/me/rated-applications/`, {
@@ -67,5 +73,39 @@ export async function whoami(): Promise<PatronResponse> {
   if (!res.ok) {
     throw new HttpError('Not authorized', res.status)
   }
+  return res.json()
+}
+
+export async function getRanking(): Promise<PatronRankingResponse> {
+  const res = await fetch(`${VITE_PUBLIC_API}/patron/ranking`, {
+    method: 'GET',
+    headers: {
+      'Content-Type': 'application/json'
+    },
+    credentials: 'include'
+  })
+
+  if (!res.ok) {
+    throw new HttpError('Failed to get ranking', res.status)
+  }
+
+  return res.json()
+}
+
+export async function updateRanking(applicationIds: number[]): Promise<PatronRankingResponse> {
+  const res = await fetch(`${VITE_PUBLIC_API}/patron/ranking`, {
+    method: 'PUT',
+    headers: {
+      'Content-Type': 'application/json'
+    },
+    body: JSON.stringify({ application_ids: applicationIds }),
+    credentials: 'include'
+  })
+
+  if (!res.ok) {
+    const text = await res.text()
+    throw new Error(`Failed to update ranking: ${res.status} ${text}`)
+  }
+
   return res.json()
 }
