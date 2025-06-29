@@ -1,6 +1,6 @@
-import type { Application, Docs, PatronRating, PatronResponse } from '@/lib/types/types'
 import { VITE_PUBLIC_API } from '@/lib/constants'
 import { HttpError } from '@/lib/types/errors.ts'
+import type { Application, Docs, PatronRating, PatronResponse } from '@/lib/types/types'
 
 export async function getRatedApplications(): Promise<PatronRating[]> {
   const res = await fetch(`${VITE_PUBLIC_API}/patron/me/rated-applications/`, {

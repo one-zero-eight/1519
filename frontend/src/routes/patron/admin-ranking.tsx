@@ -1,5 +1,6 @@
 import InnoButton from '@/components/ui/shared/InnoButton'
 import { exportApplications, getRanking } from '@/lib/api/admin'
+import { authRedirect } from '@/lib/functions/guards/authRedirect.ts'
 import { ApplicationRankingStats } from '@/lib/types/types'
 import {
   Alert,
@@ -16,7 +17,6 @@ import {
 } from '@mui/material'
 import { createFileRoute, useNavigate } from '@tanstack/react-router'
 import React, { useEffect, useState } from 'react'
-import { authRedirect } from '@/lib/functions/guards/authRedirect.ts'
 
 export const Route = createFileRoute('/patron/admin-ranking')({
   beforeLoad: authRedirect,

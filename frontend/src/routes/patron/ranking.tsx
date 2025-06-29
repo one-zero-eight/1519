@@ -1,5 +1,5 @@
-import { createFileRoute } from '@tanstack/react-router'
 import { authRedirect } from '@/lib/functions/guards/authRedirect.ts'
+import { createFileRoute } from '@tanstack/react-router'
 
 export const Route = createFileRoute('/patron/ranking')({
   beforeLoad: authRedirect,

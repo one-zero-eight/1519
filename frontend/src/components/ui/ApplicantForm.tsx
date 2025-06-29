@@ -137,7 +137,10 @@ export default function ApplicantForm({ onSuccess, initialValues }: ApplicantFor
 
         <div className="space-y-3">
           <div>
-            <label className="mb-2 block text-sm font-medium">CV</label>
+            <label className="mb-2 block text-sm font-medium">
+              CV <b>(.pdf)</b>
+              <span className="text-red-500"> *</span>
+            </label>
             <input
               type="file"
               accept=".pdf"
@@ -147,7 +150,10 @@ export default function ApplicantForm({ onSuccess, initialValues }: ApplicantFor
           </div>
 
           <div>
-            <label className="mb-2 block text-sm font-medium">Transcript</label>
+            <label className="mb-2 block text-sm font-medium">
+              Transcript <b>(.xlsx)</b>
+              <span className="text-red-500"> *</span>
+            </label>
             <input
               type="file"
               accept=".xlsx,.xls"
@@ -157,7 +163,10 @@ export default function ApplicantForm({ onSuccess, initialValues }: ApplicantFor
           </div>
 
           <div>
-            <label className="mb-2 block text-sm font-medium">Motivational Letter</label>
+            <label className="mb-2 block text-sm font-medium">
+              Motivational Letter <b>(.pdf)</b>
+              <span className="text-red-500"> *</span>
+            </label>
             <input
               type="file"
               accept=".pdf"
@@ -167,7 +176,9 @@ export default function ApplicantForm({ onSuccess, initialValues }: ApplicantFor
           </div>
 
           <div>
-            <label className="mb-2 block text-sm font-medium">Recommendation Letter</label>
+            <label className="mb-2 block text-sm font-medium">
+              Recommendation Letter <b>(.pdf)</b>
+            </label>
             <input
               type="file"
               accept=".pdf"
@@ -177,7 +188,9 @@ export default function ApplicantForm({ onSuccess, initialValues }: ApplicantFor
           </div>
 
           <div>
-            <label className="mb-2 block text-sm font-medium">"Almost A Student" Document</label>
+            <label className="mb-2 block text-sm font-medium">
+              "Almost A Student" Document <b>(.pdf)</b>
+            </label>
             <input
               type="file"
               accept=".pdf"
