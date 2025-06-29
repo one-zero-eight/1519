@@ -60,6 +60,24 @@ export default function ApplicantForm({ onSuccess, initialValues }: ApplicantFor
     return emailRegex.test(email)
   }
 
+  const validateRequiredFiles = (): string[] => {
+    const errors: string[] = []
+
+    if (!files.cv_file) {
+      errors.push('CV file is required')
+    }
+
+    if (!files.transcript_file) {
+      errors.push('Transcript file is required')
+    }
+
+    if (!files.motivational_letter_file) {
+      errors.push('Motivational letter file is required')
+    }
+
+    return errors
+  }
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
     setError(null)
@@ -78,6 +96,12 @@ export default function ApplicantForm({ onSuccess, initialValues }: ApplicantFor
         throw new Error('Full name is required')
       }
 
+      // Validate required files
+      const fileErrors = validateRequiredFiles()
+      if (fileErrors.length > 0) {
+        throw new Error(`Required files missing: ${fileErrors.join(', ')}`)
+      }
+
       const submitData: SubmitFormData = {
         ...formData,
         ...files
@@ -91,6 +115,16 @@ export default function ApplicantForm({ onSuccess, initialValues }: ApplicantFor
     } finally {
       setLoading(false)
     }
+  }
+
+  // Check if form is valid for enabling/disabling submit button
+  const isFormValid = () => {
+    const emailValid = validateEmail(formData.email)
+    const nameValid = formData.full_name.trim().length > 0
+    const requiredFilesPresent =
+      files.cv_file && files.transcript_file && files.motivational_letter_file
+
+    return emailValid && nameValid && requiredFilesPresent
   }
 
   if (success) {
@@ -202,7 +236,7 @@ export default function ApplicantForm({ onSuccess, initialValues }: ApplicantFor
       </div>
 
       <div className="flex justify-center">
-        <InnoButton type="submit" disabled={loading} className="px-8 py-3">
+        <InnoButton type="submit" disabled={loading || !isFormValid()} className="px-8 py-3">
           {loading ? (
             <div className="flex items-center space-x-2">
               <CircularProgress size={20} color="inherit" />
