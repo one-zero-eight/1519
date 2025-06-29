@@ -9,42 +9,42 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
-import { Route as ApplicantIndexRouteImport } from './routes/applicant/index'
-import { Route as AuthIndexRouteImport } from './routes/auth/index'
 import { Route as IndexRouteImport } from './routes/index'
-import { Route as PatronAdminRankingRouteImport } from './routes/patron/admin-ranking'
 import { Route as PatronIndexRouteImport } from './routes/patron/index'
+import { Route as AuthIndexRouteImport } from './routes/auth/index'
+import { Route as ApplicantIndexRouteImport } from './routes/applicant/index'
 import { Route as PatronRankingRouteImport } from './routes/patron/ranking'
+import { Route as PatronAdminRankingRouteImport } from './routes/patron/admin-ranking'
 
 const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
-  getParentRoute: () => rootRouteImport
+  getParentRoute: () => rootRouteImport,
 } as any)
 const PatronIndexRoute = PatronIndexRouteImport.update({
   id: '/patron/',
   path: '/patron/',
-  getParentRoute: () => rootRouteImport
+  getParentRoute: () => rootRouteImport,
 } as any)
 const AuthIndexRoute = AuthIndexRouteImport.update({
   id: '/auth/',
   path: '/auth/',
-  getParentRoute: () => rootRouteImport
+  getParentRoute: () => rootRouteImport,
 } as any)
 const ApplicantIndexRoute = ApplicantIndexRouteImport.update({
   id: '/applicant/',
   path: '/applicant/',
-  getParentRoute: () => rootRouteImport
+  getParentRoute: () => rootRouteImport,
 } as any)
 const PatronRankingRoute = PatronRankingRouteImport.update({
   id: '/patron/ranking',
   path: '/patron/ranking',
-  getParentRoute: () => rootRouteImport
+  getParentRoute: () => rootRouteImport,
 } as any)
 const PatronAdminRankingRoute = PatronAdminRankingRouteImport.update({
   id: '/patron/admin-ranking',
   path: '/patron/admin-ranking',
-  getParentRoute: () => rootRouteImport
+  getParentRoute: () => rootRouteImport,
 } as any)
 
 export interface FileRoutesByFullPath {
@@ -74,9 +74,21 @@ export interface FileRoutesById {
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/patron/admin-ranking' | '/patron/ranking' | '/applicant' | '/auth' | '/patron'
+  fullPaths:
+    | '/'
+    | '/patron/admin-ranking'
+    | '/patron/ranking'
+    | '/applicant'
+    | '/auth'
+    | '/patron'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/patron/admin-ranking' | '/patron/ranking' | '/applicant' | '/auth' | '/patron'
+  to:
+    | '/'
+    | '/patron/admin-ranking'
+    | '/patron/ranking'
+    | '/applicant'
+    | '/auth'
+    | '/patron'
   id:
     | '__root__'
     | '/'
@@ -149,7 +161,7 @@ const rootRouteChildren: RootRouteChildren = {
   PatronRankingRoute: PatronRankingRoute,
   ApplicantIndexRoute: ApplicantIndexRoute,
   AuthIndexRoute: AuthIndexRoute,
-  PatronIndexRoute: PatronIndexRoute
+  PatronIndexRoute: PatronIndexRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
