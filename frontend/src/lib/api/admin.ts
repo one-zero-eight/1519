@@ -1,9 +1,8 @@
+import { VITE_PUBLIC_API } from '@/lib/constants'
 import { type ApplicationRankingStats } from '@/lib/types/types'
 
-const apiServer = import.meta.env.VITE_PUBLIC_API
-
 export async function getRanking(): Promise<ApplicationRankingStats[]> {
-  const res = await fetch(`${apiServer}/admin/applications/ranking`, {
+  const res = await fetch(`${VITE_PUBLIC_API}/admin/applications/ranking`, {
     method: 'GET',
     headers: { 'Content-Type': 'application/json' },
     credentials: 'include'
@@ -18,7 +17,7 @@ export async function getRanking(): Promise<ApplicationRankingStats[]> {
 }
 
 export async function exportApplications() {
-  const res = await fetch(`${apiServer}/admin/applications/export`, {
+  const res = await fetch(`${VITE_PUBLIC_API}/admin/applications/export`, {
     method: 'GET',
     headers: { 'Content-Type': 'application/json' },
     credentials: 'include'

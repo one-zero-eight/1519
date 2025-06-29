@@ -2,6 +2,7 @@ import ExcelPreview from '@/components/ExcelPreview'
 import Sidebar from '@/components/ui/Sidebar'
 import StudentDetails from '@/components/ui/StudentDetails'
 import { getAllApplications, getRatedApplications, rateApplication } from '@/lib/api/patron'
+import { VITE_PUBLIC_API } from '@/lib/constants'
 import { Application, FieldNames, PatronApplication, StudentListItem } from '@/lib/types/types'
 import { createFileRoute } from '@tanstack/react-router'
 import { useEffect, useMemo, useState } from 'react'
@@ -11,9 +12,6 @@ export const Route = createFileRoute('/patron/')({
 })
 
 function RouteComponent() {
-  // TODO: глобал константа
-  const apiServer = import.meta.env.VITE_PUBLIC_API
-
   const [applications, setApplications] = useState<Application[]>([])
   const [ratedApplications, setRatedApplications] = useState<PatronApplication[]>([])
 
@@ -81,7 +79,7 @@ function RouteComponent() {
     const docKey = selectedDoc.replace(/([A-Z])/g, '_$1').toLowerCase() as keyof Application
     const path = selectedApplication[docKey]
     if (!path) return null
-    return `${apiServer}/files/${path}`
+    return `${VITE_PUBLIC_API}/files/${path}`
   }, [selectedDoc, selectedApplication])
 
   function isExcelFile(path: string | null) {

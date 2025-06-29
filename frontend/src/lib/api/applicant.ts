@@ -1,6 +1,6 @@
 import { type Application } from '@/lib/types/types'
 
-const apiServer = import.meta.env.VITE_PUBLIC_API
+import { VITE_PUBLIC_API } from '@/lib/constants'
 
 export interface SubmitFormData {
   email: string
@@ -34,7 +34,7 @@ export async function submitApplication(formData: SubmitFormData): Promise<Appli
     data.append('almost_a_student_file', formData.almost_a_student_file)
   }
 
-  const res = await fetch(`${apiServer}/applicant/submit/`, {
+  const res = await fetch(`${VITE_PUBLIC_API}/applicant/submit/`, {
     method: 'POST',
     body: data,
     credentials: 'include'
@@ -49,7 +49,7 @@ export async function submitApplication(formData: SubmitFormData): Promise<Appli
 }
 
 export async function getMyApplication(): Promise<Application> {
-  const res = await fetch(`${apiServer}/applicant/my-application/`, {
+  const res = await fetch(`${VITE_PUBLIC_API}/applicant/my-application/`, {
     method: 'GET',
     headers: {
       'Content-Type': 'application/json'
