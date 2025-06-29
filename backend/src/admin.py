@@ -8,6 +8,7 @@ from fastapi_derive_responses import AutoDeriveResponsesAPIRoute
 from sqlalchemy import func
 from sqlalchemy.orm import Session
 
+from src import patron
 from src.config import settings
 from src.models import Application, Patron, PatronDailyStats, PatronRanking, PatronRateApplication, get_db_session
 from src.schemas import (
@@ -170,12 +171,15 @@ def export_applications(
     session: Session = Depends(get_db_session)
 ) -> StreamingResponse:
     applications = session.query(Application).all()
-    data = []
+    all_rankings = session.query(PatronRanking).all()
+    all_patrons = session.query(Patron).all()
+
+    applicants_data = []
 
     rrf_const = 60 # 60 is a common constant for rrf
 
     for application in applications:
-        rankings = session.query(PatronRanking).filter(PatronRanking.application_id == application.id).all()
+        rankings = filter(lambda ranking: ranking.application_id == application.id, all_rankings)
 
         rrf_score = 0
         if rankings:
@@ -186,29 +190,47 @@ def export_applications(
         negative_votes = sum(1 for v in votes if v.rate == -1)
         neutral_votes = sum(1 for v in votes if v.rate == 0)
 
-        data.append({
-            'ID': application.id,
-            'Email': application.email,
-            'Full Name': application.full_name,
-            'Submitted At': application.submitted_at,
-            'RRF Score': rrf_score,
-            'Positive Votes': positive_votes,
-            'Negative Votes': negative_votes,
-            'Neutral Votes': neutral_votes,
-            'Total Votes': len(votes),
-            'Has CV': bool(application.cv),
-            'Has Transcript': bool(application.transcript),
-            'Has Motivational Letter': bool(application.motivational_letter),
-            'Has Recommendation Letter': bool(application.recommendation_letter),
-            'Has Almost A Student': bool(application.almost_a_student),
-        })
+        applicants_data.append(
+            {
+                "ID": application.id,
+                "Email": application.email,
+                "Full Name": application.full_name,
+                "Submitted At": application.submitted_at,
+                "RRF Score": rrf_score,
+                "Positive Votes": positive_votes,
+                "Negative Votes": negative_votes,
+                "Neutral Votes": neutral_votes,
+                "Total Votes": len(votes),
+                "Has CV": bool(application.cv),
+                "Has Transcript": bool(application.transcript),
+                "Has Motivational Letter": bool(application.motivational_letter),
+                "Has Recommendation Letter": bool(application.recommendation_letter),
+                "Has Almost A Student": bool(application.almost_a_student),
+            }
+        )
 
-    df = pd.DataFrame(data)
-    df = df.sort_values('RRF Score', ascending=False)
+    applicants_df = pd.DataFrame(applicants_data)
+    applicants_df = applicants_df.sort_values("RRF Score", ascending=False)
+
+    rankings_data = []
+
+    for patron in all_patrons:
+        ranks = session.query(PatronRanking).filter(PatronRanking.patron_id == patron.id).all()
+        ranks.sort(key=lambda x: x.rank)
+
+        row = {"patron": patron.telegram_data.get("username", f"id: {patron.id}")}
+        for i, ranking in enumerate(ranks, start=1):
+            application = session.query(Application).filter(Application.id == ranking.application_id).one()
+            row[str(i)] = application.email
+        rankings_data.append(row)
+
+    rankings_df = pd.DataFrame(rankings_data)
+
 
     output = BytesIO()
     with pd.ExcelWriter(output, engine='xlsxwriter') as writer:
-        df.to_excel(writer, sheet_name='Applications Ranking', index=False)
+        applicants_df.to_excel(writer, sheet_name='Applications Ranking', index=False)
+        rankings_df.to_excel(writer, sheet_name='Rankings', index=False)
 
     output.seek(0)
 
