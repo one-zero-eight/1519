@@ -16,8 +16,10 @@ import {
 } from '@mui/material'
 import { createFileRoute, useNavigate } from '@tanstack/react-router'
 import React, { useEffect, useState } from 'react'
+import { authRedirect } from '@/lib/functions/guards/authRedirect.ts'
 
 export const Route = createFileRoute('/patron/admin-ranking')({
+  beforeLoad: authRedirect,
   component: RouteComponent
 })
 

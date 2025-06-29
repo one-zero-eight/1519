@@ -3,11 +3,13 @@ import Sidebar from '@/components/ui/Sidebar'
 import StudentDetails from '@/components/ui/StudentDetails'
 import { getAllApplications, getRatedApplications, rateApplication } from '@/lib/api/patron'
 import { VITE_PUBLIC_API } from '@/lib/constants'
+import { authRedirect } from '@/lib/functions/guards/authRedirect.ts'
 import { Application, FieldNames, PatronApplication, StudentListItem } from '@/lib/types/types'
 import { createFileRoute } from '@tanstack/react-router'
 import { useEffect, useMemo, useState } from 'react'
 
 export const Route = createFileRoute('/patron/')({
+  beforeLoad: authRedirect,
   component: RouteComponent
 })
 

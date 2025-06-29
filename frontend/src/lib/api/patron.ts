@@ -1,6 +1,6 @@
 import type { Application, Docs, PatronRating, PatronResponse } from '@/lib/types/types'
-
 import { VITE_PUBLIC_API } from '@/lib/constants'
+import { HttpError } from '@/lib/types/errors.ts'
 
 export async function getRatedApplications(): Promise<PatronRating[]> {
   const res = await fetch(`${VITE_PUBLIC_API}/patron/me/rated-applications/`, {
@@ -65,8 +65,7 @@ export async function whoami(): Promise<PatronResponse> {
   })
 
   if (!res.ok) {
-    const text = await res.text()
-    throw new Error(`Ошибка: ${res.status} ${text}`)
+    throw new HttpError('Not authorized', res.status)
   }
   return res.json()
 }
