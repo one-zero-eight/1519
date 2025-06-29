@@ -5,6 +5,7 @@ import { getAllApplications, getRatedApplications, rateApplication } from '@/lib
 import { VITE_PUBLIC_API } from '@/lib/constants'
 import { authRedirect } from '@/lib/functions/guards/authRedirect.ts'
 import { Application, FieldNames, PatronApplication, StudentListItem } from '@/lib/types/types'
+import { useQueryClient } from '@tanstack/react-query'
 import { createFileRoute } from '@tanstack/react-router'
 import { useEffect, useMemo, useState } from 'react'
 
@@ -14,11 +15,20 @@ export const Route = createFileRoute('/patron/')({
 })
 
 function RouteComponent() {
+  const queryClient = useQueryClient()
   const [applications, setApplications] = useState<Application[]>([])
   const [ratedApplications, setRatedApplications] = useState<PatronApplication[]>([])
 
   const [selectedApplicationId, setSelectedApplicationId] = useState<number | null>(null)
   const [selectedDoc, setSelectedDoc] = useState<keyof typeof FieldNames | null>(null)
+
+  // Invalidate cache on component mount to get fresh data
+  useEffect(() => {
+    // Invalidate patron-related queries to get fresh data
+    queryClient.invalidateQueries({ queryKey: ['rated-applications'] })
+    queryClient.invalidateQueries({ queryKey: ['all-applications'] })
+    queryClient.invalidateQueries({ queryKey: ['patron-ranking'] })
+  }, [queryClient])
 
   useEffect(() => {
     Promise.all([getAllApplications(), getRatedApplications()])
@@ -72,6 +82,10 @@ function RouteComponent() {
           }
         })
         setSelectedApplicationId(updated.application_id)
+
+        // Invalidate cache after rating change
+        queryClient.invalidateQueries({ queryKey: ['rated-applications'] })
+        queryClient.invalidateQueries({ queryKey: ['patron-ranking'] })
       })
       .catch(console.error)
   }
