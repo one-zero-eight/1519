@@ -1,9 +1,9 @@
 import type { Application, Docs, PatronRating, PatronResponse } from '@/lib/types/types'
-
-const apiServer = import.meta.env.VITE_PUBLIC_API
+import { VITE_PUBLIC_API } from '@/lib/constants'
+import { HttpError } from '@/lib/types/errors.ts'
 
 export async function getRatedApplications(): Promise<PatronRating[]> {
-  const res = await fetch(`${apiServer}/patron/me/rated-applications/`, {
+  const res = await fetch(`${VITE_PUBLIC_API}/patron/me/rated-applications/`, {
     method: 'GET',
     headers: {
       'Content-Type': 'application/json'
@@ -15,7 +15,7 @@ export async function getRatedApplications(): Promise<PatronRating[]> {
 }
 
 export async function getAllApplications(): Promise<Application[]> {
-  const res = await fetch(`${apiServer}/patron/applications/`, {
+  const res = await fetch(`${VITE_PUBLIC_API}/patron/applications/`, {
     method: 'GET',
     headers: {
       'Content-Type': 'application/json'
@@ -38,7 +38,7 @@ export async function rateApplication(
   params.append('rate', rate.toString())
 
   const res = await fetch(
-    `${apiServer}/patron/rate-application/${application_id}/?${params.toString()}`,
+    `${VITE_PUBLIC_API}/patron/rate-application/${application_id}/?${params.toString()}`,
     {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
@@ -56,7 +56,7 @@ export async function rateApplication(
 }
 
 export async function whoami(): Promise<PatronResponse> {
-  const res = await fetch(`${apiServer}/patron/me`, {
+  const res = await fetch(`${VITE_PUBLIC_API}/patron/me`, {
     method: 'GET',
     headers: {
       'Content-Type': 'application/json'
@@ -65,8 +65,7 @@ export async function whoami(): Promise<PatronResponse> {
   })
 
   if (!res.ok) {
-    const text = await res.text()
-    throw new Error(`Ошибка: ${res.status} ${text}`)
+    throw new HttpError('Not authorized', res.status)
   }
   return res.json()
 }
