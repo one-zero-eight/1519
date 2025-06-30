@@ -52,12 +52,11 @@ const RankingDragDrop: React.FC<RankingDragDropProps> = ({
       newRanked.splice(destination.index, 0, moved)
       onRankingChange(newRanked)
     }
-    // Перемещение из ranked в available (если нужно)
+    // Перемещение из ranked в available (исключение из рейтинга)
     else if (source.droppableId === 'ranked' && destination.droppableId === 'available') {
       const newRanked = Array.from(rankedApplications)
-      const [moved] = newRanked.splice(source.index, 1)
-      // Можно реализовать возврат в available, если нужно
-      // onRankingChange(newRanked)
+      newRanked.splice(source.index, 1)
+      onRankingChange(newRanked)
     }
   }
 

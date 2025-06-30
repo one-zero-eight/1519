@@ -113,7 +113,7 @@ function RouteComponent() {
           console.error('Auto-save failed:', error)
         }
       }
-    }, 2000), // 2 sec delay
+    }, 500),
     [lastSavedRanking, updateRankingMutation]
   )
 
@@ -128,7 +128,7 @@ function RouteComponent() {
       // Set new timeout
       autoSaveTimeoutRef.current = setTimeout(() => {
         debouncedAutoSave(localRankedApplications)
-      }, 1000)
+      }, 500)
     }
   }, [localRankedApplications, debouncedAutoSave])
 
