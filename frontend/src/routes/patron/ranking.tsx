@@ -1,4 +1,4 @@
-import { RankingDragDrop } from '@/components/ui/RankingDragDrop'
+import RankingDragDrop from '@/components/ui/RankingDragDrop'
 import InnoButton from '@/components/ui/shared/InnoButton'
 import { authRedirect } from '@/lib/functions/guards/authRedirect.ts'
 import {
@@ -23,7 +23,6 @@ function RouteComponent() {
   const [localRankedApplications, setLocalRankedApplications] = useState<Application[]>([])
   const [lastSavedRanking, setLastSavedRanking] = useState<Application[]>([])
   const [isAutoSaving, setIsAutoSaving] = useState(false)
-  const [isDragging, setIsDragging] = useState(false)
   const [showNegativeRemovedNotice, setShowNegativeRemovedNotice] = useState(false)
   const autoSaveTimeoutRef = useRef<NodeJS.Timeout | null>(null)
 
@@ -98,7 +97,7 @@ function RouteComponent() {
   // Debounced auto-save function
   const debouncedAutoSave = useCallback(
     debounce(async (applications: Application[]) => {
-      if (applications.length === 0 || isDragging) return
+      if (applications.length === 0) return
 
       // Check if ranking has actually changed
       const hasChanged =
@@ -115,12 +114,12 @@ function RouteComponent() {
         }
       }
     }, 2000), // 2 sec delay
-    [lastSavedRanking, updateRankingMutation, isDragging]
+    [lastSavedRanking, updateRankingMutation]
   )
 
-  // Auto-save when local ranking changes (but not during drag)
+  // Auto-save when local ranking changes
   useEffect(() => {
-    if (localRankedApplications.length > 0 && !isDragging) {
+    if (localRankedApplications.length > 0) {
       // Clear existing timeout
       if (autoSaveTimeoutRef.current) {
         clearTimeout(autoSaveTimeoutRef.current)
@@ -131,7 +130,7 @@ function RouteComponent() {
         debouncedAutoSave(localRankedApplications)
       }, 1000)
     }
-  }, [localRankedApplications, debouncedAutoSave, isDragging])
+  }, [localRankedApplications, debouncedAutoSave])
 
   // Cleanup timeout on unmount
   useEffect(() => {
@@ -145,27 +144,6 @@ function RouteComponent() {
   // Handle ranking changes
   const handleRankingChange = (newRanked: Application[]) => {
     setLocalRankedApplications(newRanked)
-  }
-
-  // Handle drag start
-  const handleDragStart = () => {
-    setIsDragging(true)
-    // Clear any pending auto-save
-    if (autoSaveTimeoutRef.current) {
-      clearTimeout(autoSaveTimeoutRef.current)
-      autoSaveTimeoutRef.current = null
-    }
-  }
-
-  // Handle drag end
-  const handleDragEnd = () => {
-    setIsDragging(false)
-    // Trigger auto-save after drag ends
-    setTimeout(() => {
-      if (localRankedApplications.length > 0) {
-        debouncedAutoSave(localRankedApplications)
-      }
-    }, 500)
   }
 
   // Handle viewing application
@@ -249,17 +227,10 @@ function RouteComponent() {
             <span className="text-red-600 text-sm flex items-center">✗ Save error</span>
           )}
 
-          {hasUnsavedChanges &&
-            !isAutoSaving &&
-            !updateRankingMutation.isPending &&
-            !isDragging && (
-              <span className="text-orange-600 text-sm flex items-center">
-                ⏳ Waiting for auto-save...
-              </span>
-            )}
-
-          {isDragging && (
-            <span className="text-purple-600 text-sm flex items-center">🎯 Dragging...</span>
+          {hasUnsavedChanges && !isAutoSaving && !updateRankingMutation.isPending && (
+            <span className="text-orange-600 text-sm flex items-center">
+              ⏳ Waiting for auto-save...
+            </span>
           )}
 
           {showNegativeRemovedNotice && (
@@ -276,8 +247,6 @@ function RouteComponent() {
         onRankingChange={handleRankingChange}
         onViewApplication={handleViewApplication}
         onBackToPatron={handleBackToPatron}
-        onDragStart={handleDragStart}
-        onDragEnd={handleDragEnd}
       />
 
       {availableApplications.length === 0 && localRankedApplications.length === 0 && (
