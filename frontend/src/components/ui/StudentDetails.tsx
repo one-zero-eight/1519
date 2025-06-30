@@ -48,10 +48,6 @@ export default function StudentDetails({
     }
   }, [application, rating])
 
-  const handlePickDocument = (doc: keyof typeof FieldNames) => {
-    onSelectedDoc(doc)
-  }
-
   if (!edit) {
     return <div>Loading...</div>
   }
@@ -67,7 +63,11 @@ export default function StudentDetails({
         <RadioGroup
           aria-labelledby="student-status-radio-group"
           value={edit.rate}
-          onChange={(e) => setEdit({ ...edit, rate: Number(e.target.value) as 1 | 0 | -1 })}
+          onChange={(e) => {
+            const _ = { ...edit, rate: Number(e.target.value) as 1 | 0 | -1 }
+            setEdit(_)
+            onSave(_)
+          }}
           sx={{
             display: 'flex',
             flexDirection: 'row',
@@ -132,19 +132,21 @@ export default function StudentDetails({
           if (!documentExists(key)) return null
 
           return (
-            <div key={key} className="space-y-w flex flex-col">
+            <div key={key} className="flex flex-col">
               <div className="flex flex-row items-center">
                 <InnoCheckbox
                   checked={!!edit.docs[seenKey]}
-                  onChange={(_, checked) =>
-                    setEdit({
+                  onChange={(e, checked) => {
+                    const _ = {
                       ...edit,
                       docs: {
                         ...edit.docs,
                         [seenKey]: checked
                       }
-                    })
-                  }
+                    }
+                    setEdit(_)
+                    onSave(_)
+                  }}
                 />
                 <Link
                   href="#"
@@ -152,7 +154,16 @@ export default function StudentDetails({
                   sx={{ minWidth: 180, fontWeight: 500 }}
                   onClick={(e) => {
                     e.preventDefault()
-                    handlePickDocument(key as keyof typeof FieldNames)
+                    onSelectedDoc(key as keyof typeof FieldNames)
+                    const _ = {
+                      ...edit,
+                      docs: {
+                        ...edit.docs,
+                        [seenKey]: true
+                      }
+                    }
+                    setEdit(_)
+                    onSave(_)
                   }}
                 >
                   {label}
@@ -182,9 +193,13 @@ export default function StudentDetails({
         })}
       </section>
 
-      <InnoButton onClick={() => onSave(edit)}>Save</InnoButton>
+      <div className="flex justify-center w-full mt-4">
+        <InnoButton onClick={() => onSave(edit)} className="w-[95%]">
+          Save
+        </InnoButton>
+      </div>
 
-      <hr className="border border-dashed border-gray-400" />
+      <hr className="mt-2 border border-dashed border-gray-400" />
 
       <section className="flex flex-col space-y-4">
         <h4 className="mt-4 text-xl">Not provided docs:</h4>

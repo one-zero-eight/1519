@@ -1,12 +1,13 @@
 import CheckboxFilter from '@/components/ui/Checkbox-filter'
 import InnoButton from '@/components/ui/shared/InnoButton'
-import { StudentListItem } from '@/lib/types/types'
+import { whoami } from '@/lib/api/patron.ts'
+import { PatronResponse, StudentListItem } from '@/lib/types/types'
 import ClearIcon from '@mui/icons-material/Clear'
 import DoneOutlineIcon from '@mui/icons-material/DoneOutline'
 import QuestionMarkIcon from '@mui/icons-material/QuestionMark'
 import { Stack } from '@mui/material'
 import { Link } from '@tanstack/react-router'
-import { useMemo, useState } from 'react'
+import { useEffect, useMemo, useState } from 'react'
 
 interface SidebarProps {
   items: StudentListItem[]
@@ -16,6 +17,7 @@ interface SidebarProps {
 
 function Sidebar({ items, onSelected, selectedId }: SidebarProps) {
   const [selectedFilters, setSelectedFilters] = useState<string[]>([])
+  const [user, setUser] = useState<PatronResponse | null>(null)
 
   const handleFilterChange = (selected: string[]) => {
     setSelectedFilters(selected)
@@ -30,6 +32,14 @@ function Sidebar({ items, onSelected, selectedId }: SidebarProps) {
   const handlePickStudent = (item: StudentListItem) => {
     onSelected(item.application_id)
   }
+
+  useEffect(() => {
+    async function fetchUser() {
+      setUser(await whoami())
+    }
+
+    fetchUser()
+  }, [])
 
   return (
     <aside className="order-1 min-h-full min-w-80 bg-gray-700 p-4 text-white">
@@ -70,9 +80,11 @@ function Sidebar({ items, onSelected, selectedId }: SidebarProps) {
         <Link to="/patron/ranking">
           <InnoButton className="w-full">Rank students</InnoButton>
         </Link>
-        <Link to="/patron/admin-ranking">
-          <InnoButton className="w-full">See total ranking</InnoButton>
-        </Link>
+        {user?.is_admin && (
+          <Link to="/patron/admin-ranking">
+            <InnoButton className="w-full">See total ranking</InnoButton>
+          </Link>
+        )}
       </section>
     </aside>
   )

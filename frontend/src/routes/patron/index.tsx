@@ -128,7 +128,7 @@ function RouteComponent() {
             <div className="preview-header flex flex-row items-center justify-between border-b bg-gray-100 p-4">
               <span className="font-semibold">{FieldNames[selectedDoc!]}</span>
               <button
-                className="rounded-3xl bg-[var(--red-choice)] p-4 font-medium text-white"
+                className="rounded-3xl bg-red-choice px-4 py-2 font-medium text-white"
                 onClick={() => setSelectedDoc(null)}
               >
                 Close Preview

@@ -5,3 +5,4 @@ docker-compose.yaml
 node_modules/
 Dockerfile
 pnpm-lock.yaml
+*.gen.ts
