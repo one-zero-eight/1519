@@ -44,9 +44,9 @@ function RouteComponent() {
 
   if (loading) {
     return (
-      <main className="min-w-screen mx-8 mt-8 flex min-h-screen flex-col items-center">
+      <main className="min-w-screen flex min-h-screen flex-col items-center">
         <div className="mb-8 flex flex-row items-center gap-4">
-          <img src={FN} alt="108" className="w-20" draggable={false} />
+          <img src={FN} alt="1519" className="w-20" draggable={false} />
           <h1 className="text-4xl font-semibold">Scholarship</h1>
         </div>
         <div className="flex items-center justify-center">
@@ -57,9 +57,9 @@ function RouteComponent() {
   }
 
   return (
-    <main className="min-w-screen mx-8 mt-8 flex min-h-screen flex-col items-center">
-      <div className="mb-8 flex flex-row items-center gap-4">
-        <img src={FN} alt="108" className="w-20" draggable={false} />
+    <main className="min-w-screen flex min-h-screen flex-col items-center">
+      <div className="my-8 flex flex-row items-center gap-4">
+        <img src={FN} alt="1519" className="w-20" draggable={false} />
         <h1 className="text-4xl font-semibold">Scholarship Application</h1>
       </div>
 

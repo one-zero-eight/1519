@@ -38,77 +38,75 @@ interface SortableItemProps {
   onView?: () => void
 }
 
-const SortableItem: React.FC<SortableItemProps> = ({
-  application,
-  index,
-  isRanked = false,
-  onView
-}) => {
-  const { attributes, listeners, setNodeRef, transform, transition, isDragging } = useSortable({
-    id: application.id.toString()
-  })
+const SortableItem = React.memo<SortableItemProps>(
+  ({ application, index, isRanked = false, onView }) => {
+    const { attributes, listeners, setNodeRef, transform, transition, isDragging } = useSortable({
+      id: application.id.toString()
+    })
 
-  const style = {
-    transform: CSS.Transform.toString(transform),
-    transition,
-    opacity: isDragging ? 0.5 : 1
-  }
+    const style = {
+      transform: CSS.Transform.toString(transform),
+      transition,
+      opacity: isDragging ? 0.8 : 1,
+      willChange: 'transform'
+    }
 
-  const getRankColor = (rank: number) => {
-    if (rank === 0 || rank === 1) return 'bg-green-100 border-green-300'
-    return 'bg-gray-50 border-gray-200'
-  }
+    const getRankColor = (rank: number) => {
+      if (rank === 0 || rank === 1) return 'bg-green-100 border-green-300'
+      return 'bg-gray-50 border-gray-200'
+    }
 
-  // Prevent drag when clicking on buttons
-  const handleButtonClick = (e: React.MouseEvent, callback?: () => void) => {
-    e.stopPropagation()
-    e.preventDefault()
-    if (callback) callback()
-  }
+    // Prevent drag when clicking on buttons
+    const handleButtonClick = (e: React.MouseEvent, callback?: () => void) => {
+      e.stopPropagation()
+      e.preventDefault()
+      if (callback) callback()
+    }
 
-  return (
-    <div
-      ref={setNodeRef}
-      style={style}
-      {...attributes}
-      {...listeners}
-      className={`
+    return (
+      <div
+        ref={setNodeRef}
+        style={style}
+        {...attributes}
+        {...listeners}
+        className={`
         p-4 mb-3 border rounded-lg cursor-move hover:shadow-md transition-all
         ${isRanked && index !== undefined ? getRankColor(index) : 'bg-white border-gray-200'}
         ${isDragging ? 'shadow-lg' : ''}
         touch-manipulation select-none
       `}
-    >
-      <div className="flex items-center justify-between">
-        <div className="flex-1">
-          {isRanked && index !== undefined && (
-            <div className="flex items-center mb-2">
-              <span className="text-sm font-medium text-gray-500 mr-2">#{index + 1}</span>
-              {(index === 0 || index === 1) && (
-                <span className="text-xs bg-green-500 text-white px-2 py-1 rounded-full">
-                  Scholarship
-                </span>
-              )}
-            </div>
-          )}
-          <h3 className="font-medium text-gray-900">{application.full_name}</h3>
-          <p className="text-sm text-gray-600">{application.email}</p>
-        </div>
-        <div className="flex gap-2 ml-4">
-          {onView && (
-            <InnoButton
-              onClick={(e) => handleButtonClick(e, onView)}
-              size="small"
-              sx={{ fontSize: '0.75rem', padding: '4px 12px' }}
-            >
-              View
-            </InnoButton>
-          )}
+      >
+        <div className="flex items-center justify-between">
+          <div className="flex-1">
+            {isRanked && index !== undefined && (
+              <div className="flex items-center mb-2">
+                <span className="text-sm font-medium text-gray-500 mr-2">#{index + 1}</span>
+                {(index === 0 || index === 1) && (
+                  <span className="text-xs bg-green-500 text-white px-2 py-1 rounded-full">
+                    Scholarship
+                  </span>
+                )}
+              </div>
+            )}
+            <h3 className="font-medium text-gray-900">{application.full_name}</h3>
+            <p className="text-sm text-gray-600">{application.email}</p>
+          </div>
+          <div className="flex gap-2 ml-4">
+            {onView && (
+              <InnoButton
+                onClick={(e) => handleButtonClick(e, onView)}
+                size="small"
+                sx={{ fontSize: '0.75rem', padding: '4px 12px' }}
+              >
+                View
+              </InnoButton>
+            )}
+          </div>
         </div>
       </div>
-    </div>
-  )
-}
+    )
+  }
+)
 
 export const RankingDragDrop: React.FC<RankingDragDropProps> = ({
   availableApplications,
@@ -126,8 +124,8 @@ export const RankingDragDrop: React.FC<RankingDragDropProps> = ({
     }),
     useSensor(TouchSensor, {
       activationConstraint: {
-        delay: 250,
-        tolerance: 5
+        delay: 0,
+        tolerance: 3
       }
     })
   )
