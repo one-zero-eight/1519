@@ -12,7 +12,7 @@ import uvicorn  # noqa: E402
 # Get arguments from command
 args = sys.argv[1:]
 extended_args = [
-    "src.app:app",
+    "src.api.app:app",
     "--use-colors",
     "--proxy-headers",
     "--forwarded-allow-ips=*",

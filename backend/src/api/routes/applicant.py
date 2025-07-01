@@ -1,35 +1,24 @@
 import os
 from typing import Annotated
 
-from fastapi import APIRouter, Depends, Form, HTTPException, Request, UploadFile
+from fastapi import APIRouter, Depends, Form, HTTPException, Request
 from fastapi_derive_responses import AutoDeriveResponsesAPIRoute
 from sqlalchemy.orm import Session
 
+from src.api.forms import SubmitForm
 from src.config import settings
-from src.models import Application, get_db_session
-from src.pydantic_base import BaseSchema
+from src.db.models import Application
+from src.dependencies import get_db_session
 from src.schemas import ApplicationResponse
 
-router = APIRouter(prefix="/applicant", tags=["Applicant"], route_class=AutoDeriveResponsesAPIRoute)
+router = APIRouter(
+    prefix="/applicant",
+    tags=["Applicant"],
+    route_class=AutoDeriveResponsesAPIRoute,
+)
 
 
-class SubmitForm(BaseSchema):
-    email: str = Form(
-        ...,
-        description="Innopolis email of the participant (...@innopolis.university or ...@innopolis.ru)",
-        pattern=r"^[a-zA-Z0-9_.+-]+@(innopolis\.(university|ru))$",
-        min_length=1,
-        examples=["i.ivanov@innopolis.university"],
-    )
-    full_name: str = Form(..., description="Full name of the participant", min_length=1, examples=["Ivan Ivanov"])
-    cv_file: UploadFile = Form(None, description="CV of the participant")
-    transcript_file: UploadFile = Form(None, description="Transcript of the participant")
-    motivational_letter_file: UploadFile = Form(None, description="Motivational letter of the participant")
-    recommendation_letter_file: UploadFile = Form(None, description="Recommendation letter of the participant")
-    almost_a_student_file: UploadFile = Form(None, description='"Almost A student" document of the participant')
-
-
-@router.post("/submit/")
+@router.post("/submit")
 async def submit_application_route(
     request: Request,
     form: Annotated[SubmitForm, Form(media_type="multipart/form-data")],
@@ -121,7 +110,7 @@ async def submit_application_route(
     return ApplicationResponse.model_validate(application, from_attributes=True)
 
 
-@router.get("/my-application/")
+@router.get("/my-application")
 async def my_application_route(request: Request, session: Session = Depends(get_db_session)) -> ApplicationResponse:
     """
     Get the applications of the current user

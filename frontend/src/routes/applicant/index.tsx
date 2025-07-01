@@ -44,10 +44,10 @@ function RouteComponent() {
 
   if (loading) {
     return (
-      <main className="min-w-screen flex min-h-screen flex-col items-center">
-        <div className="mb-8 flex flex-row items-center gap-4">
-          <img src={FN} alt="1519" className="w-20" draggable={false} />
-          <h1 className="text-4xl font-semibold">Scholarship</h1>
+      <main className="min-w-screen flex min-h-screen flex-col items-center px-2">
+        <div className="mb-8 flex lg:flex-row items-center gap-4 sm:gap-6 sm:mb-12 sm:mt-8 sm:flex-row flex-col text-center">
+          <img src={FN} alt="1519" className="w-16 sm:w-20 mb-2 sm:mb-0" draggable={false} />
+          <h1 className="text-2xl sm:text-4xl font-semibold">Scholarship</h1>
         </div>
         <div className="flex items-center justify-center">
           <CircularProgress />
@@ -57,14 +57,14 @@ function RouteComponent() {
   }
 
   return (
-    <main className="min-w-screen flex min-h-screen flex-col items-center">
-      <div className="my-8 flex flex-row items-center gap-4">
-        <img src={FN} alt="1519" className="w-20" draggable={false} />
-        <h1 className="text-4xl font-semibold">Scholarship Application</h1>
+    <main className="min-w-screen flex min-h-screen flex-col items-center px-2 py-4">
+      <div className="my-6 sm:my-8 flex flex-col sm:flex-row items-center gap-2 sm:gap-4 text-center">
+        <img src={FN} alt="1519" className="w-16 sm:w-20 mb-2 sm:mb-0" draggable={false} />
+        <h1 className="text-2xl sm:text-4xl font-semibold">Scholarship Application</h1>
       </div>
 
       {error && (
-        <Alert severity="error" className="mb-6 max-w-2xl">
+        <Alert severity="error" className="mb-4 sm:mb-6 w-full max-w-md sm:max-w-2xl">
           {error}
         </Alert>
       )}
@@ -72,12 +72,12 @@ function RouteComponent() {
       {application && !editMode ? (
         <ApplicationStatus application={application} onEdit={() => setEditMode(true)} />
       ) : (
-        <div className="w-full max-w-4xl">
-          <div className="mb-8 text-center">
-            <h2 className="mb-4 text-2xl font-semibold">
+        <div className="w-full max-w-md sm:max-w-4xl mx-auto">
+          <div className="mb-6 sm:mb-8 text-center">
+            <h2 className="mb-2 sm:mb-4 text-xl sm:text-2xl font-semibold">
               {application ? 'Edit Your Application' : 'Submit Your Application'}
             </h2>
-            <p className="mx-auto max-w-2xl text-gray-600">
+            <p className="mx-auto max-w-xs sm:max-w-2xl text-gray-600 text-sm sm:text-base">
               Please fill out the form below to {application ? 'edit' : 'submit'} your scholarship
               application.
               <br />

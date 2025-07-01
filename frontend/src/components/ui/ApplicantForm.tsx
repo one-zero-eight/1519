@@ -129,7 +129,7 @@ export default function ApplicantForm({ onSuccess, initialValues }: ApplicantFor
 
   if (success) {
     return (
-      <Alert severity="success" className="mb-4">
+      <Alert severity="success" className="mb-4 text-sm sm:text-base">
         Application submitted successfully! You will be notified about the status of your
         application.
       </Alert>
@@ -137,14 +137,17 @@ export default function ApplicantForm({ onSuccess, initialValues }: ApplicantFor
   }
 
   return (
-    <form onSubmit={handleSubmit} className="mx-auto max-w-2xl space-y-6">
+    <form
+      onSubmit={handleSubmit}
+      className="mx-auto w-full max-w-xs sm:max-w-2xl space-y-6 px-2 sm:px-0"
+    >
       {error && (
-        <Alert severity="error" className="mb-4">
+        <Alert severity="error" className="mb-4 text-sm sm:text-base">
           {error}
         </Alert>
       )}
 
-      <div className="space-y-4">
+      <div className="flex flex-col gap-4">
         <TextField
           fullWidth
           label="Full Name"
@@ -152,6 +155,24 @@ export default function ApplicantForm({ onSuccess, initialValues }: ApplicantFor
           onChange={handleInputChange('full_name')}
           required
           variant="outlined"
+          size="medium"
+          sx={{
+            fontSize: 18,
+            '& .MuiInputBase-root': {
+              borderRadius: '1rem',
+              fontSize: 18,
+              minHeight: 56,
+              paddingLeft: 1,
+              paddingRight: 1
+            },
+            '& .MuiInputLabel-root': {
+              fontSize: 16,
+              top: '-4px'
+            },
+            '& .MuiOutlinedInput-input': {
+              padding: '18.5px 14px'
+            }
+          }}
         />
 
         <TextField
@@ -162,16 +183,34 @@ export default function ApplicantForm({ onSuccess, initialValues }: ApplicantFor
           onChange={handleInputChange('email')}
           required
           variant="outlined"
+          size="medium"
           helperText="Must be an Innopolis email address (@innopolis.university or @innopolis.ru)"
+          sx={{
+            fontSize: 18,
+            '& .MuiInputBase-root': {
+              borderRadius: '1rem',
+              fontSize: 18,
+              minHeight: 56,
+              paddingLeft: 1,
+              paddingRight: 1
+            },
+            '& .MuiInputLabel-root': {
+              fontSize: 16,
+              top: '-4px'
+            },
+            '& .MuiOutlinedInput-input': {
+              padding: '18.5px 14px'
+            }
+          }}
         />
       </div>
 
       <div className="space-y-4">
-        <h3 className="text-lg font-semibold">Required Documents</h3>
+        <h3 className="text-base sm:text-lg font-semibold">Required Documents</h3>
 
         <div className="space-y-3">
           <div>
-            <label className="mb-2 block text-sm font-medium">
+            <label className="mb-2 block text-xs sm:text-sm font-medium">
               CV <b>(.pdf)</b>
               <span className="text-red-500"> *</span>
             </label>
@@ -179,12 +218,12 @@ export default function ApplicantForm({ onSuccess, initialValues }: ApplicantFor
               type="file"
               accept=".pdf"
               onChange={handleFileChange('cv_file')}
-              className="block w-full text-sm text-gray-500 file:mr-4 file:rounded-full file:border-0 file:bg-blue-50 file:px-4 file:py-2 file:text-sm file:font-semibold file:text-blue-700 hover:file:bg-blue-100"
+              className="block w-full text-xs sm:text-sm text-gray-500 file:mr-2 sm:file:mr-4 file:rounded-full file:border-0 file:bg-blue-50 file:px-2 sm:file:px-4 file:py-2 file:text-xs sm:file:text-sm file:font-semibold file:text-blue-700 hover:file:bg-blue-100"
             />
           </div>
 
           <div>
-            <label className="mb-2 block text-sm font-medium">
+            <label className="mb-2 block text-xs sm:text-sm font-medium">
               Transcript <b>(.xlsx)</b>
               <span className="text-red-500"> *</span>
             </label>
@@ -192,12 +231,12 @@ export default function ApplicantForm({ onSuccess, initialValues }: ApplicantFor
               type="file"
               accept=".xlsx,.xls"
               onChange={handleFileChange('transcript_file')}
-              className="block w-full text-sm text-gray-500 file:mr-4 file:rounded-full file:border-0 file:bg-blue-50 file:px-4 file:py-2 file:text-sm file:font-semibold file:text-blue-700 hover:file:bg-blue-100"
+              className="block w-full text-xs sm:text-sm text-gray-500 file:mr-2 sm:file:mr-4 file:rounded-full file:border-0 file:bg-blue-50 file:px-2 sm:file:px-4 file:py-2 file:text-xs sm:file:text-sm file:font-semibold file:text-blue-700 hover:file:bg-blue-100"
             />
           </div>
 
           <div>
-            <label className="mb-2 block text-sm font-medium">
+            <label className="mb-2 block text-xs sm:text-sm font-medium">
               Motivational Letter <b>(.pdf)</b>
               <span className="text-red-500"> *</span>
             </label>
@@ -205,38 +244,42 @@ export default function ApplicantForm({ onSuccess, initialValues }: ApplicantFor
               type="file"
               accept=".pdf"
               onChange={handleFileChange('motivational_letter_file')}
-              className="block w-full text-sm text-gray-500 file:mr-4 file:rounded-full file:border-0 file:bg-blue-50 file:px-4 file:py-2 file:text-sm file:font-semibold file:text-blue-700 hover:file:bg-blue-100"
+              className="block w-full text-xs sm:text-sm text-gray-500 file:mr-2 sm:file:mr-4 file:rounded-full file:border-0 file:bg-blue-50 file:px-2 sm:file:px-4 file:py-2 file:text-xs sm:file:text-sm file:font-semibold file:text-blue-700 hover:file:bg-blue-100"
             />
           </div>
 
           <div>
-            <label className="mb-2 block text-sm font-medium">
+            <label className="mb-2 block text-xs sm:text-sm font-medium">
               Recommendation Letter <b>(.pdf)</b>
             </label>
             <input
               type="file"
               accept=".pdf"
               onChange={handleFileChange('recommendation_letter_file')}
-              className="block w-full text-sm text-gray-500 file:mr-4 file:rounded-full file:border-0 file:bg-blue-50 file:px-4 file:py-2 file:text-sm file:font-semibold file:text-blue-700 hover:file:bg-blue-100"
+              className="block w-full text-xs sm:text-sm text-gray-500 file:mr-2 sm:file:mr-4 file:rounded-full file:border-0 file:bg-blue-50 file:px-2 sm:file:px-4 file:py-2 file:text-xs sm:file:text-sm file:font-semibold file:text-blue-700 hover:file:bg-blue-100"
             />
           </div>
 
           <div>
-            <label className="mb-2 block text-sm font-medium">
+            <label className="mb-2 block text-xs sm:text-sm font-medium">
               "Almost A Student" Document <b>(.pdf)</b>
             </label>
             <input
               type="file"
               accept=".pdf"
               onChange={handleFileChange('almost_a_student_file')}
-              className="block w-full text-sm text-gray-500 file:mr-4 file:rounded-full file:border-0 file:bg-blue-50 file:px-4 file:py-2 file:text-sm file:font-semibold file:text-blue-700 hover:file:bg-blue-100"
+              className="block w-full text-xs sm:text-sm text-gray-500 file:mr-2 sm:file:mr-4 file:rounded-full file:border-0 file:bg-blue-50 file:px-2 sm:file:px-4 file:py-2 file:text-xs sm:file:text-sm file:font-semibold file:text-blue-700 hover:file:bg-blue-100"
             />
           </div>
         </div>
       </div>
 
       <div className="flex justify-center">
-        <InnoButton type="submit" disabled={loading || !isFormValid()} className="px-8 py-3">
+        <InnoButton
+          type="submit"
+          disabled={loading || !isFormValid()}
+          className="px-4 py-2 sm:px-8 sm:py-3 w-full sm:w-auto text-xs sm:text-base"
+        >
           {loading ? (
             <div className="flex items-center space-x-2">
               <CircularProgress size={20} color="inherit" />
