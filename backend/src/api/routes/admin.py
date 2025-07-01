@@ -2,15 +2,15 @@ from datetime import UTC, datetime, timedelta
 from io import BytesIO
 
 import pandas as pd
-from fastapi import APIRouter, Depends, HTTPException, Query, Request, status
+from fastapi import APIRouter, Depends, HTTPException, Query, status
 from fastapi.responses import StreamingResponse
 from fastapi_derive_responses import AutoDeriveResponsesAPIRoute
 from sqlalchemy import func
 from sqlalchemy.orm import Session
 
-from src import patron
 from src.config import settings
-from src.models import Application, Patron, PatronDailyStats, PatronRanking, PatronRateApplication, get_db_session
+from src.db.models import Application, Patron, PatronDailyStats, PatronRanking, PatronRateApplication
+from src.dependencies import admin_auth, get_db_session
 from src.schemas import (
     AddPatronRequest,
     ApplicationRankingStats,
@@ -30,21 +30,6 @@ router = APIRouter(
     tags=["Admin"],
     route_class=AutoDeriveResponsesAPIRoute,
 )
-
-
-async def admin_auth(request: Request, session: Session = Depends(get_db_session)) -> Patron:
-    patron_id = request.session.get("patron_id")
-    if patron_id is None:
-        raise HTTPException(status_code=403, detail="Only admins can access this endpoint")
-
-    patron_obj = session.query(Patron).get(patron_id)
-    if patron_obj is None:
-        raise HTTPException(status_code=403, detail="Patron with such id not found")
-
-    if not patron_obj.is_admin:
-        raise HTTPException(status_code=403, detail="Only admins can access this endpoint")
-
-    return patron_obj
 
 
 @router.post("/add-patron", status_code=status.HTTP_201_CREATED)

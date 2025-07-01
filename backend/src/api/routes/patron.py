@@ -1,10 +1,11 @@
 import datetime
 
-from fastapi import APIRouter, Body, Depends, HTTPException, Request
+from fastapi import APIRouter, Body, Depends, HTTPException
 from fastapi_derive_responses import AutoDeriveResponsesAPIRoute
 from sqlalchemy.orm import Session
 
-from src.models import Application, Patron, PatronDailyStats, PatronRanking, PatronRateApplication, get_db_session
+from src.db.models import Application, Patron, PatronDailyStats, PatronRanking, PatronRateApplication
+from src.dependencies import get_db_session, patron_auth
 from src.schemas import ApplicationResponse, Docs, PatronRankingResponse, PatronRateApplicationResponse, PatronResponse
 
 router = APIRouter(
@@ -33,22 +34,12 @@ def update_daily_stats(session: Session, patron_id: int, rating_increment: int =
         session.add(stats)
 
 
-async def patron_auth(request: Request, session: Session = Depends(get_db_session)) -> Patron:
-    patron_id = request.session.get("patron_id")
-    if patron_id is None:
-        raise HTTPException(status_code=403, detail="Only patrons can access this endpoint")
-    patron_obj = session.query(Patron).get(patron_id)
-    if patron_obj is None:
-        raise HTTPException(status_code=403, detail="Patron with such id not found")
-    return patron_obj
-
-
 @router.get("/me")
 def get_me_route(patron: Patron = Depends(patron_auth)) -> PatronResponse:
     return PatronResponse.model_validate(patron, from_attributes=True)
 
 
-@router.get("/me/rated-applications/", generate_unique_id_function=lambda _: "get_rated_applications")
+@router.get("/me/rated-applications", generate_unique_id_function=lambda _: "get_rated_applications")
 def get_rated_applications_route(
     patron: Patron = Depends(patron_auth), session: Session = Depends(get_db_session)
 ) -> list[PatronRateApplicationResponse]:
@@ -56,7 +47,7 @@ def get_rated_applications_route(
     return [PatronRateApplicationResponse.model_validate(r, from_attributes=True) for r in rated_by_patron]
 
 
-@router.get("/applications/", generate_unique_id_function=lambda _: "get_all_applications")
+@router.get("/applications", generate_unique_id_function=lambda _: "get_all_applications")
 def get_all_applications_route(
     _: Patron = Depends(patron_auth), session: Session = Depends(get_db_session)
 ) -> list[ApplicationResponse]:
@@ -65,7 +56,7 @@ def get_all_applications_route(
     return [ApplicationResponse.model_validate(a, from_attributes=True) for a in all_applications]
 
 
-@router.get("/applications/{application_id}/", generate_unique_id_function=lambda _: "get_application")
+@router.get("/applications/{application_id}", generate_unique_id_function=lambda _: "get_application")
 def get_application_route(
     application_id: int, _: Patron = Depends(patron_auth), session: Session = Depends(get_db_session)
 ) -> ApplicationResponse:
@@ -75,7 +66,7 @@ def get_application_route(
     return ApplicationResponse.model_validate(application, from_attributes=True)
 
 
-@router.post("/rate-application/{application_id}/", generate_unique_id_function=lambda _: "rate_application")
+@router.post("/rate-application/{application_id}", generate_unique_id_function=lambda _: "rate_application")
 def rate_application_route(
     application_id: int,
     comment: str = "",
