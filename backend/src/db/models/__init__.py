@@ -1,12 +1,12 @@
 from os import environ
 
 from src.db import Base, engine
-from src.logging_ import logger
-
 from src.db.models.applicant import Application
 from src.db.models.patron import Patron
-from src.db.models.rating import PatronRateApplication, PatronRanking
+from src.db.models.rating import PatronRanking, PatronRateApplication
 from src.db.models.statistics import PatronDailyStats
+from src.db.models.timewindow import TimeWindow
+from src.logging_ import logger
 
 __all__ = [
     "Base",
@@ -15,6 +15,7 @@ __all__ = [
     "PatronRateApplication",
     "PatronRanking",
     "PatronDailyStats",
+    "TimeWindow",
 ]
 
 if environ.get("RECREATE_DATABASE") == "true":

@@ -7,9 +7,9 @@ from starlette.responses import FileResponse
 
 import src.logging_  # noqa: F401
 from src.config import settings
-from src.logging_ import logger
 from src.db.models import Patron
 from src.dependencies import patron_auth
+from src.logging_ import logger
 
 router = APIRouter(
     prefix="/files",

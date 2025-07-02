@@ -47,7 +47,7 @@ app.add_middleware(
     https_only=True,
 )
 
-from src.api.routes import (
+from src.api.routes import (  # noqa: E402
     admin_router,
     applicant_router,
     auth_router,

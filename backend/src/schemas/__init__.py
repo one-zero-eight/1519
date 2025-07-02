@@ -3,16 +3,17 @@ from src.schemas.applicant import ApplicationResponse
 from src.schemas.patron import PatronResponse, PatronWithRatingsAndRankings
 from src.schemas.rating import (
     Docs,
-    PatronRateApplicationResponse,
     PatronRankingResponse,
+    PatronRateApplicationResponse,
 )
 from src.schemas.statistics import (
     ApplicationRankingStats,
-    DailyPatronStats,
     DailyApplicationStats,
+    DailyPatronStats,
     OverallStats,
     PatronStats,
 )
+from src.schemas.timewindow import CreateTimeWindowRequest, TimeWindowResponse
 
 __all__ = [
     "AddPatronRequest",
@@ -27,4 +28,6 @@ __all__ = [
     "DailyApplicationStats",
     "OverallStats",
     "PatronStats",
+    "CreateTimeWindowRequest",
+    "TimeWindowResponse",
 ]

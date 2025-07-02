@@ -1,7 +1,7 @@
 from __future__ import annotations
 
 from src.schemas.pydantic_base import BaseSchema
-from src.schemas.rating import PatronRateApplicationResponse, PatronRankingResponse
+from src.schemas.rating import PatronRankingResponse, PatronRateApplicationResponse
 
 
 class PatronResponse(BaseSchema):

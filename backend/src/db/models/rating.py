@@ -33,8 +33,8 @@ class PatronRateApplication(Base):
     updated_at: Mapped[datetime.datetime] = mapped_column(server_default=func.now())
     "Datetime of the last update"
 
-    application: Mapped["Application"] = relationship("Application", backref="patron_x_application", viewonly=True)
-    patron: Mapped["Patron"] = relationship("Patron", backref="patron_x_application", viewonly=True)
+    application: Mapped[Application] = relationship("Application", backref="patron_x_application", viewonly=True)
+    patron: Mapped[Patron] = relationship("Patron", backref="patron_x_application", viewonly=True)
 
 
 class PatronRanking(Base):
@@ -50,5 +50,5 @@ class PatronRanking(Base):
     updated_at: Mapped[datetime.datetime] = mapped_column(server_default=func.now())
     "Datetime of the last update"
 
-    application: Mapped["Application"] = relationship("Application", backref="patron_rankings", viewonly=True)
-    patron: Mapped["Patron"] = relationship("Patron", backref="patron_rankings", viewonly=True)
+    application: Mapped[Application] = relationship("Application", backref="patron_rankings", viewonly=True)
+    patron: Mapped[Patron] = relationship("Patron", backref="patron_rankings", viewonly=True)

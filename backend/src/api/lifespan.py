@@ -2,9 +2,9 @@ from contextlib import asynccontextmanager
 
 import src.logging_  # noqa: F401
 from src.config import settings
-from src.logging_ import logger
 from src.db.models import Patron
 from src.dependencies import get_db_session
+from src.logging_ import logger
 
 
 @asynccontextmanager

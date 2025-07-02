@@ -5,13 +5,12 @@ from sqlalchemy.orm import Session
 from starlette.responses import HTMLResponse
 
 import src.logging_  # noqa: F401
+from src.api.telegram import telegram_check
 from src.config import settings
-from src.logging_ import logger
 from src.db.models import Patron
 from src.dependencies import get_db_session
+from src.logging_ import logger
 from src.schemas import PatronResponse
-from src.api.telegram import telegram_check
-
 
 router = APIRouter(
     prefix="/auth",

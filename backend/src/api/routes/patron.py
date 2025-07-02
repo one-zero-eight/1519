@@ -4,8 +4,8 @@ from fastapi import APIRouter, Body, Depends, HTTPException
 from fastapi_derive_responses import AutoDeriveResponsesAPIRoute
 from sqlalchemy.orm import Session
 
-from src.db.models import Application, Patron, PatronDailyStats, PatronRanking, PatronRateApplication
-from src.dependencies import get_db_session, patron_auth
+from src.db.models import Application, Patron, PatronDailyStats, PatronRanking, PatronRateApplication, TimeWindow
+from src.dependencies import get_current_timewindow, get_db_session, patron_auth
 from src.schemas import ApplicationResponse, Docs, PatronRankingResponse, PatronRateApplicationResponse, PatronResponse
 
 router = APIRouter(
@@ -41,24 +41,38 @@ def get_me_route(patron: Patron = Depends(patron_auth)) -> PatronResponse:
 
 @router.get("/me/rated-applications", generate_unique_id_function=lambda _: "get_rated_applications")
 def get_rated_applications_route(
-    patron: Patron = Depends(patron_auth), session: Session = Depends(get_db_session)
+    show_only_current: bool = True,
+    timewindow: TimeWindow | None = Depends(get_current_timewindow),
+    patron: Patron = Depends(patron_auth),
+    session: Session = Depends(get_db_session),
 ) -> list[PatronRateApplicationResponse]:
+    if show_only_current and timewindow is None:
+        raise HTTPException(400, "No current timewindow")
     rated_by_patron = session.query(PatronRateApplication).filter(PatronRateApplication.patron_id == patron.id).all()
+    if show_only_current:
+        rated_by_patron = list(filter(lambda rate: timewindow.start <= rate.application.submitted_at.date() <= timewindow.end, rated_by_patron))
     return [PatronRateApplicationResponse.model_validate(r, from_attributes=True) for r in rated_by_patron]
 
 
 @router.get("/applications", generate_unique_id_function=lambda _: "get_all_applications")
 def get_all_applications_route(
-    _: Patron = Depends(patron_auth), session: Session = Depends(get_db_session)
+    show_only_current: bool = True,
+    timewindow: TimeWindow | None = Depends(get_current_timewindow),
+    _: Patron = Depends(patron_auth),
+    session: Session = Depends(get_db_session),
 ) -> list[ApplicationResponse]:
+    if show_only_current and timewindow is None:
+        raise HTTPException(400, "No current timewindow")
     all_applications = session.query(Application).order_by(Application.submitted_at).all()
-
+    if show_only_current:
+        all_applications = list(filter(lambda application: timewindow.start <= application.submitted_at.date() <= timewindow.end, all_applications))
     return [ApplicationResponse.model_validate(a, from_attributes=True) for a in all_applications]
 
 
 @router.get("/applications/{application_id}", generate_unique_id_function=lambda _: "get_application")
 def get_application_route(
-    application_id: int, _: Patron = Depends(patron_auth), session: Session = Depends(get_db_session)
+    application_id: int, _: Patron = Depends(patron_auth),
+    session: Session = Depends(get_db_session),
 ) -> ApplicationResponse:
     application = session.query(Application).get(application_id)
     if application is None:
@@ -110,8 +124,14 @@ def rate_application_route(
 
 @router.get("/ranking")
 def get_ranking_route(
-    patron: Patron = Depends(patron_auth), session: Session = Depends(get_db_session)
+    show_only_current: bool = True,
+    timewindow: TimeWindow | None = Depends(get_current_timewindow),
+    patron: Patron = Depends(patron_auth),
+    session: Session = Depends(get_db_session),
 ) -> PatronRankingResponse:
+    if show_only_current and timewindow is None:
+        raise HTTPException(400, "No current timewindow")
+
     ranked_applications = (
         session.query(PatronRanking)
         .filter_by(patron_id=patron.id)
@@ -120,6 +140,9 @@ def get_ranking_route(
     )
     if not ranked_applications:
         return PatronRankingResponse(patron_id=patron.id, applications=[])
+
+    if show_only_current:
+        ranked_applications = list(filter(lambda rank: timewindow.start <= rank.application.submitted_at.date() <= timewindow.end, ranked_applications))
 
     application_ids = [r.application_id for r in ranked_applications]
     db_applications = session.query(Application).filter(Application.id.in_(application_ids)).all()
@@ -151,4 +174,4 @@ def put_ranking_route(
 
     session.commit()
 
-    return get_ranking_route(patron, session)
+    return get_ranking_route(show_only_current=False, patron=patron, session=session)
