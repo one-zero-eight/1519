@@ -1,6 +1,6 @@
 export async function tgCallback(param: URLSearchParams, inviteSecret: string) {
   const res = await fetch(
-    `${import.meta.env.VITE_PUBLIC_API}/auth/telegram-callback/?${param.toString()}&invite_secret=${inviteSecret}`,
+    `${import.meta.env.VITE_PUBLIC_API}/auth/telegram-callback?${param.toString()}&invite_secret=${inviteSecret}`,
     {
       method: 'POST',
       headers: {
