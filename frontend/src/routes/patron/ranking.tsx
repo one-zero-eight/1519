@@ -28,20 +28,9 @@ function RouteComponent() {
 
   // Invalidate cache on component mount to get fresh data
   useEffect(() => {
-    // Invalidate all patron-related queries to get fresh data
     queryClient.invalidateQueries({ queryKey: patronQueryKeys.ratedApplications })
     queryClient.invalidateQueries({ queryKey: patronQueryKeys.ranking })
     queryClient.invalidateQueries({ queryKey: patronQueryKeys.allApplications })
-
-    // Also refetch the data immediately
-    queryClient.refetchQueries({ queryKey: patronQueryKeys.ratedApplications })
-    queryClient.refetchQueries({ queryKey: patronQueryKeys.ranking })
-
-    // Force refetch with fresh data
-    setTimeout(() => {
-      queryClient.refetchQueries({ queryKey: patronQueryKeys.ratedApplications, exact: true })
-      queryClient.refetchQueries({ queryKey: patronQueryKeys.ranking, exact: true })
-    }, 100)
   }, [queryClient])
 
   // Use custom hooks for data fetching
@@ -80,30 +69,29 @@ function RouteComponent() {
     if (updateRankingMutation.isSuccess && updateRankingMutation.data) {
       setLastSavedRanking(updateRankingMutation.data.applications)
       setIsAutoSaving(false)
-
       // Invalidate cache after successful save
       queryClient.invalidateQueries({ queryKey: patronQueryKeys.ranking })
       queryClient.invalidateQueries({ queryKey: patronQueryKeys.ratedApplications })
     }
   }, [updateRankingMutation.isSuccess, updateRankingMutation.data, queryClient])
 
-  // Handle save error
+  // Handle save error: откат к последнему успешному
   useEffect(() => {
     if (updateRankingMutation.isError) {
       setIsAutoSaving(false)
+      setLocalRankedApplications(lastSavedRanking)
     }
-  }, [updateRankingMutation.isError])
+  }, [updateRankingMutation.isError, lastSavedRanking])
 
   // Debounced auto-save function
   const debouncedAutoSave = useCallback(
     debounce(async (applications: Application[]) => {
       if (applications.length === 0) return
-
+      if (updateRankingMutation.isPending) return // не запускать, если уже идёт сохранение
       // Check if ranking has actually changed
       const hasChanged =
         JSON.stringify(applications.map((app) => app.id)) !==
         JSON.stringify(lastSavedRanking.map((app) => app.id))
-
       if (hasChanged) {
         setIsAutoSaving(true)
         try {
@@ -120,17 +108,10 @@ function RouteComponent() {
   // Auto-save when local ranking changes
   useEffect(() => {
     if (localRankedApplications.length > 0) {
-      // Clear existing timeout
-      if (autoSaveTimeoutRef.current) {
-        clearTimeout(autoSaveTimeoutRef.current)
-      }
-
-      // Set new timeout
-      autoSaveTimeoutRef.current = setTimeout(() => {
-        debouncedAutoSave(localRankedApplications)
-      }, 500)
+      debouncedAutoSave(localRankedApplications)
     }
-  }, [localRankedApplications, debouncedAutoSave])
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [localRankedApplications])
 
   // Cleanup timeout on unmount
   useEffect(() => {
