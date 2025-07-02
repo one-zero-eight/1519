@@ -4,7 +4,16 @@ import { Application, FieldNames, PatronApplication } from '@/lib/types/types'
 import ClearIcon from '@mui/icons-material/Clear'
 import DoneOutlineIcon from '@mui/icons-material/DoneOutline'
 import QuestionMarkIcon from '@mui/icons-material/QuestionMark'
-import { FormControlLabel, Link, Radio, RadioGroup, SvgIcon, TextField } from '@mui/material'
+import {
+  FormControlLabel,
+  Link,
+  Radio,
+  RadioGroup,
+  SvgIcon,
+  TextField,
+  Tooltip,
+  useMediaQuery
+} from '@mui/material'
 import { useEffect, useState } from 'react'
 
 interface StudentDetailsProps {
@@ -21,6 +30,9 @@ export default function StudentDetails({
   onSave
 }: StudentDetailsProps) {
   const [edit, setEdit] = useState<PatronApplication | null>(null)
+
+  // определяем мобильное устройство
+  const isMobile = useMediaQuery('(max-width:600px)')
 
   useEffect(() => {
     if (rating) {
@@ -59,7 +71,7 @@ export default function StudentDetails({
 
   return (
     <div className="space-y-2">
-      <div className="flex flex-row items-center space-x-1">
+      <div className="flex flex-col items-center gap-2 p-1">
         <RadioGroup
           aria-labelledby="student-status-radio-group"
           value={edit.rate}
@@ -72,7 +84,10 @@ export default function StudentDetails({
             display: 'flex',
             flexDirection: 'row',
             alignItems: 'center',
-            justifyContent: 'space-around'
+            justifyContent: 'center',
+            width: '100%',
+            gap: 2,
+            mb: 1
           }}
         >
           <FormControlLabel
@@ -80,9 +95,10 @@ export default function StudentDetails({
             control={<Radio sx={{ color: '#5ea500', '&.Mui-checked': { color: '#5ea500' } }} />}
             label={
               <SvgIcon>
-                <DoneOutlineIcon sx={{ color: '#5ea500' }} />
+                <DoneOutlineIcon sx={{ color: '#5ea500', width: '12rem' }} />
               </SvgIcon>
             }
+            sx={{ mx: 1 }}
           />
           <FormControlLabel
             value={-1}
@@ -92,6 +108,7 @@ export default function StudentDetails({
                 <ClearIcon sx={{ color: '#c10007' }} />
               </SvgIcon>
             }
+            sx={{ mx: 1 }}
           />
           <FormControlLabel
             value={0}
@@ -101,10 +118,45 @@ export default function StudentDetails({
                 <QuestionMarkIcon sx={{ color: '#d08700' }} />
               </SvgIcon>
             }
+            sx={{ mx: 1 }}
           />
         </RadioGroup>
-        <hr className="h-[10vh] border border-dashed border-gray-400" />
-        <h4 className="text-center text-lg">{edit.full_name}</h4>
+        <div className="flex flex-col gap-1 items-center">
+          <h4 className="text-center text-lg">{edit.full_name}</h4>
+          <div
+            style={{
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              gap: 8,
+              flexDirection: 'column'
+            }}
+          >
+            <span style={{ fontSize: 15, color: '#555', fontWeight: 500 }}>
+              {application.email}
+              {!isMobile && (
+                <Tooltip
+                  title={`Дата отправки: ${application.submitted_at ? new Date(application.submitted_at).toLocaleString() : 'неизвестно'}`}
+                  placement="right"
+                  arrow
+                >
+                  <span style={{ cursor: 'pointer', color: '#888', fontSize: 18, marginLeft: 4 }}>
+                    🛈
+                  </span>
+                </Tooltip>
+              )}
+            </span>
+            {isMobile && (
+              <span style={{ fontSize: 13, color: '#888', marginTop: 2 }}>
+                Дата отправки:{' '}
+                {application.submitted_at
+                  ? new Date(application.submitted_at).toLocaleString()
+                  : 'неизвестно'}
+              </span>
+            )}
+          </div>
+        </div>
+        <hr className="w-full border border-dashed border-gray-400" />
       </div>
       <TextField
         fullWidth
@@ -199,9 +251,9 @@ export default function StudentDetails({
         </InnoButton>
       </div>
 
-      <hr className="mt-2 border border-dashed border-gray-400" />
+      <hr className="mt-4 border border-dashed border-gray-400" />
 
-      <section className="flex flex-col space-y-4">
+      <section className="flex flex-col space-y-4 lg:items-start items-center">
         <h4 className="mt-4 text-xl">Not provided docs:</h4>
         {Object.entries(FieldNames).map(([key, label]) => {
           if (documentExists(key)) return null
