@@ -326,10 +326,28 @@ def get_patron_stats_route(
         for row in activity_query
     ]
 
-    stats = PatronStats(
-        patron_id=patron.id,
-        total_ratings=total_ratings,
-        activity_by_day=activity_by_day
-    )
+    stats = PatronStats(patron_id=patron.id, total_ratings=total_ratings, activity_by_day=activity_by_day)
 
     return PatronStats.model_validate(stats, from_attributes=True)
+
+
+@router.put("/promote")
+def promote_patron(
+    patron_telegram_id: int,
+    is_admin: bool,
+    admin: Patron = Depends(admin_auth),
+    session: Session = Depends(get_db_session),
+) -> PatronResponse:
+    """
+    Change admin status of existing patron. Only accessible by superadmins
+    """
+    if admin.telegram_id != settings.superadmin_telegram_id:
+        raise HTTPException(status_code=403, detail="Only superadmin can promote patrons")
+
+    patron = session.query(Patron).filter(Patron.telegram_id == patron_telegram_id).first()
+    if patron is None:
+        raise HTTPException(status_code=404, detail="Patron not found")
+
+    patron.is_admin = is_admin
+    session.commit()
+    return PatronResponse.model_validate(patron, from_attributes=True)
