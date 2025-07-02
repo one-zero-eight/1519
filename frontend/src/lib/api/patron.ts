@@ -9,7 +9,7 @@ import type {
 } from '@/lib/types/types'
 
 export async function getRatedApplications(): Promise<PatronRating[]> {
-  const res = await fetch(`${VITE_PUBLIC_API}/patron/me/rated-applications/`, {
+  const res = await fetch(`${VITE_PUBLIC_API}/patron/me/rated-applications`, {
     method: 'GET',
     headers: {
       'Content-Type': 'application/json'
@@ -21,7 +21,7 @@ export async function getRatedApplications(): Promise<PatronRating[]> {
 }
 
 export async function getAllApplications(): Promise<Application[]> {
-  const res = await fetch(`${VITE_PUBLIC_API}/patron/applications/`, {
+  const res = await fetch(`${VITE_PUBLIC_API}/patron/applications`, {
     method: 'GET',
     headers: {
       'Content-Type': 'application/json'
@@ -44,7 +44,7 @@ export async function rateApplication(
   params.append('rate', rate.toString())
 
   const res = await fetch(
-    `${VITE_PUBLIC_API}/patron/rate-application/${application_id}/?${params.toString()}`,
+    `${VITE_PUBLIC_API}/patron/rate-application/${application_id}?${params.toString()}`,
     {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
