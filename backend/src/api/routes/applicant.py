@@ -7,8 +7,8 @@ from sqlalchemy.orm import Session
 
 from src.api.forms import SubmitForm
 from src.config import settings
-from src.db.models import Application
-from src.dependencies import get_db_session
+from src.db.models import Application, TimeWindow
+from src.dependencies import get_current_timewindow, get_db_session
 from src.schemas import ApplicationResponse
 
 router = APIRouter(
@@ -23,10 +23,13 @@ async def submit_application_route(
     request: Request,
     form: Annotated[SubmitForm, Form(media_type="multipart/form-data")],
     session: Session = Depends(get_db_session),
+    timewindow: TimeWindow | None = Depends(get_current_timewindow),
 ) -> ApplicationResponse:
     """
     Submit an application or update an existing one (if the email is the same)
     """
+    if timewindow is None:
+        raise HTTPException(status_code=400, detail="Submission is currently closed")
 
     # check if application with such email already exists
     existing = session.query(Application).filter(Application.email == form.email).first()
@@ -89,6 +92,7 @@ async def submit_application_route(
             motivational_letter=on_fs_filenames["motivational-letter.pdf"],
             recommendation_letter=on_fs_filenames["recommendation-letter.pdf"],
             almost_a_student=on_fs_filenames["almost-a-student.pdf"],
+            timewindow_id=timewindow.id,
         )
         session.add(application)
     else:

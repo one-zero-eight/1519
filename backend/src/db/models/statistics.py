@@ -39,6 +39,6 @@ class PatronDailyStats(Base):
         nullable=False,
     )
 
-    patron: Mapped["Patron"] = relationship(
+    patron: Mapped[Patron] = relationship(
         "Patron", back_populates="daily_stats", lazy="joined"
     )

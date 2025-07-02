@@ -2,8 +2,8 @@ from __future__ import annotations
 
 import datetime
 
-from src.schemas.pydantic_base import BaseSchema
 from src.schemas.applicant import ApplicationResponse
+from src.schemas.pydantic_base import BaseSchema
 
 
 class ApplicationRankingStats(BaseSchema):

@@ -9,7 +9,7 @@ from src.db import Base
 
 if TYPE_CHECKING:
     from src.db.models.applicant import Application
-    from src.db.models.rating import PatronRateApplication, PatronRanking
+    from src.db.models.rating import PatronRanking, PatronRateApplication
     from src.db.models.statistics import PatronDailyStats
 
 
@@ -24,27 +24,27 @@ class Patron(Base):
     is_admin: Mapped[bool] = mapped_column(default=False)
     "Is the patron an admin"
 
-    ratings: Mapped[list["PatronRateApplication"]] = relationship(
+    ratings: Mapped[list[PatronRateApplication]] = relationship(
         "PatronRateApplication",
         back_populates="patron",
         cascade="all, delete-orphan",
         lazy="selectin",
     )
-    rankings: Mapped[list["PatronRanking"]] = relationship(
+    rankings: Mapped[list[PatronRanking]] = relationship(
         "PatronRanking",
         back_populates="patron",
         cascade="all, delete-orphan",
         lazy="selectin",
     )
 
-    rated_applications: Mapped[list["Application"]] = relationship(
+    rated_applications: Mapped[list[Application]] = relationship(
         "Application",
         secondary="patron_x_application",
         viewonly=True,
         lazy="selectin",
         overlaps="ratings,application",
     )
-    ranked_applications: Mapped[list["Application"]] = relationship(
+    ranked_applications: Mapped[list[Application]] = relationship(
         "Application",
         secondary="patron_ranking",
         viewonly=True,
@@ -52,7 +52,7 @@ class Patron(Base):
         overlaps="rankings,application",
     )
 
-    daily_stats: Mapped[list["PatronDailyStats"]] = relationship(
+    daily_stats: Mapped[list[PatronDailyStats]] = relationship(
         "PatronDailyStats",
         back_populates="patron",
         cascade="all, delete-orphan",

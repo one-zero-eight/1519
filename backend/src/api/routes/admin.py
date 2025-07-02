@@ -9,12 +9,13 @@ from sqlalchemy import func
 from sqlalchemy.orm import Session
 
 from src.config import settings
-from src.db.models import Application, Patron, PatronDailyStats, PatronRanking, PatronRateApplication
+from src.db.models import Application, Patron, PatronDailyStats, PatronRanking, PatronRateApplication, TimeWindow
 from src.dependencies import admin_auth, get_db_session
 from src.schemas import (
     AddPatronRequest,
     ApplicationRankingStats,
     ApplicationResponse,
+    CreateTimeWindowRequest,
     DailyApplicationStats,
     DailyPatronStats,
     OverallStats,
@@ -23,6 +24,7 @@ from src.schemas import (
     PatronResponse,
     PatronStats,
     PatronWithRatingsAndRankings,
+    TimeWindowResponse,
 )
 
 router = APIRouter(
@@ -326,7 +328,11 @@ def get_patron_stats_route(
         for row in activity_query
     ]
 
-    stats = PatronStats(patron_id=patron.id, total_ratings=total_ratings, activity_by_day=activity_by_day)
+    stats = PatronStats(
+        patron_id=patron.id,
+        total_ratings=total_ratings,
+        activity_by_day=activity_by_day
+    )
 
     return PatronStats.model_validate(stats, from_attributes=True)
 
@@ -344,6 +350,9 @@ def promote_patron(
     if admin.telegram_id != settings.superadmin_telegram_id:
         raise HTTPException(status_code=403, detail="Only superadmin can promote patrons")
 
+    if admin.telegram_id == patron_telegram_id:
+        raise HTTPException(status_code=403, detail="Cannot change your own admin status")
+
     patron = session.query(Patron).filter(Patron.telegram_id == patron_telegram_id).first()
     if patron is None:
         raise HTTPException(status_code=404, detail="Patron not found")
@@ -351,3 +360,23 @@ def promote_patron(
     patron.is_admin = is_admin
     session.commit()
     return PatronResponse.model_validate(patron, from_attributes=True)
+
+
+@router.post("/create-timewindow", status_code=status.HTTP_201_CREATED)
+def create_timewindow_route(
+    data: CreateTimeWindowRequest,
+    _: Patron = Depends(admin_auth),
+    session: Session = Depends(get_db_session),
+) -> TimeWindowResponse:
+    """
+    Create timewindow during which applications can be sent
+    """
+
+    new_timewindow = TimeWindow(
+        title=data.title,
+        start=data.start,
+        end=data.end,
+    )
+    session.add(new_timewindow)
+    session.commit()
+    return TimeWindowResponse.model_validate(new_timewindow, from_attributes=True)
