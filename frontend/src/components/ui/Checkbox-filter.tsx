@@ -25,16 +25,21 @@ function CheckboxFilter({ options, onChange }: CheckboxFilterProps) {
           display: 'flex',
           flexDirection: 'row',
           alignItems: 'center',
-          justifyContent: 'space-between',
+          justifyContent: 'space-around',
           width: '100%',
-          ml: '1rem'
+          flexWrap: 'wrap',
+          gap: 1
         }}
       >
         {options.map((option) => (
           <FormControlLabel
-            className={`flex items-center justify-center rounded-xl pl-2 pr-2`}
             sx={{
-              bgcolor: option.color
+              bgcolor: option.color,
+              borderRadius: 2,
+              px: 1,
+              py: 0.5,
+              m: 0,
+              minWidth: 'auto'
             }}
             key={option.name}
             control={
@@ -46,11 +51,12 @@ function CheckboxFilter({ options, onChange }: CheckboxFilterProps) {
                   '&.MuiSvgIcon-root': { fontSize: 28 },
                   '&.Mui-checked': {
                     color: 'white'
-                  }
+                  },
+                  p: 0.5
                 }}
               />
             }
-            label={<SvgIcon>{option.icon}</SvgIcon>}
+            label={<SvgIcon sx={{ fontSize: 20 }}>{option.icon}</SvgIcon>}
           />
         ))}
       </FormGroup>

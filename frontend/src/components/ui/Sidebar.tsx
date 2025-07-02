@@ -5,7 +5,7 @@ import { PatronResponse, StudentListItem } from '@/lib/types/types'
 import ClearIcon from '@mui/icons-material/Clear'
 import DoneOutlineIcon from '@mui/icons-material/DoneOutline'
 import QuestionMarkIcon from '@mui/icons-material/QuestionMark'
-import { Stack } from '@mui/material'
+import { Box, Stack } from '@mui/material'
 import { Link } from '@tanstack/react-router'
 import { useEffect, useMemo, useState } from 'react'
 
@@ -42,7 +42,16 @@ function Sidebar({ items, onSelected, selectedId }: SidebarProps) {
   }, [])
 
   return (
-    <aside className="order-1 min-h-full min-w-80 bg-gray-700 p-4 text-white">
+    <Box
+      sx={{
+        minHeight: '100%',
+        bgcolor: '#374151',
+        p: 2,
+        color: 'white',
+        overflow: 'auto',
+        width: '100%'
+      }}
+    >
       <CheckboxFilter
         options={[
           { icon: <ClearIcon />, name: -1, color: '#c10007' },
@@ -51,42 +60,74 @@ function Sidebar({ items, onSelected, selectedId }: SidebarProps) {
         ]}
         onChange={handleFilterChange}
       />
-      <hr className="mt-4 font-bold text-white" />
-      <h4 className="mb-1 mt-3 w-full text-center text-3xl font-normal">Student list</h4>
+      <hr style={{ marginTop: 16, marginBottom: 16, borderColor: 'white', fontWeight: 'bold' }} />
+      <h4
+        style={{
+          marginBottom: 4,
+          marginTop: 12,
+          width: '100%',
+          textAlign: 'center',
+          fontSize: '1.875rem',
+          fontWeight: 'normal'
+        }}
+      >
+        Student list
+      </h4>
       <Stack
-        className="mt-4"
-        direction="column"
-        spacing={2}
         sx={{
+          mt: 2,
           display: 'flex',
           flexDirection: 'column',
           alignItems: 'center',
-          justifyContent: 'center'
+          justifyContent: 'center',
+          gap: 2
         }}
       >
         {filteredItems.map((item) => (
-          <div
+          <Box
             key={item.application_id}
-            className={`box-border flex w-full flex-row items-start rounded-xl border-2 bg-gray-600 py-2 ${item.application_id === selectedId ? `border-4` : ''} ${item.rate === 0 ? `border-[#d08700]` : item.rate === 1 ? `border-[#5ea500]` : item.rate === -1 ? `border-[#c10007]` : 'border-gray-500'}`}
+            sx={{
+              boxSizing: 'border-box',
+              display: 'flex',
+              width: '100%',
+              flexDirection: 'row',
+              alignItems: 'flex-start',
+              borderRadius: 2,
+              border: item.application_id === selectedId ? 4 : 2,
+              borderColor:
+                item.rate === 0
+                  ? '#d08700'
+                  : item.rate === 1
+                    ? '#5ea500'
+                    : item.rate === -1
+                      ? '#c10007'
+                      : '#6b7280',
+              bgcolor: '#4b5563',
+              py: 1,
+              cursor: 'pointer',
+              '&:hover': {
+                bgcolor: '#5a6268'
+              }
+            }}
             onClick={() => handlePickStudent(item)}
           >
-            <span className="ml-8">{item.full_name}</span>
-          </div>
+            <span style={{ marginLeft: 32 }}>{item.full_name}</span>
+          </Box>
         ))}
       </Stack>
 
-      <section className="flex flex-col gap-4">
-        <hr className="my-4 font-bold text-white" />
-        <Link to="/patron/ranking">
-          <InnoButton className="w-full">Rank students</InnoButton>
+      <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2, mt: 2 }}>
+        <hr style={{ margin: '16px 0', borderColor: 'white', fontWeight: 'bold' }} />
+        <Link to="/patron/ranking" style={{ textDecoration: 'none' }}>
+          <InnoButton sx={{ width: '100%' }}>Rank students</InnoButton>
         </Link>
         {user?.is_admin && (
-          <Link to="/patron/admin-ranking">
-            <InnoButton className="w-full">See total ranking</InnoButton>
+          <Link to="/patron/admin-ranking" style={{ textDecoration: 'none' }}>
+            <InnoButton sx={{ width: '100%' }}>See total ranking</InnoButton>
           </Link>
         )}
-      </section>
-    </aside>
+      </Box>
+    </Box>
   )
 }
 
