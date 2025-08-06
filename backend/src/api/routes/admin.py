@@ -382,3 +382,27 @@ def create_timewindow_route(
     session.add(new_timewindow)
     session.commit()
     return TimeWindowResponse.model_validate(new_timewindow, from_attributes=True)
+
+
+@router.get("/timewindows")
+def get_timewindows(
+    _: Patron = Depends(admin_auth),
+    session: Session = Depends(get_db_session),
+) -> list[TimeWindowResponse]:
+    timewindows = session.query(TimeWindow).all()
+    return [TimeWindowResponse.model_validate(tw, from_attributes=True) for tw in timewindows]
+
+
+@router.delete("/timewindows/{timewindow_id}")
+def delete_timewindow(
+    timewindow_id: str,
+    _: Patron = Depends(admin_auth),
+    session: Session = Depends(get_db_session),
+):
+    timewindow = session.query(TimeWindow).get(timewindow_id)
+    if not timewindow:
+        raise HTTPException(status_code=404, detail="Timewindow not found")
+
+    session.delete(timewindow)
+    session.commit()
+    return {"status": "success", "message": f"Timewindow with ID {timewindow_id} has been deleted"}
