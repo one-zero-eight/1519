@@ -25,7 +25,7 @@ class Application(Base):
     session_id: Mapped[str] = mapped_column()
     "Session ID of user who created the application"
 
-    email: Mapped[str] = mapped_column(unique=True, index=True)
+    email: Mapped[str] = mapped_column(index=True)
     "Innopolis email of the participant"
     full_name: Mapped[str]
     "Full name of the participant"
@@ -44,6 +44,7 @@ class Application(Base):
     timewindow_id: Mapped[int] = mapped_column(
         ForeignKey("timewindows.id", ondelete="CASCADE"),
         nullable=False,
+        index=True,
     )
     "ID of Timewindow application belongs to"
 

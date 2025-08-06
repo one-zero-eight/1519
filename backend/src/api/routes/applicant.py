@@ -32,16 +32,28 @@ async def submit_application_route(
         raise HTTPException(status_code=400, detail="Submission is currently closed")
 
     # check if application with such email already exists
-    existing = session.query(Application).filter(Application.email == form.email).first()
+    existing = (
+        session.query(Application)
+        .filter(
+            Application.email == form.email,
+            Application.timewindow_id == timewindow.id,
+        )
+        .first()
+    )
     if existing is not None and existing.session_id != request.session.get("session_id"):
-        raise HTTPException(400, f"Application with email {form.email} already exists and belongs to another user")
+        raise HTTPException(400, f"Application with email {form.email} already exists in this timewindow and belongs to another user")
 
     # check if applicant has already submitted an application
-    application_same_sessions = (
-        session.query(Application).filter(Application.session_id == request.session.get("session_id")).count()
+    application_same_sessions_and_tw = (
+        session.query(Application)
+        .filter(
+            Application.session_id == request.session.get("session_id"),
+            Application.timewindow_id == timewindow.id,
+        )
+        .count()
     )
-    if (application_same_sessions >= 1 and existing is None) or application_same_sessions > 1:
-        raise HTTPException(400, "You have already submitted an application")
+    if (application_same_sessions_and_tw >= 1 and existing is None) or application_same_sessions_and_tw > 1:
+        raise HTTPException(400, "You have already submitted an application for this timewindow")
 
     if form.cv_file is None or form.transcript_file is None or form.motivational_letter_file is None:
         raise HTTPException(status_code=400, detail="CV, transcript, and motivational letter files are required")
