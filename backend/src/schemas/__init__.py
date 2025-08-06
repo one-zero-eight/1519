@@ -5,6 +5,7 @@ from src.schemas.rating import (
     Docs,
     PatronRankingResponse,
     PatronRateApplicationResponse,
+    Rating,
 )
 from src.schemas.statistics import (
     ApplicationRankingStats,
@@ -30,4 +31,5 @@ __all__ = [
     "PatronStats",
     "CreateTimeWindowRequest",
     "TimeWindowResponse",
+    "Rating"
 ]

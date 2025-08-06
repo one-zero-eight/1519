@@ -7,6 +7,7 @@ from sqlalchemy import JSON, ForeignKey, func
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 
 from src.db import Base
+from src.schemas.rating import Rating
 
 if TYPE_CHECKING:
     from src.db.models.applicant import Application
@@ -26,7 +27,7 @@ class PatronRateApplication(Base):
     )  # who was rated
     docs: Mapped[dict] = mapped_column(JSON, default={})
     "Comments and seen flags for documents"
-    rate: Mapped[int] = mapped_column(default=0)
+    rate: Mapped[Rating] = mapped_column(default=Rating.UNRATED)
     "Rating of the participant: -1, 0, 1"
     comment: Mapped[str] = mapped_column(default="")
     "Comment about the participant"

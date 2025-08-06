@@ -6,7 +6,14 @@ from sqlalchemy.orm import Session
 
 from src.db.models import Application, Patron, PatronDailyStats, PatronRanking, PatronRateApplication, TimeWindow
 from src.dependencies import get_current_timewindow, get_db_session, patron_auth
-from src.schemas import ApplicationResponse, Docs, PatronRankingResponse, PatronRateApplicationResponse, PatronResponse
+from src.schemas import (
+    ApplicationResponse,
+    Docs,
+    PatronRankingResponse,
+    PatronRateApplicationResponse,
+    PatronResponse,
+    Rating,
+)
 
 router = APIRouter(
     prefix="/patron",
@@ -85,7 +92,7 @@ def rate_application_route(
     application_id: int,
     comment: str = "",
     docs: Docs = Docs(),
-    rate: int = 0,
+    rate: Rating = Rating.UNRATED,
     patron: Patron = Depends(patron_auth),
     session: Session = Depends(get_db_session),
 ) -> PatronRateApplicationResponse:

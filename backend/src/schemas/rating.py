@@ -1,5 +1,7 @@
 from __future__ import annotations
 
+from enum import StrEnum
+
 from src.schemas.applicant import ApplicationResponse
 from src.schemas.pydantic_base import BaseSchema
 
@@ -25,6 +27,13 @@ class Docs(BaseSchema):
     almost_a_student_seen: bool = False
 
 
+class Rating(StrEnum):
+    POSITIVE = "positive"
+    NEGATIVE = "negative"
+    NEUTRAL = "neutral"
+    UNRATED = "unrated"
+
+
 class PatronRateApplicationResponse(BaseSchema):
     patron_id: int
     "ID of the patron who rated"
@@ -34,7 +43,7 @@ class PatronRateApplicationResponse(BaseSchema):
     "Comment for whole application"
     docs: Docs = Docs()
     "Per-document comments/flags"
-    rate: int
+    rate: Rating = Rating.UNRATED
     "Rating value"
 
 

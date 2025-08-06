@@ -24,6 +24,7 @@ from src.schemas import (
     PatronResponse,
     PatronStats,
     PatronWithRatingsAndRankings,
+    Rating,
     TimeWindowResponse,
 )
 
@@ -132,10 +133,11 @@ def get_applications_ranking(
             rrf_score = sum(1 / (rrf_const + ranking.rank + 1) for ranking in rankings)
 
         votes = session.query(PatronRateApplication).filter(PatronRateApplication.application_id == application.id).all()
-        positive_votes = sum(1 for v in votes if v.rate == 1)
-        negative_votes = sum(1 for v in votes if v.rate == -1)
-        neutral_votes = sum(1 for v in votes if v.rate == 0)
-        total_votes = len(votes)
+        positive_votes = sum(1 for v in votes if v.rate == Rating.POSITIVE)
+        negative_votes = sum(1 for v in votes if v.rate == Rating.NEGATIVE)
+        neutral_votes = sum(1 for v in votes if v.rate == Rating.NEUTRAL)
+        unrated = sum(1 for v in votes if v.rate == Rating.UNRATED)
+        total_votes = len(votes) - unrated
 
         result.append(
             ApplicationRankingStats(
@@ -173,9 +175,9 @@ def export_applications(
             rrf_score = sum(1 / (rrf_const + ranking.rank + 1) for ranking in rankings)
 
         votes = session.query(PatronRateApplication).filter(PatronRateApplication.application_id == application.id).all()
-        positive_votes = sum(1 for v in votes if v.rate == 1)
-        negative_votes = sum(1 for v in votes if v.rate == -1)
-        neutral_votes = sum(1 for v in votes if v.rate == 0)
+        positive_votes = sum(1 for v in votes if v.rate == Rating.POSITIVE)
+        negative_votes = sum(1 for v in votes if v.rate == Rating.NEGATIVE)
+        neutral_votes = sum(1 for v in votes if v.rate == Rating.NEUTRAL)
 
         applicants_data.append(
             {
