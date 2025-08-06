@@ -373,6 +373,13 @@ def create_timewindow_route(
     """
     Create timewindow during which applications can be sent
     """
+    overlapping = session.query(TimeWindow).filter(
+        TimeWindow.start <= data.end,
+        TimeWindow.end >= data.start
+    ).first()
+
+    if overlapping:
+        raise HTTPException(status_code=400, detail=f"New time window overlaps with existing one ({overlapping.title}, start: {overlapping.start}, end: {overlapping.end})")
 
     new_timewindow = TimeWindow(
         title=data.title,
