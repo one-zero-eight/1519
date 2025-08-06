@@ -17,7 +17,7 @@ class Patron(Base):
     __tablename__ = "patron"
 
     id: Mapped[int] = mapped_column(primary_key=True, autoincrement=True)
-    telegram_id: Mapped[str] = mapped_column(unique=True)
+    telegram_id: Mapped[str] = mapped_column(unique=True, index=True)
     "Telegram ID of the patron"
     telegram_data: Mapped[dict] = mapped_column(JSON, server_default="{}")
     "Data from Telegram Login Widget"

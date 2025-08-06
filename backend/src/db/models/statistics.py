@@ -29,6 +29,7 @@ class PatronDailyStats(Base):
         ForeignKey("patron.id", ondelete="CASCADE"),
         primary_key=True,
         nullable=False,
+        index=True,
     )
     rating_count: Mapped[int] = mapped_column(
         default=0,
