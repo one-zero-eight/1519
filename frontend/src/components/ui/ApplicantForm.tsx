@@ -142,7 +142,7 @@ export default function ApplicantForm({ onSuccess, initialValues }: ApplicantFor
       className="mx-auto w-full max-w-xs sm:max-w-2xl space-y-6 px-2 sm:px-0"
     >
       {error && (
-        <Alert severity="error" className="mb-4 text-sm sm:text-base">
+        <Alert severity="error" className="mb-10 text-sm sm:text-base">
           {error}
         </Alert>
       )}

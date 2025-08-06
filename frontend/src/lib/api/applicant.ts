@@ -41,8 +41,8 @@ export async function submitApplication(formData: SubmitFormData): Promise<Appli
   })
 
   if (!res.ok) {
-    const text = await res.text()
-    throw new Error(`Ошибка: ${res.status} ${text}`)
+    const errorDetail = await res.json()
+    throw new Error(errorDetail.detail)
   }
 
   return res.json()
@@ -61,8 +61,8 @@ export async function getMyApplication(): Promise<Application> {
     if (res.status === 404) {
       throw new Error('Application not found')
     }
-    const text = await res.text()
-    throw new Error(`Ошибка: ${res.status} ${text}`)
+    const errorDetail = await res.json()
+    throw new Error(errorDetail.detail)
   }
 
   return res.json()
