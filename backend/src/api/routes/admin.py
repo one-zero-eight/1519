@@ -305,7 +305,7 @@ def get_statistics(
 
 @router.get("/patron-stats/{telegram_id}")
 def get_patron_stats_route(
-    telegram_id: int,
+    telegram_id: str,
     _: Patron = Depends(admin_auth),
     session: Session = Depends(get_db_session),
     days: int = Query(30, description="Number of days to include in the activity charts"),
@@ -341,7 +341,7 @@ def get_patron_stats_route(
 
 @router.put("/promote")
 def promote_patron(
-    patron_telegram_id: int,
+    patron_telegram_id: str,
     is_admin: bool,
     admin: Patron = Depends(admin_auth),
     session: Session = Depends(get_db_session),
