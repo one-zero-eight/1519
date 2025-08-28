@@ -1,4 +1,4 @@
-import React from "react";
+import React from 'react'
 import styles from './SectionIntro.module.css'
 
 export interface SectionIntroProps extends React.HTMLAttributes<HTMLDivElement> {}

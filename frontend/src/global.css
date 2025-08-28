@@ -3,11 +3,13 @@
 @font-face {
   font-family: 'FormaDJR';
   src: url('./assets/fonts/FormaDJRCyrillicMicro-Regular.eot');
-  src: local('Forma DJR Cyrillic Micro'), local('FormaDJRCyrillicMicro-Regular'),
-      url('./assets/fonts/FormaDJRCyrillicMicro-Regular.eot?#iefix') format('embedded-opentype'),
-      url('./assets/fonts/FormaDJRCyrillicMicro-Regular.woff2') format('woff2'),
-      url('./assets/fonts/FormaDJRCyrillicMicro-Regular.woff') format('woff'),
-      url('./assets/fonts/FormaDJRCyrillicMicro-Regular.ttf') format('truetype');
+  src:
+    local('Forma DJR Cyrillic Micro'),
+    local('FormaDJRCyrillicMicro-Regular'),
+    url('./assets/fonts/FormaDJRCyrillicMicro-Regular.eot?#iefix') format('embedded-opentype'),
+    url('./assets/fonts/FormaDJRCyrillicMicro-Regular.woff2') format('woff2'),
+    url('./assets/fonts/FormaDJRCyrillicMicro-Regular.woff') format('woff'),
+    url('./assets/fonts/FormaDJRCyrillicMicro-Regular.ttf') format('truetype');
   font-weight: normal;
   font-style: normal;
   font-display: swap;
@@ -19,7 +21,8 @@
   --color-red-choice: #c10007;
   --color-yellow-choice: #d08700;
   --color-green-choice: #5ea500;
-  --font-landing: 'FormaDJR', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  --font-landing:
+    'FormaDJR', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
 }
 
 :root {
