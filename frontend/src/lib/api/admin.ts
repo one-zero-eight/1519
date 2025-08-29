@@ -100,3 +100,23 @@ export async function removePatron(patronTgId: string) {
 
   return res.json();
 }
+
+export async function promotePatron(patronTgId: string, isAdmin: boolean) {
+  const params = new URLSearchParams({
+    patron_telegram_id: patronTgId,
+    is_admin: isAdmin.toString()
+  });
+
+  const res = await fetch(`${VITE_PUBLIC_API}/admin/promote?${params}`, {
+    method: 'PUT',
+    headers: { 'Content-Type': 'application/json' },
+    credentials: 'include',
+  })
+
+  if (!res.ok) {
+    const text = await res.text()
+    throw new Error(`Ошибка: ${res.status} ${text}`)
+  }
+
+  return res.json()
+}

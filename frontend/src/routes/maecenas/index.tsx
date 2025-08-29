@@ -3,7 +3,7 @@ import {authRedirect} from "@/lib/functions/guards/authRedirect.ts";
 import InnoButton from "@/components/ui/shared/InnoButton.tsx";
 import {TextField} from "@mui/material";
 import React, {useEffect, useState} from "react";
-import {addPatron, getPatrons, removePatron} from "@/lib/api/admin.ts";
+import {addPatron, getPatrons, promotePatron, removePatron} from "@/lib/api/admin.ts";
 import {PatronFullResponse } from "@/lib/types/types.ts";
 import RemoveButton from "@/components/ui/shared/RemoveButton.tsx";
 
@@ -21,7 +21,11 @@ function RouteComponent() {
             { `@${patron.patron.telegram_data.username}` }
         </div>
         <div className="flex gap-3">
-            <InnoButton>Promote</InnoButton>
+            <InnoButton
+                onClick={() => handlePromotePatron(patron.patron.telegram_id, patron.patron.is_admin)}
+            >
+                Promote
+            </InnoButton>
             <RemoveButton
                 onClick={() => handlePatronDelete(patron.patron.telegram_id)}
             >
@@ -48,7 +52,7 @@ function RouteComponent() {
       try {
           const response = await addPatron(newPatron);
           setNewPatron('');
-          loadPatrons();
+          await loadPatrons();
       } catch (err) {
           setNewPatron('');
       }
@@ -57,7 +61,16 @@ function RouteComponent() {
   async function handlePatronDelete(patronTgId: string) {
       try {
           const response = await removePatron(patronTgId);
-          loadPatrons();
+          await loadPatrons();
+      } catch (err) {
+
+      }
+  }
+
+  async function handlePromotePatron(patronTgId: string, isAdmin: boolean) {
+      try {
+          const response = await promotePatron(patronTgId, isAdmin);
+          await loadPatrons();
       } catch (err) {
 
       }
