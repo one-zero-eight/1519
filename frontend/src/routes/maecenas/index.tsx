@@ -89,7 +89,7 @@ function RouteComponent() {
 
   async function handlePromotePatron(patronTgId: string, isAdmin: boolean) {
     try {
-      await promotePatron(patronTgId, isAdmin)
+      await promotePatron(patronTgId, !isAdmin)
       await loadPatrons()
       setError(null)
     } catch (err) {
