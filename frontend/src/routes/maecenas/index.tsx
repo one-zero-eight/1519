@@ -15,8 +15,10 @@ export const Route = createFileRoute('/maecenas/')({
 function RouteComponent() {
   const [patrons, setPatrons] = useState<PatronFullResponse[] | null>(null);
   const [newPatron, setNewPatron] = useState<string>('');
+  const [error, setError] = useState<string | null>(null);
+
   const patronsList = patrons ? patrons.map((patron) => (
-      <div key={patron.ranking.patron_id} className="flex justify-between bg-gray-50 rounded-xl p-3">
+      <div key={patron.ranking.patron_id} className="flex justify-between bg-gray-50 rounded-xl p-5">
         <div className="text-xl">
             { `@${patron.patron.telegram_data.username}` }
         </div>
@@ -43,18 +45,24 @@ function RouteComponent() {
       try {
           const patronsFetched = await getPatrons();
           setPatrons(patronsFetched);
+          setError(null);
       } catch (err) {
-          setPatrons(null)
+          setPatrons(null);
+          setError(err instanceof Error ? err.message : 'Failed to fetch patrons')
       }
   }
 
   async function handlePatronAdd() {
       try {
-          const response = await addPatron(newPatron);
-          setNewPatron('');
-          await loadPatrons();
+          if (newPatron.length > 0) {
+              const response = await addPatron(newPatron);
+              setNewPatron('');
+              await loadPatrons();
+              setError(null);
+          }
       } catch (err) {
           setNewPatron('');
+          setError(err instanceof Error ? err.message : 'Failed to add patron')
       }
   }
 
@@ -62,8 +70,9 @@ function RouteComponent() {
       try {
           const response = await removePatron(patronTgId);
           await loadPatrons();
+          setError(null);
       } catch (err) {
-
+          setError(err instanceof Error ? err.message : 'Failed to remove patron');
       }
   }
 
@@ -71,8 +80,9 @@ function RouteComponent() {
       try {
           const response = await promotePatron(patronTgId, isAdmin);
           await loadPatrons();
+          setError(null);
       } catch (err) {
-
+          setError(err instanceof Error ? err.message : 'Failed to promote patron');
       }
   }
 
@@ -110,6 +120,7 @@ function RouteComponent() {
                     }}
                 />
                 <InnoButton onClick={handlePatronAdd}>Add patron</InnoButton>
+                {error && (<div className="text-red-500 font-bold my-3">{error}</div>)}
             </div>
           <h2 className="text-xl font-semibold mb-5">
               Patrons list
