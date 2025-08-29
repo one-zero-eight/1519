@@ -54,11 +54,14 @@ function RouteComponent() {
 
   async function handlePatronAdd() {
       try {
-          if (newPatron.length > 0) {
+          if (newPatron.length > 0 && !Number.isNaN(Number.parseInt(newPatron))) {
               const response = await addPatron(newPatron);
               setNewPatron('');
               await loadPatrons();
               setError(null);
+          }
+          else {
+              setError('Invalid Telegram ID')
           }
       } catch (err) {
           setNewPatron('');
