@@ -71,7 +71,7 @@ export interface TelegramUser {
 
 export interface PatronResponse {
   telegram_id: string
-  telegram_data: {}
+  telegram_data: TelegramUser
   is_admin: boolean
 }
 
@@ -87,4 +87,10 @@ export interface ApplicationRankingStats {
 export interface PatronRankingResponse {
   patron_id: number
   applications: Application[]
+}
+
+export interface PatronFullResponse {
+  patron: PatronResponse
+  ratings: PatronRating[]
+  ranking: PatronRankingResponse
 }

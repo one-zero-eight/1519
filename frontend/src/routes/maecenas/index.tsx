@@ -2,7 +2,10 @@ import { createFileRoute } from '@tanstack/react-router'
 import {authRedirect} from "@/lib/functions/guards/authRedirect.ts";
 import InnoButton from "@/components/ui/shared/InnoButton.tsx";
 import {TextField} from "@mui/material";
-import React from "react";
+import React, {useEffect, useState} from "react";
+import {addPatron, getPatrons, removePatron} from "@/lib/api/admin.ts";
+import {PatronFullResponse } from "@/lib/types/types.ts";
+import RemoveButton from "@/components/ui/shared/RemoveButton.tsx";
 
 export const Route = createFileRoute('/maecenas/')({
   beforeLoad: authRedirect,
@@ -10,17 +13,56 @@ export const Route = createFileRoute('/maecenas/')({
 })
 
 function RouteComponent() {
-  const patrons = ["first", "second", "third"].map((patron) => (
-      <div key={patron} className="flex justify-between bg-gray-50 p-3">
+  const [patrons, setPatrons] = useState<PatronFullResponse[] | null>(null);
+  const [newPatron, setNewPatron] = useState<string>('');
+  const patronsList = patrons ? patrons.map((patron) => (
+      <div key={patron.ranking.patron_id} className="flex justify-between bg-gray-50 rounded-xl p-3">
         <div className="text-xl">
-            { patron }
+            { `@${patron.patron.telegram_data.username}` }
         </div>
         <div className="flex gap-3">
-            <InnoButton>promote</InnoButton>
-            <InnoButton>remove</InnoButton>
+            <InnoButton>Promote</InnoButton>
+            <RemoveButton
+                onClick={() => handlePatronDelete(patron.patron.telegram_id)}
+            >
+                Remove
+            </RemoveButton>
         </div>
       </div>
-  ))
+  )) : <div />;
+
+    useEffect(() => {
+        loadPatrons();
+    }, []);
+
+  async function loadPatrons() {
+      try {
+          const patronsFetched = await getPatrons();
+          setPatrons(patronsFetched);
+      } catch (err) {
+          setPatrons(null)
+      }
+  }
+
+  async function handlePatronAdd() {
+      try {
+          const response = await addPatron(newPatron);
+          setNewPatron('');
+          loadPatrons();
+      } catch (err) {
+          setNewPatron('');
+      }
+  }
+
+  async function handlePatronDelete(patronTgId: string) {
+      try {
+          const response = await removePatron(patronTgId);
+          loadPatrons();
+      } catch (err) {
+
+      }
+  }
+
   return (
       <div className="flex min-h-screen flex-col items-center px-2">
         <h1 className="text-2xl sm:text-4xl font-semibold mb-8 flex lg:flex-row items-center gap-4 sm:gap-6 sm:mb-12 sm:mt-8 sm:flex-row flex-col text-center">
@@ -30,9 +72,9 @@ function RouteComponent() {
             <div className="flex flex-col items-center gap-5">
                 <TextField
                     fullWidth
-                    label="Add new patron"
-                    value=""
-                    // onChange={handleInputChange('full_name')}
+                    label="Add new patron with Telegram ID"
+                    value={newPatron}
+                    onChange={(e) => setNewPatron(e.target.value)}
                     variant="outlined"
                     size="medium"
                     sx={{
@@ -54,13 +96,13 @@ function RouteComponent() {
                         }
                     }}
                 />
-                <InnoButton>Add patron</InnoButton>
+                <InnoButton onClick={handlePatronAdd}>Add patron</InnoButton>
             </div>
           <h2 className="text-xl font-semibold mb-5">
               Patrons list
           </h2>
-            <div className="flex-col w-[60vw]">
-                {patrons}
+            <div className="flex flex-col gap-2 w-[60vw]">
+                {patronsList}
             </div>
         </main>
       </div>
