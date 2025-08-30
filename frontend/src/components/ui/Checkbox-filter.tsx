@@ -2,7 +2,7 @@ import { Checkbox, FormControlLabel, FormGroup, SvgIcon } from '@mui/material'
 import React, { useState } from 'react'
 
 interface CheckboxFilterProps {
-  options: { icon: React.ReactNode; name: number; color: string }[]
+  options: { icon: React.ReactNode; name: string; color: string }[]
   onChange: (selected: string[]) => void
 }
 
