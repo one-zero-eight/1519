@@ -19,11 +19,15 @@ import {
   useTheme
 } from '@mui/material'
 import { useQueryClient } from '@tanstack/react-query'
-import { createFileRoute } from '@tanstack/react-router'
+import { createFileRoute, useSearch } from '@tanstack/react-router'
 import { useEffect, useMemo, useState } from 'react'
+import { z } from 'zod'
 
 export const Route = createFileRoute('/patron/')({
   beforeLoad: authRedirect,
+  validateSearch: z.object({
+    selectedApplicationId: z.string().optional()
+  }),
   component: RouteComponent
 })
 
@@ -32,7 +36,14 @@ function RouteComponent() {
   const [applications, setApplications] = useState<Application[]>([])
   const [ratedApplications, setRatedApplications] = useState<PatronApplication[]>([])
 
-  const [selectedApplicationId, setSelectedApplicationId] = useState<number | null>(null)
+  const search = useSearch({ from: '/patron/' })
+  const initialSelectedId = search.selectedApplicationId
+    ? Number(search.selectedApplicationId)
+    : null
+
+  const [selectedApplicationId, setSelectedApplicationId] = useState<number | null>(
+    initialSelectedId
+  )
   const [selectedDoc, setSelectedDoc] = useState<keyof typeof FieldNames | null>(null)
 
   // --- Drawer state for mobile ---
@@ -66,7 +77,7 @@ function RouteComponent() {
       return {
         application_id: app.id,
         full_name: app.full_name,
-        rate: rated ? rated.rate : null
+        rate: rated ? rated.rate : 'unrated'
       }
     })
   }, [applications, ratedApplications])
