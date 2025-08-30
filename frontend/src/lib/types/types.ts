@@ -1,7 +1,7 @@
 export interface PatronApplication {
   patron_id: number
   application_id: number
-  rate: -1 | 0 | 1
+  rate: "positive" | "negative" | "neutral" | "unrated"
   full_name: string
   comment?: string
   docs: Docs

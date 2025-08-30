@@ -42,7 +42,7 @@ export default function StudentDetails({
         application_id: application.id,
         patron_id: -1, // This will be set on the backend, -1 is a placeholder
         full_name: application.full_name,
-        rate: 0,
+        rate: 'unrated',
         comment: '',
         docs: {
           cv_comments: '',
@@ -76,7 +76,7 @@ export default function StudentDetails({
           aria-labelledby="student-status-radio-group"
           value={edit.rate}
           onChange={(e) => {
-            const _ = { ...edit, rate: Number(e.target.value) as 1 | 0 | -1 }
+            const _ = { ...edit, rate: e.target.value as "positive" | "negative" | "neutral" | "unrated" }
             setEdit(_)
             onSave(_)
           }}
@@ -91,7 +91,7 @@ export default function StudentDetails({
           }}
         >
           <FormControlLabel
-            value={1}
+            value={'positive'}
             control={<Radio sx={{ color: '#5ea500', '&.Mui-checked': { color: '#5ea500' } }} />}
             label={
               <SvgIcon>
@@ -101,7 +101,7 @@ export default function StudentDetails({
             sx={{ mx: 1 }}
           />
           <FormControlLabel
-            value={-1}
+            value={'negative'}
             control={<Radio sx={{ color: '#c10007', '&.Mui-checked': { color: '#c10007' } }} />}
             label={
               <SvgIcon>
@@ -111,7 +111,7 @@ export default function StudentDetails({
             sx={{ mx: 1 }}
           />
           <FormControlLabel
-            value={0}
+            value={'neutral'}
             control={<Radio sx={{ color: '#d08700', '&.Mui-checked': { color: '#d08700' } }} />}
             label={
               <SvgIcon>
