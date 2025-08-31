@@ -21,12 +21,12 @@ import {
 import { useQueryClient } from '@tanstack/react-query'
 import { createFileRoute, useSearch } from '@tanstack/react-router'
 import { useEffect, useMemo, useState } from 'react'
-import { z } from 'zod'
 
 export const Route = createFileRoute('/patron/')({
   beforeLoad: authRedirect,
-  validateSearch: z.object({
-    selectedApplicationId: z.string().optional()
+  validateSearch: (search) => ({
+    selectedApplicationId:
+      typeof search.selectedApplicationId === 'string' ? search.selectedApplicationId : undefined
   }),
   component: RouteComponent
 })
