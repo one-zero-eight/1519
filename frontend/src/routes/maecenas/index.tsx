@@ -1,14 +1,14 @@
 import InnoButton from '@/components/ui/shared/InnoButton.tsx'
 import RemoveButton from '@/components/ui/shared/RemoveButton.tsx'
 import { addPatron, getPatrons, promotePatron, removePatron } from '@/lib/api/admin.ts'
-import { authRedirect } from '@/lib/functions/guards/authRedirect.ts'
+import { isAdminRedirect } from '@/lib/functions/guards/authRedirect.ts'
 import { PatronFullResponse } from '@/lib/types/types.ts'
 import { TextField } from '@mui/material'
 import { createFileRoute } from '@tanstack/react-router'
 import { useEffect, useState } from 'react'
 
 export const Route = createFileRoute('/maecenas/')({
-  beforeLoad: authRedirect,
+  beforeLoad: isAdminRedirect,
   component: RouteComponent
 })
 
