@@ -147,7 +147,8 @@ function RouteComponent() {
     queryClient.invalidateQueries({ queryKey: patronQueryKeys.allApplications })
     queryClient.invalidateQueries({ queryKey: patronQueryKeys.ranking })
 
-    navigate({ to: '/patron' })
+    // TODO: урбать selectedApplicationId: undefined
+    navigate({ to: '/patron', search: { selectedApplicationId: undefined } })
   }
 
   // Manual save function (for immediate save)

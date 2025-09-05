@@ -26,7 +26,7 @@ function Sidebar({ items, onSelected, selectedId }: SidebarProps) {
   const filteredItems = useMemo(() => {
     if (selectedFilters.length === 0) return items
 
-    return items.filter((item) => selectedFilters.includes(String(item.rate)))
+    return items.filter((item) => selectedFilters.includes(item.rate))
   }, [items, selectedFilters])
 
   const handlePickStudent = (item: StudentListItem) => {
@@ -54,9 +54,9 @@ function Sidebar({ items, onSelected, selectedId }: SidebarProps) {
     >
       <CheckboxFilter
         options={[
-          { icon: <ClearIcon />, name: -1, color: '#c10007' },
-          { icon: <QuestionMarkIcon />, name: 0, color: '#d08700' },
-          { icon: <DoneOutlineIcon />, name: 1, color: '#5ea500' }
+          { icon: <ClearIcon />, name: 'negative', color: '#c10007' },
+          { icon: <QuestionMarkIcon />, name: 'neutral', color: '#d08700' },
+          { icon: <DoneOutlineIcon />, name: 'positive', color: '#5ea500' }
         ]}
         onChange={handleFilterChange}
       />
@@ -95,13 +95,13 @@ function Sidebar({ items, onSelected, selectedId }: SidebarProps) {
               borderRadius: 2,
               border: item.application_id === selectedId ? 4 : 2,
               borderColor:
-                item.rate === 0
+                item.rate === 'neutral'
                   ? '#d08700'
-                  : item.rate === 1
+                  : item.rate === 'positive'
                     ? '#5ea500'
-                    : item.rate === -1
+                    : item.rate === 'negative'
                       ? '#c10007'
-                      : '#6b7280',
+                      : '#d08700',
               bgcolor: '#4b5563',
               py: 1,
               cursor: 'pointer',
@@ -122,9 +122,15 @@ function Sidebar({ items, onSelected, selectedId }: SidebarProps) {
           <InnoButton sx={{ width: '100%' }}>Rank students</InnoButton>
         </Link>
         {user?.is_admin && (
-          <Link to="/patron/admin-ranking" style={{ textDecoration: 'none' }}>
-            <InnoButton sx={{ width: '100%' }}>See total ranking</InnoButton>
-          </Link>
+          <span>
+            <Link to="/patron/admin-ranking" style={{ textDecoration: 'none' }}>
+              <InnoButton sx={{ width: '100%' }}>See total ranking</InnoButton>
+            </Link>
+            <hr style={{ margin: '16px 0', borderColor: 'white', fontWeight: 'bold' }} />
+            <Link to="/maecenas" style={{ textDecoration: 'none' }}>
+              <InnoButton sx={{ width: '100%' }}>My patrons</InnoButton>
+            </Link>
+          </span>
         )}
       </Box>
     </Box>

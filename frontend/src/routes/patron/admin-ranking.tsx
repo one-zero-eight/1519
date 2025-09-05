@@ -1,6 +1,6 @@
 import InnoButton from '@/components/ui/shared/InnoButton'
 import { exportApplications, getRanking } from '@/lib/api/admin'
-import { authRedirect } from '@/lib/functions/guards/authRedirect.ts'
+import { isAdminRedirect } from '@/lib/functions/guards/authRedirect.ts'
 import { ApplicationRankingStats } from '@/lib/types/types'
 import {
   Alert,
@@ -19,7 +19,7 @@ import { createFileRoute, useNavigate } from '@tanstack/react-router'
 import React, { useEffect, useState } from 'react'
 
 export const Route = createFileRoute('/patron/admin-ranking')({
-  beforeLoad: authRedirect,
+  beforeLoad: isAdminRedirect,
   component: RouteComponent
 })
 
@@ -141,7 +141,14 @@ function RouteComponent() {
                 'Export to Excel'
               )}
             </InnoButton>
-            <InnoButton onClick={() => navigate({ to: '/patron' })}>Back to main page</InnoButton>
+            <InnoButton
+              // TODO: урбать selectedApplicationId: undefined
+              onClick={() =>
+                navigate({ to: '/patron', search: { selectedApplicationId: undefined } })
+              }
+            >
+              Back to main page
+            </InnoButton>
           </div>
         </Box>
 
