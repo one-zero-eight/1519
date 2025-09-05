@@ -54,9 +54,9 @@ function Sidebar({ items, onSelected, selectedId }: SidebarProps) {
     >
       <CheckboxFilter
         options={[
-          { icon: <ClearIcon />, name: "negative", color: '#c10007' },
-          { icon: <QuestionMarkIcon />, name: "neutral", color: '#d08700' },
-          { icon: <DoneOutlineIcon />, name: "positive", color: '#5ea500' }
+          { icon: <ClearIcon />, name: 'negative', color: '#c10007' },
+          { icon: <QuestionMarkIcon />, name: 'neutral', color: '#d08700' },
+          { icon: <DoneOutlineIcon />, name: 'positive', color: '#5ea500' }
         ]}
         onChange={handleFilterChange}
       />
@@ -95,11 +95,11 @@ function Sidebar({ items, onSelected, selectedId }: SidebarProps) {
               borderRadius: 2,
               border: item.application_id === selectedId ? 4 : 2,
               borderColor:
-                item.rate === "neutral"
+                item.rate === 'neutral'
                   ? '#d08700'
-                  : item.rate === "positive"
+                  : item.rate === 'positive'
                     ? '#5ea500'
-                    : item.rate === "negative"
+                    : item.rate === 'negative'
                       ? '#c10007'
                       : '#d08700',
               bgcolor: '#4b5563',
@@ -122,9 +122,15 @@ function Sidebar({ items, onSelected, selectedId }: SidebarProps) {
           <InnoButton sx={{ width: '100%' }}>Rank students</InnoButton>
         </Link>
         {user?.is_admin && (
-          <Link to="/patron/admin-ranking" style={{ textDecoration: 'none' }}>
-            <InnoButton sx={{ width: '100%' }}>See total ranking</InnoButton>
-          </Link>
+          <span>
+            <Link to="/patron/admin-ranking" style={{ textDecoration: 'none' }}>
+              <InnoButton sx={{ width: '100%' }}>See total ranking</InnoButton>
+            </Link>
+            <hr style={{ margin: '16px 0', borderColor: 'white', fontWeight: 'bold' }} />
+            <Link to="/maecenas" style={{ textDecoration: 'none' }}>
+              <InnoButton sx={{ width: '100%' }}>My patrons</InnoButton>
+            </Link>
+          </span>
         )}
       </Box>
     </Box>
