@@ -147,7 +147,8 @@ function RouteComponent() {
     queryClient.invalidateQueries({ queryKey: patronQueryKeys.allApplications })
     queryClient.invalidateQueries({ queryKey: patronQueryKeys.ranking })
 
-    navigate({ to: '/patron' })
+    // @ts-ignore
+    navigate({ to: "/patron" })
   }
 
   // Manual save function (for immediate save)

@@ -101,7 +101,7 @@ function Sidebar({ items, onSelected, selectedId }: SidebarProps) {
                     ? '#5ea500'
                     : item.rate === "negative"
                       ? '#c10007'
-                      : '#6b7280',
+                      : '#d08700',
               bgcolor: '#4b5563',
               py: 1,
               cursor: 'pointer',
