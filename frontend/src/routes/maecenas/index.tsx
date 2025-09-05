@@ -3,8 +3,8 @@ import RemoveButton from '@/components/ui/shared/RemoveButton.tsx'
 import { addPatron, getPatrons, promotePatron, removePatron } from '@/lib/api/admin.ts'
 import { isAdminRedirect } from '@/lib/functions/guards/authRedirect.ts'
 import { PatronFullResponse } from '@/lib/types/types.ts'
-import { TextField } from '@mui/material'
-import { createFileRoute } from '@tanstack/react-router'
+import { Button, TextField } from '@mui/material'
+import { createFileRoute, Link } from '@tanstack/react-router'
 import { useEffect, useState } from 'react'
 
 export const Route = createFileRoute('/maecenas/')({
@@ -131,9 +131,30 @@ function RouteComponent() {
             }}
             className="w-full sm:w-3/4 lg:w-1/2"
           />
-          <InnoButton onClick={handlePatronAdd} className="w-full sm:w-auto px-8">
-            Add patron
-          </InnoButton>
+          <div className="flex flex-row gap-4">
+            <Link
+              to="/patron"
+              // TODO: урбать selectedApplicationId: undefined
+              search={{ selectedApplicationId: undefined }}
+              style={{ textDecoration: 'none' }}
+            >
+              <Button
+                sx={{
+                  backgroundColor: '#d08700',
+                  color: 'white',
+                  '&:hover': {
+                    backgroundColor: '#d08700',
+                    opacity: 0.8
+                  }
+                }}
+              >
+                Back to main page
+              </Button>
+            </Link>
+            <InnoButton onClick={handlePatronAdd} className="w-full sm:w-auto px-8">
+              Add patron
+            </InnoButton>
+          </div>
           {error && (
             <div className="text-red-500 font-bold text-sm sm:text-base text-center my-2 sm:my-3">
               {error}
