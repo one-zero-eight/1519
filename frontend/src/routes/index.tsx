@@ -6,6 +6,7 @@ import LetterO from '@/assets/landing/letter-O.svg?react'
 import { Picture } from '@/components/landing/Picture'
 import { SectionIntro } from '@/components/landing/SectionIntro'
 import { createFileRoute } from '@tanstack/react-router'
+import { Route as ApplicantRoute } from '@/routes/applicant'
 
 import patterns1_128_png from '@/assets/landing/patterns/patterns-1_128.png'
 import patterns1_128_webp from '@/assets/landing/patterns/patterns-1_128.webp'
@@ -35,6 +36,9 @@ import patternsHero_512_webp from '@/assets/landing/patterns/patterns-hero_512.w
 export const Route = createFileRoute('/')({
   component: Index
 })
+
+const PATRON_TG_USERNAME = 'vkurenkov'
+const PATRON_MESSAGE_DRAFT = 'Привет! Хочу стать меценатом стипендии 1519.'
 
 function Index() {
   return (
@@ -91,9 +95,12 @@ function Index() {
             от выпускников
           </h3>
         </div>
-        <button className="mx-auto cursor-pointer max-w-96 w-full rounded-[100%] text-center h-[30px] flex items-center justify-center border border-black">
+        <a
+          href={ApplicantRoute.fullPath}
+          className="mx-auto cursor-pointer max-w-96 w-full rounded-[100%] text-center h-[30px] flex items-center justify-center border border-black"
+        >
           Податься
-        </button>
+        </a>
       </div>
       <section>
         <SectionIntro className="mb-8">
@@ -221,7 +228,12 @@ function Index() {
             </div>
           ))}
           <div>
-            <button className="cursor-pointer text-sm md:text-base leading-none flex flex-col items-center justify-center size-[120px] mx-auto rounded-full bg-white border border-black pb-3">
+            <a
+              href={`https://t.me/${PATRON_TG_USERNAME}?text=${encodeURIComponent(PATRON_MESSAGE_DRAFT)}`}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="cursor-pointer text-center text-sm md:text-base leading-none flex flex-col items-center justify-center size-[120px] mx-auto rounded-full bg-white border border-black pb-3"
+            >
               <Picture
                 w={128}
                 h={128}
@@ -236,10 +248,13 @@ function Index() {
                 <br />
                 меценатом
               </span>
-            </button>
+            </a>
           </div>
         </div>
-        <button className="block w-[300px] md:w-[450px] relative text-lg md:text-2xl cursor-pointer mx-auto mb-6">
+        <a
+          href={ApplicantRoute.fullPath}
+          className="block w-[300px] md:w-[450px] relative text-lg md:text-2xl cursor-pointer mx-auto mb-6"
+        >
           <Picture
             w={512}
             h={512}
@@ -250,11 +265,13 @@ function Index() {
             className="w-full h-auto"
           />
           <span className="absolute top-1/2 left-1/2 -translate-x-1/2">Податься</span>
-        </button>
+        </a>
         <p className="text-center opacity-25">
           По всем вопросам —{' '}
           <a
-            href="https://www.youtube.com/watch?v=dQw4w9WgXcQ"
+            href="https://t.me/+duU-j-Cb-cQ4Mjli"
+            target="_blank"
+            rel="noopener noreferrer"
             className="underline underline-offset-2"
           >
             сюда
