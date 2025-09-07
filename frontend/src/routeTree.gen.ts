@@ -12,6 +12,7 @@ import { Route as rootRouteImport } from './routes/__root'
 import { Route as EnRouteImport } from './routes/en'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as PatronIndexRouteImport } from './routes/patron/index'
+import { Route as MaecenasIndexRouteImport } from './routes/maecenas/index'
 import { Route as AuthIndexRouteImport } from './routes/auth/index'
 import { Route as ApplicantIndexRouteImport } from './routes/applicant/index'
 import { Route as PatronRankingRouteImport } from './routes/patron/ranking'
@@ -30,6 +31,11 @@ const IndexRoute = IndexRouteImport.update({
 const PatronIndexRoute = PatronIndexRouteImport.update({
   id: '/patron/',
   path: '/patron/',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const MaecenasIndexRoute = MaecenasIndexRouteImport.update({
+  id: '/maecenas/',
+  path: '/maecenas/',
   getParentRoute: () => rootRouteImport,
 } as any)
 const AuthIndexRoute = AuthIndexRouteImport.update({
@@ -60,6 +66,7 @@ export interface FileRoutesByFullPath {
   '/patron/ranking': typeof PatronRankingRoute
   '/applicant': typeof ApplicantIndexRoute
   '/auth': typeof AuthIndexRoute
+  '/maecenas': typeof MaecenasIndexRoute
   '/patron': typeof PatronIndexRoute
 }
 export interface FileRoutesByTo {
@@ -69,6 +76,7 @@ export interface FileRoutesByTo {
   '/patron/ranking': typeof PatronRankingRoute
   '/applicant': typeof ApplicantIndexRoute
   '/auth': typeof AuthIndexRoute
+  '/maecenas': typeof MaecenasIndexRoute
   '/patron': typeof PatronIndexRoute
 }
 export interface FileRoutesById {
@@ -79,6 +87,7 @@ export interface FileRoutesById {
   '/patron/ranking': typeof PatronRankingRoute
   '/applicant/': typeof ApplicantIndexRoute
   '/auth/': typeof AuthIndexRoute
+  '/maecenas/': typeof MaecenasIndexRoute
   '/patron/': typeof PatronIndexRoute
 }
 export interface FileRouteTypes {
@@ -90,6 +99,7 @@ export interface FileRouteTypes {
     | '/patron/ranking'
     | '/applicant'
     | '/auth'
+    | '/maecenas'
     | '/patron'
   fileRoutesByTo: FileRoutesByTo
   to:
@@ -99,6 +109,7 @@ export interface FileRouteTypes {
     | '/patron/ranking'
     | '/applicant'
     | '/auth'
+    | '/maecenas'
     | '/patron'
   id:
     | '__root__'
@@ -108,6 +119,7 @@ export interface FileRouteTypes {
     | '/patron/ranking'
     | '/applicant/'
     | '/auth/'
+    | '/maecenas/'
     | '/patron/'
   fileRoutesById: FileRoutesById
 }
@@ -118,6 +130,7 @@ export interface RootRouteChildren {
   PatronRankingRoute: typeof PatronRankingRoute
   ApplicantIndexRoute: typeof ApplicantIndexRoute
   AuthIndexRoute: typeof AuthIndexRoute
+  MaecenasIndexRoute: typeof MaecenasIndexRoute
   PatronIndexRoute: typeof PatronIndexRoute
 }
 
@@ -142,6 +155,13 @@ declare module '@tanstack/react-router' {
       path: '/patron'
       fullPath: '/patron'
       preLoaderRoute: typeof PatronIndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/maecenas/': {
+      id: '/maecenas/'
+      path: '/maecenas'
+      fullPath: '/maecenas'
+      preLoaderRoute: typeof MaecenasIndexRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/auth/': {
@@ -182,6 +202,7 @@ const rootRouteChildren: RootRouteChildren = {
   PatronRankingRoute: PatronRankingRoute,
   ApplicantIndexRoute: ApplicantIndexRoute,
   AuthIndexRoute: AuthIndexRoute,
+  MaecenasIndexRoute: MaecenasIndexRoute,
   PatronIndexRoute: PatronIndexRoute,
 }
 export const routeTree = rootRouteImport
