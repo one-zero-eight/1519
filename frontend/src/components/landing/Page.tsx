@@ -7,6 +7,7 @@ import LetterO from '@/assets/landing/letter-O.svg?react'
 import LetterP from '@/assets/landing/letter-P.svg?react'
 import { Picture } from '@/components/landing/Picture'
 import { SectionIntro } from '@/components/landing/SectionIntro'
+import { Person } from '@/components/landing/Person'
 
 import patterns1_128_png from '@/assets/landing/patterns/patterns-1_128.png'
 import patterns1_128_webp from '@/assets/landing/patterns/patterns-1_128.webp'
@@ -35,6 +36,41 @@ import patternsHero_512_webp from '@/assets/landing/patterns/patterns-hero_512.w
 import { Link } from '@tanstack/react-router'
 
 const PATRON_TG_USERNAME = 'vkurenkov'
+
+type PersonInfo = {
+  firstNameRu: string
+  lastNameRu: string
+  firstNameEn: string
+  lastNameEn: string
+  photoFilename: string
+}
+
+const ORGANIZERS: PersonInfo[] = [
+  {
+    firstNameRu: 'Владислав',
+    lastNameRu: 'Куренков',
+    firstNameEn: 'Vladislav',
+    lastNameEn: 'Kurenkov',
+    photoFilename: 'kurenkov.webp'
+  },
+  {
+    firstNameRu: 'Булат',
+    lastNameRu: 'Максудов',
+    firstNameEn: 'Bulat',
+    lastNameEn: 'Maksudov',
+    photoFilename: 'maksudov.webp'
+  },
+]
+
+const PATRONS: PersonInfo[] = [
+  {
+    firstNameRu: 'Алексей',
+    lastNameRu: 'Исхаков',
+    firstNameEn: 'Alexey',
+    lastNameEn: 'Iskhakov',
+    photoFilename: 'iskhakov.webp'
+  }
+]
 
 const TRANSLATIONS = {
   ru: {
@@ -295,19 +331,13 @@ export function Page({ lang }: PageProps) {
           </div>
         </SectionIntro>
         <div className="flex flex-wrap justify-center max-w-[calc(160px*4+24px*3)] [&>*]:w-[160px] gap-[24px] my-20 mx-auto">
-          {[1, 2, 3].map((v) => (
-            <div className="flex flex-col items-center gap-2" key={v}>
-              <img
-                src="https://placehold.co/640x360.png"
-                alt=""
-                className="bg-white size-[120px] rounded-full object-cover"
-              />
-              <p className="text-center md:text-xl">
-                <span>Бамблслав</span>
-                <br />
-                <span>Эспрессотоников</span>
-              </p>
-            </div>
+          {ORGANIZERS.map((organizer) => (
+            <Person
+              key={organizer.photoFilename}
+              photoFilename={organizer.photoFilename}
+              firstName={lang === 'ru' ? organizer.firstNameRu : organizer.firstNameEn}
+              lastName={lang === 'ru' ? organizer.lastNameRu : organizer.lastNameEn}
+            />
           ))}
         </div>
       </section>
@@ -330,19 +360,13 @@ export function Page({ lang }: PageProps) {
           </div>
         </SectionIntro>
         <div className="flex flex-wrap justify-center max-w-[calc(160px*4+24px*3)] [&>*]:w-[160px] gap-[24px] my-20 mx-auto">
-          {Array.from({ length: 11 }).map((_, v) => (
-            <div className="flex flex-col items-center gap-2" key={v}>
-              <img
-                src="https://placehold.co/640x360.png"
-                alt=""
-                className="bg-white size-[120px] rounded-full object-cover"
-              />
-              <p className="text-center md:text-xl">
-                <span>Alexey</span>
-                <br />
-                <span>Alexeev</span>
-              </p>
-            </div>
+          {PATRONS.map((patron) => (
+            <Person
+              key={patron.photoFilename}
+              photoFilename={patron.photoFilename}
+              firstName={lang === 'ru' ? patron.firstNameRu : patron.firstNameEn}
+              lastName={lang === 'ru' ? patron.lastNameRu : patron.lastNameEn}
+            />
           ))}
           <div>
             <a
