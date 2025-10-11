@@ -64,11 +64,116 @@ const ORGANIZERS: PersonInfo[] = [
 
 const PATRONS: PersonInfo[] = [
   {
+    firstNameRu: 'Владислав',
+    lastNameRu: 'Куренков',
+    firstNameEn: 'Vladislav',
+    lastNameEn: 'Kurenkov',
+    photoFilename: 'kurenkov.webp'
+  },
+  {
+    firstNameRu: 'Булат',
+    lastNameRu: 'Максудов',
+    firstNameEn: 'Bulat',
+    lastNameEn: 'Maksudov',
+    photoFilename: 'maksudov.webp'
+  },
+  {
+    firstNameRu: 'Никита',
+    lastNameRu: 'Алексеев',
+    firstNameEn: 'Nikita',
+    lastNameEn: 'Alekseev',
+    photoFilename: 'alekseev.webp'
+  },
+  {
+    firstNameRu: 'Юрий',
+    lastNameRu: 'Гаврилин',
+    firstNameEn: 'Yuriy',
+    lastNameEn: 'Gavrilin',
+    photoFilename: 'gavrilin.webp'
+  },
+  {
+    firstNameRu: 'Светлана',
+    lastNameRu: 'Кабирова',
+    firstNameEn: 'Svetlana',
+    lastNameEn: 'Kabirova',
+    photoFilename: 'kabirova.webp'
+  },
+  {
+    firstNameRu: 'Кевин',
+    lastNameRu: 'Ханда',
+    firstNameEn: 'Kevin',
+    lastNameEn: 'Khanda',
+    photoFilename: 'khanda.webp'
+  },
+  {
+    firstNameRu: 'Ринат',
+    lastNameRu: 'Мулахметов',
+    firstNameEn: 'Rinat',
+    lastNameEn: 'Mulakhmetov',
+    photoFilename: 'mulakhmetov.webp'
+  },
+  {
+    firstNameRu: 'Даниил',
+    lastNameRu: 'Лашин',
+    firstNameEn: 'Daniil',
+    lastNameEn: 'Lashin',
+    photoFilename: 'lashin.webp'
+  },
+  {
+    firstNameRu: 'Данил',
+    lastNameRu: 'Фронтс',
+    firstNameEn: 'Danil',
+    lastNameEn: 'Fronts',
+    photoFilename: 'fronts.webp'
+  },
+  {
     firstNameRu: 'Алексей',
-    lastNameRu: 'Исхаков',
+    lastNameRu: 'Потемкин',
     firstNameEn: 'Alexey',
-    lastNameEn: 'Iskhakov',
-    photoFilename: 'iskhakov.webp'
+    lastNameEn: 'Potemkin',
+    photoFilename: 'potemkin.webp'
+  },
+  {
+    firstNameRu: 'Антон',
+    lastNameRu: 'Зув',
+    firstNameEn: 'Anton',
+    lastNameEn: 'Zuv',
+    photoFilename: 'zuv.webp'
+  },
+  {
+    firstNameRu: 'Иван',
+    lastNameRu: 'Лягаев',
+    firstNameEn: 'Ivan',
+    lastNameEn: 'Lyagaev',
+    photoFilename: 'lyagaev.webp'
+  },
+  {
+    firstNameRu: 'София Мария Ло Чичеро',
+    lastNameRu: 'Вайна',
+    firstNameEn: 'Sofia Maria Lo Chichero',
+    lastNameEn: 'Vayna',
+    photoFilename: 'vayna.webp'
+  },
+  {
+    firstNameRu: 'Дмитрий',
+    lastNameRu: 'Десяткин',
+    firstNameEn: 'Dmitriy',
+    lastNameEn: 'Desyatkin',
+    photoFilename: 'desyatkin.webp'
+  },
+  {
+    firstNameRu: 'Мадина',
+    lastNameRu: 'Гафарова',
+    firstNameEn: 'Madina',
+    lastNameEn: 'Gafarova',
+    photoFilename: 'gafarova.webp'
+  },
+  {
+    firstNameRu: 'Сергей',
+    lastNameRu: 'Малюткин',
+    firstNameEn: 'Sergey',
+    lastNameEn: 'Malyutkin',
+    photoFilename: 'malyutkin.webp'
   }
 ]
 
