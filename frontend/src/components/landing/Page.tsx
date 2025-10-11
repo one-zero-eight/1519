@@ -135,9 +135,9 @@ const PATRONS: PersonInfo[] = [
   },
   {
     firstNameRu: 'Антон',
-    lastNameRu: 'Зув',
+    lastNameRu: 'Зуев',
     firstNameEn: 'Anton',
-    lastNameEn: 'Zuv',
+    lastNameEn: 'Zuev',
     photoFilename: 'Антон Зув.webp'
   },
   {
