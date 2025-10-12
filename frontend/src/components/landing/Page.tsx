@@ -1,5 +1,6 @@
 import Text1519 from '@/assets/landing/1519.svg?react'
-import Iu from '@/assets/landing/iu.svg?react'
+import LogoIu from '@/assets/landing/iu.svg?react'
+import Logo108 from '@/assets/landing/108.svg?react'
 import LetterC from '@/assets/landing/letter-C.svg?react'
 import LetterD from '@/assets/landing/letter-D.svg?react'
 import LetterM from '@/assets/landing/letter-M.svg?react'
@@ -237,7 +238,20 @@ const TRANSLATIONS = {
         </a>
       </>
     ),
-    PatronMessageDraft: 'Привет! Хочу стать меценатом стипендии 1519.'
+    PatronMessageDraft: 'Привет! Хочу стать меценатом стипендии 1519.',
+    MadeBy108: (
+      <>
+        Сделано в{' '}
+        <a
+          href="https://t.me/one_zero_eight"
+          target="_blank"
+          rel="noopener noreferrer"
+          className="underline underline-offset-2"
+        >
+          one-zero-eight
+        </a>
+      </>
+    )
   },
   en: {
     Scholarship: 'Scholarship',
@@ -297,7 +311,20 @@ const TRANSLATIONS = {
         </a>
       </>
     ),
-    PatronMessageDraft: 'Hi! I want to become a patron of the 1519 scholarship.'
+    PatronMessageDraft: 'Hi! I want to become a patron of the 1519 scholarship.',
+    MadeBy108: (
+      <>
+        Developed by{' '}
+        <a
+          href="https://t.me/one_zero_eight"
+          target="_blank"
+          rel="noopener noreferrer"
+          className="underline underline-offset-2"
+        >
+          one-zero-eight
+        </a>
+      </>
+    )
   }
 }
 
@@ -309,7 +336,7 @@ export function Page({ lang }: PageProps) {
   const t = TRANSLATIONS[lang]
 
   return (
-    <div className="landing font-landing w-full bg-[#f4f4f4] flex flex-col items-stretch justify-center pb-20 font-normal text-base">
+    <div className="landing font-landing w-full bg-[#f4f4f4] flex flex-col items-stretch justify-center pb-10 font-normal text-base">
       <div className="px-8 mx-auto pt-10 mb-30">
         <div className="flex items-center justify-center gap-4">
           <Link to="/" from="/" className="underline">
@@ -385,7 +412,7 @@ export function Page({ lang }: PageProps) {
         </SectionIntro>
         <div className="text-center flex flex-col items-center gap-6">
           <p className="leading-none">{t.ScholarshipAmount}</p>
-          <span className="inline-block w-2 h-2 bg-black rounded-full"></span>
+          <Dot/>
           <p className="leading-none">{t.Duration}</p>
         </div>
         <div className="text-lg md:text-2xl grid grid-cols-[1fr_auto_1fr] items-center w-fit mx-auto gap-6 md:gap-10 my-20">
@@ -404,7 +431,7 @@ export function Page({ lang }: PageProps) {
             </div>
             <div className="flex flex-col self-end">{t.DeadlineText}</div>
           </div>
-          <span className="inline-block w-2 h-2 bg-black rounded-full"></span>
+          <Dot/>
           <p className="leading-none text-center">{t.DeadlinePeriod}</p>
         </div>
         <Picture
@@ -510,7 +537,22 @@ export function Page({ lang }: PageProps) {
         </Link>
         <p className="text-center opacity-25">{t.ContactInfo}</p>
       </section>
-      <Iu className="self-center size-9 mt-40" />
+      <div className="self-center h-9 mt-20 grid grid-cols-[1fr_auto_1fr] items-center w-fit gap-6 md:gap-10">
+        <LogoIu className="w-auto h-full justify-self-end" />
+        <Dot/>
+        <Logo108 className='justify-self-start w-auto h-full' />
+      </div>
+      <p className="text-center opacity-25 mt-20">
+        <a 
+          href="https://t.me/one_zero_eight" 
+          target="_blank" rel="noopener noreferrer"
+        >{t.MadeBy108}</a>
+      </p>
     </div>
   )
+}
+
+
+function Dot() {
+  return <span className="inline-block w-2 h-2 bg-black rounded-full"/>
 }
