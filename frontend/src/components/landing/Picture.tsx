@@ -31,7 +31,7 @@ export function Picture({
         width={w}
         height={h}
         loading={eager ? 'eager' : 'lazy'}
-        className={`select-none pointer-events-none ${className}`}
+        className={`select-none pointer-events-none ${className ?? ''}`}
         {...rest}
       />
     </picture>
