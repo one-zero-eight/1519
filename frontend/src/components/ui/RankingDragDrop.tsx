@@ -18,6 +18,7 @@ interface RankingDragDropProps {
   onRankingChange: (ranked: Application[]) => void
   onViewApplication: (applicationId: number) => void
   onBackToPatron?: () => void
+  ratingMap?: Map<number, 'positive' | 'negative' | 'neutral' | 'unrated'>
 }
 
 const getRankColor = (rank: number) => {
@@ -25,12 +26,19 @@ const getRankColor = (rank: number) => {
   return 'bg-gray-50 border-gray-200'
 }
 
+const getAvailableColor = (rating: 'positive' | 'negative' | 'neutral' | 'unrated' | undefined) => {
+  if (rating === 'positive') return 'bg-green-50 border-green-300'
+  if (rating === 'neutral') return 'bg-yellow-50 border-yellow-300'
+  return 'bg-white border-gray-200'
+}
+
 const RankingDragDrop: React.FC<RankingDragDropProps> = ({
   availableApplications,
   rankedApplications,
   onRankingChange,
   onViewApplication,
-  onBackToPatron
+  onBackToPatron,
+  ratingMap
 }) => {
   // Обработка перемещения
   const onDragEnd = (result: DropResult) => {
@@ -164,31 +172,49 @@ const RankingDragDrop: React.FC<RankingDragDropProps> = ({
                       draggableId={application.id.toString()}
                       index={index}
                     >
-                      {(provided: DraggableProvided, snapshot: DraggableStateSnapshot) => (
-                        <div
-                          ref={provided.innerRef}
-                          {...provided.draggableProps}
-                          {...provided.dragHandleProps}
-                          className={`p-4 mb-3 border rounded-lg cursor-move hover:shadow-md transition-all bg-white border-gray-200 ${snapshot.isDragging ? 'shadow-lg' : ''} touch-manipulation select-none`}
-                          style={provided.draggableProps.style}
-                        >
-                          <div className="flex items-center justify-between">
-                            <div className="flex-1">
-                              <h3 className="font-medium text-gray-900">{application.full_name}</h3>
-                              <p className="text-sm text-gray-600">{application.email}</p>
-                            </div>
-                            <div className="flex gap-2 ml-4">
-                              <InnoButton
-                                onClick={() => onViewApplication(application.id)}
-                                size="small"
-                                sx={{ fontSize: '0.75rem', padding: '4px 12px' }}
-                              >
-                                View
-                              </InnoButton>
+                      {(provided: DraggableProvided, snapshot: DraggableStateSnapshot) => {
+                        const rating = ratingMap?.get(application.id)
+                        const colorClass = getAvailableColor(rating)
+                        return (
+                          <div
+                            ref={provided.innerRef}
+                            {...provided.draggableProps}
+                            {...provided.dragHandleProps}
+                            className={`p-4 mb-3 border rounded-lg cursor-move hover:shadow-md transition-all ${colorClass} ${snapshot.isDragging ? 'shadow-lg' : ''} touch-manipulation select-none`}
+                            style={provided.draggableProps.style}
+                          >
+                            <div className="flex items-center justify-between">
+                              <div className="flex-1">
+                                <div className="flex items-center mb-1">
+                                  <h3 className="font-medium text-gray-900">
+                                    {application.full_name}
+                                  </h3>
+                                  {rating === 'positive' && (
+                                    <span className="ml-2 text-xs bg-green-500 text-white px-2 py-0.5 rounded-full">
+                                      ✓ Positive
+                                    </span>
+                                  )}
+                                  {rating === 'neutral' && (
+                                    <span className="ml-2 text-xs bg-yellow-500 text-white px-2 py-0.5 rounded-full">
+                                      ? Neutral
+                                    </span>
+                                  )}
+                                </div>
+                                <p className="text-sm text-gray-600">{application.email}</p>
+                              </div>
+                              <div className="flex gap-2 ml-4">
+                                <InnoButton
+                                  onClick={() => onViewApplication(application.id)}
+                                  size="small"
+                                  sx={{ fontSize: '0.75rem', padding: '4px 12px' }}
+                                >
+                                  View
+                                </InnoButton>
+                              </div>
                             </div>
                           </div>
-                        </div>
-                      )}
+                        )
+                      }}
                     </Draggable>
                   ))
                 )}
