@@ -61,7 +61,7 @@ export async function getPatrons() {
     throw new Error(`Ошибка: ${res.status} ${text}`)
   }
 
-  return res.json();
+  return res.json()
 }
 
 export async function addPatron(patronTgId: string) {
@@ -69,7 +69,7 @@ export async function addPatron(patronTgId: string) {
     telegram_id: patronTgId,
     telegram_data: {},
     is_admin: false
-  };
+  }
 
   const res = await fetch(`${VITE_PUBLIC_API}/admin/add-patron`, {
     method: 'POST',
@@ -83,14 +83,14 @@ export async function addPatron(patronTgId: string) {
     throw new Error(`Ошибка: ${res.status} ${text}`)
   }
 
-  return res.json();
+  return res.json()
 }
 
 export async function removePatron(patronTgId: string) {
   const res = await fetch(`${VITE_PUBLIC_API}/admin/delete-patron/${patronTgId}`, {
     method: 'DELETE',
     headers: { 'Content-Type': 'application/json' },
-    credentials: 'include',
+    credentials: 'include'
   })
 
   if (!res.ok) {
@@ -98,19 +98,19 @@ export async function removePatron(patronTgId: string) {
     throw new Error(`Ошибка: ${res.status} ${text}`)
   }
 
-  return res.json();
+  return res.json()
 }
 
 export async function promotePatron(patronTgId: string, isAdmin: boolean) {
   const params = new URLSearchParams({
     patron_telegram_id: patronTgId,
     is_admin: isAdmin.toString()
-  });
+  })
 
   const res = await fetch(`${VITE_PUBLIC_API}/admin/promote?${params}`, {
     method: 'PUT',
     headers: { 'Content-Type': 'application/json' },
-    credentials: 'include',
+    credentials: 'include'
   })
 
   if (!res.ok) {

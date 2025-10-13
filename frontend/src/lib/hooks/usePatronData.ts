@@ -72,7 +72,7 @@ export const usePositivelyRatedApplications = () => {
 
   // Filter applications that are rated positively (green or yellow, excluding red with rate -1)
   const positivelyRatedApplications = ratedApplications
-    .filter((rating) => rating.rate !== "negative") // Exclude red ratings (rate = -1)
+    .filter((rating) => rating.rate !== 'negative') // Exclude red ratings (rate = -1)
     .map((rating) => applicationMap.get(rating.application_id))
     .filter((app): app is Application => app !== undefined)
 
@@ -89,7 +89,9 @@ export const useAvailableApplications = (rankedApplications: Application[]) => {
 
   // Create a set of application IDs that have negative ratings (rate = -1)
   const negativeRatedIds = new Set(
-    ratedApplications.filter((rating) => rating.rate === "negative").map((rating) => rating.application_id)
+    ratedApplications
+      .filter((rating) => rating.rate === 'negative')
+      .map((rating) => rating.application_id)
   )
 
   // Filter out applications that are negatively rated from both available and ranked

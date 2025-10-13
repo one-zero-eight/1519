@@ -1,7 +1,7 @@
 export interface PatronApplication {
   patron_id: number
   application_id: number
-  rate: "positive" | "negative" | "neutral" | "unrated"
+  rate: 'positive' | 'negative' | 'neutral' | 'unrated'
   full_name: string
   comment?: string
   docs: Docs
@@ -40,7 +40,7 @@ export interface Docs {
 export interface PatronRating {
   patron_id: number
   application_id: number
-  rate: "positive" | "negative" | "neutral" | "unrated"
+  rate: 'positive' | 'negative' | 'neutral' | 'unrated'
   comment?: string
   docs: Docs
 }
@@ -48,7 +48,7 @@ export interface PatronRating {
 export interface StudentListItem {
   application_id: number
   full_name: string
-  rate: "positive" | "negative" | "neutral" | "unrated"
+  rate: 'positive' | 'negative' | 'neutral' | 'unrated'
 }
 
 export enum FieldNames {

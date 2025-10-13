@@ -4,6 +4,7 @@ import { Application, FieldNames, PatronApplication } from '@/lib/types/types'
 import ClearIcon from '@mui/icons-material/Clear'
 import DoneOutlineIcon from '@mui/icons-material/DoneOutline'
 import QuestionMarkIcon from '@mui/icons-material/QuestionMark'
+import RadioButtonUncheckedIcon from '@mui/icons-material/RadioButtonUnchecked'
 import {
   FormControlLabel,
   Link,
@@ -76,7 +77,9 @@ export default function StudentDetails({
           aria-labelledby="student-status-radio-group"
           value={edit.rate}
           onChange={(e) => {
-            const _ = { ...edit, rate: e.target.value as "positive" | "negative" | "neutral" | "unrated" }
+            const newValue = e.target.value as 'positive' | 'negative' | 'neutral' | 'unrated'
+            // Allow unchecking by clicking the same option again
+            const _ = { ...edit, rate: edit.rate === newValue ? 'unrated' : newValue }
             setEdit(_)
             onSave(_)
           }}
@@ -116,6 +119,16 @@ export default function StudentDetails({
             label={
               <SvgIcon>
                 <QuestionMarkIcon sx={{ color: '#d08700' }} />
+              </SvgIcon>
+            }
+            sx={{ mx: 1 }}
+          />
+          <FormControlLabel
+            value={'unrated'}
+            control={<Radio sx={{ color: '#9ca3af', '&.Mui-checked': { color: '#9ca3af' } }} />}
+            label={
+              <SvgIcon>
+                <RadioButtonUncheckedIcon sx={{ color: '#9ca3af' }} />
               </SvgIcon>
             }
             sx={{ mx: 1 }}
