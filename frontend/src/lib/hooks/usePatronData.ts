@@ -72,7 +72,7 @@ export const usePositivelyRatedApplications = () => {
 
   // Filter applications that are rated positively (green or yellow, excluding red with rate -1)
   const positivelyRatedApplications = ratedApplications
-    .filter((rating) => rating.rate !== "negative") // Exclude red ratings (rate = -1)
+    .filter((rating) => rating.rate !== 'negative') // Exclude red ratings (rate = -1)
     .map((rating) => applicationMap.get(rating.application_id))
     .filter((app): app is Application => app !== undefined)
 
@@ -87,26 +87,41 @@ export const useAvailableApplications = (rankedApplications: Application[]) => {
   const { positivelyRatedApplications, isLoading } = usePositivelyRatedApplications()
   const { data: ratedApplications = [] } = useRatedApplications()
 
-  // Create a set of application IDs that have negative ratings (rate = -1)
-  const negativeRatedIds = new Set(
-    ratedApplications.filter((rating) => rating.rate === "negative").map((rating) => rating.application_id)
+  // Create a map of application IDs to their ratings
+  const ratingMap = new Map(ratedApplications.map((rating) => [rating.application_id, rating.rate]))
+
+  // Create a set of application IDs that have negative or unrated ratings
+  const excludedRatingIds = new Set(
+    ratedApplications
+      .filter((rating) => rating.rate === 'negative' || rating.rate === 'unrated')
+      .map((rating) => rating.application_id)
   )
 
-  // Filter out applications that are negatively rated from both available and ranked
-  const availableApplications = positivelyRatedApplications.filter(
-    (app) =>
-      !rankedApplications.some((ranked) => ranked.id === app.id) && !negativeRatedIds.has(app.id)
-  )
+  // Filter out applications that are negatively rated or unrated from both available and ranked
+  const availableApplications = positivelyRatedApplications
+    .filter(
+      (app) =>
+        !rankedApplications.some((ranked) => ranked.id === app.id) && !excludedRatingIds.has(app.id)
+    )
+    .sort((a, b) => {
+      // Sort by rating: positive (green) first, then neutral (yellow)
+      const ratingA = ratingMap.get(a.id)
+      const ratingB = ratingMap.get(b.id)
+      if (ratingA === 'positive' && ratingB !== 'positive') return -1
+      if (ratingA !== 'positive' && ratingB === 'positive') return 1
+      return 0
+    })
 
-  // Also filter out negatively rated applications from the ranked list
+  // Also filter out negatively rated and unrated applications from the ranked list
   const cleanedRankedApplications = rankedApplications.filter(
-    (app) => !negativeRatedIds.has(app.id)
+    (app) => !excludedRatingIds.has(app.id)
   )
 
   return {
     availableApplications,
     cleanedRankedApplications,
     isLoading,
-    hasNegativeRatedInRanking: rankedApplications.some((app) => negativeRatedIds.has(app.id))
+    hasNegativeRatedInRanking: rankedApplications.some((app) => excludedRatingIds.has(app.id)),
+    ratingMap
   }
 }

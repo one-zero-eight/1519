@@ -32,7 +32,8 @@ export async function isAdminRedirect() {
       if (!user.is_admin) {
         return redirect({
           // TODO: урбать selectedApplicationId: undefined
-          to: '/patron', search: { selectedApplicationId: undefined }
+          to: '/patron',
+          search: { selectedApplicationId: undefined }
         })
       }
     }

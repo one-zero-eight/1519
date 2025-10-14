@@ -5,6 +5,7 @@ import { PatronResponse, StudentListItem } from '@/lib/types/types'
 import ClearIcon from '@mui/icons-material/Clear'
 import DoneOutlineIcon from '@mui/icons-material/DoneOutline'
 import QuestionMarkIcon from '@mui/icons-material/QuestionMark'
+import RadioButtonUncheckedIcon from '@mui/icons-material/RadioButtonUnchecked'
 import { Box, Stack } from '@mui/material'
 import { Link } from '@tanstack/react-router'
 import { useEffect, useMemo, useState } from 'react'
@@ -56,7 +57,8 @@ function Sidebar({ items, onSelected, selectedId }: SidebarProps) {
         options={[
           { icon: <ClearIcon />, name: 'negative', color: '#c10007' },
           { icon: <QuestionMarkIcon />, name: 'neutral', color: '#d08700' },
-          { icon: <DoneOutlineIcon />, name: 'positive', color: '#5ea500' }
+          { icon: <DoneOutlineIcon />, name: 'positive', color: '#5ea500' },
+          { icon: <RadioButtonUncheckedIcon />, name: 'unrated', color: '#9ca3af' }
         ]}
         onChange={handleFilterChange}
       />
@@ -101,7 +103,7 @@ function Sidebar({ items, onSelected, selectedId }: SidebarProps) {
                     ? '#5ea500'
                     : item.rate === 'negative'
                       ? '#c10007'
-                      : '#d08700',
+                      : '#9ca3af',
               bgcolor: '#4b5563',
               py: 1,
               cursor: 'pointer',

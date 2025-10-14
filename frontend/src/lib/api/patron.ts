@@ -35,7 +35,7 @@ export async function getAllApplications(): Promise<Application[]> {
 
 export async function rateApplication(
   application_id: number,
-  rate = "unrated",
+  rate = 'unrated',
   comment = '',
   docs: Docs
 ): Promise<PatronRating> {

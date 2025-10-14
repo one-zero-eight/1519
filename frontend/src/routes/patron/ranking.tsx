@@ -39,7 +39,8 @@ function RouteComponent() {
     availableApplications,
     cleanedRankedApplications,
     hasNegativeRatedInRanking,
-    isLoading: isLoadingAvailable
+    isLoading: isLoadingAvailable,
+    ratingMap
   } = useAvailableApplications(localRankedApplications)
   const updateRankingMutation = useUpdateRanking()
 
@@ -184,7 +185,8 @@ function RouteComponent() {
         <p className="text-gray-600 mb-6">
           Drag students from the right column to the left to create a ranking. The first two places
           will receive scholarships. Changes are saved automatically. Students rated with a cross
-          (❌) are automatically excluded from ranking and will be removed if already ranked.
+          (❌) or unrated are automatically excluded from ranking and will be removed if already
+          ranked.
         </p>
 
         <div className="flex gap-4 mb-6 items-center">
@@ -217,7 +219,8 @@ function RouteComponent() {
 
           {showNegativeRemovedNotice && (
             <span className="text-red-600 text-sm flex items-center">
-              ⚠️ Students with negative ratings have been automatically removed from ranking
+              ⚠️ Students with negative or unrated ratings have been automatically removed from
+              ranking
             </span>
           )}
         </div>
@@ -229,6 +232,7 @@ function RouteComponent() {
         onRankingChange={handleRankingChange}
         onViewApplication={handleViewApplication}
         onBackToPatron={handleBackToPatron}
+        ratingMap={ratingMap}
       />
 
       {availableApplications.length === 0 && localRankedApplications.length === 0 && (
