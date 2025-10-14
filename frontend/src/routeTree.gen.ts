@@ -9,6 +9,7 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
+import { Route as EnRouteImport } from './routes/en'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as PatronIndexRouteImport } from './routes/patron/index'
 import { Route as MaecenasIndexRouteImport } from './routes/maecenas/index'
@@ -17,6 +18,11 @@ import { Route as ApplicantIndexRouteImport } from './routes/applicant/index'
 import { Route as PatronRankingRouteImport } from './routes/patron/ranking'
 import { Route as PatronAdminRankingRouteImport } from './routes/patron/admin-ranking'
 
+const EnRoute = EnRouteImport.update({
+  id: '/en',
+  path: '/en',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
@@ -55,6 +61,7 @@ const PatronAdminRankingRoute = PatronAdminRankingRouteImport.update({
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/en': typeof EnRoute
   '/patron/admin-ranking': typeof PatronAdminRankingRoute
   '/patron/ranking': typeof PatronRankingRoute
   '/applicant': typeof ApplicantIndexRoute
@@ -64,6 +71,7 @@ export interface FileRoutesByFullPath {
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/en': typeof EnRoute
   '/patron/admin-ranking': typeof PatronAdminRankingRoute
   '/patron/ranking': typeof PatronRankingRoute
   '/applicant': typeof ApplicantIndexRoute
@@ -74,6 +82,7 @@ export interface FileRoutesByTo {
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
+  '/en': typeof EnRoute
   '/patron/admin-ranking': typeof PatronAdminRankingRoute
   '/patron/ranking': typeof PatronRankingRoute
   '/applicant/': typeof ApplicantIndexRoute
@@ -85,6 +94,7 @@ export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
   fullPaths:
     | '/'
+    | '/en'
     | '/patron/admin-ranking'
     | '/patron/ranking'
     | '/applicant'
@@ -94,6 +104,7 @@ export interface FileRouteTypes {
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
+    | '/en'
     | '/patron/admin-ranking'
     | '/patron/ranking'
     | '/applicant'
@@ -103,6 +114,7 @@ export interface FileRouteTypes {
   id:
     | '__root__'
     | '/'
+    | '/en'
     | '/patron/admin-ranking'
     | '/patron/ranking'
     | '/applicant/'
@@ -113,6 +125,7 @@ export interface FileRouteTypes {
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  EnRoute: typeof EnRoute
   PatronAdminRankingRoute: typeof PatronAdminRankingRoute
   PatronRankingRoute: typeof PatronRankingRoute
   ApplicantIndexRoute: typeof ApplicantIndexRoute
@@ -123,6 +136,13 @@ export interface RootRouteChildren {
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
+    '/en': {
+      id: '/en'
+      path: '/en'
+      fullPath: '/en'
+      preLoaderRoute: typeof EnRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/': {
       id: '/'
       path: '/'
@@ -177,6 +197,7 @@ declare module '@tanstack/react-router' {
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  EnRoute: EnRoute,
   PatronAdminRankingRoute: PatronAdminRankingRoute,
   PatronRankingRoute: PatronRankingRoute,
   ApplicantIndexRoute: ApplicantIndexRoute,
