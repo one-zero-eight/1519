@@ -65,53 +65,18 @@ const ORGANIZERS: PersonInfo[] = [
 
 const PATRONS: PersonInfo[] = [
   {
-    firstNameRu: 'Владислав',
-    lastNameRu: 'Куренков',
-    firstNameEn: 'Vladislav',
-    lastNameEn: 'Kurenkov',
-    photoFilename: 'Владислав Куренков.webp'
+    firstNameRu: 'Алексей',
+    lastNameRu: 'Потёмкин',
+    firstNameEn: 'Alexey',
+    lastNameEn: 'Potemkin',
+    photoFilename: 'Алексей Потёмкин.webp'
   },
   {
-    firstNameRu: 'Булат',
-    lastNameRu: 'Максудов',
-    firstNameEn: 'Bulat',
-    lastNameEn: 'Maksudov',
-    photoFilename: 'Булат Максудов.webp'
-  },
-  {
-    firstNameRu: 'Никита',
-    lastNameRu: 'Алексеев',
-    firstNameEn: 'Nikita',
-    lastNameEn: 'Alekseev',
-    photoFilename: 'Никита Алексеев.webp'
-  },
-  {
-    firstNameRu: 'Юрий',
-    lastNameRu: 'Гаврилин',
-    firstNameEn: 'Yuriy',
-    lastNameEn: 'Gavrilin',
-    photoFilename: 'Юрий Гаврилин.webp'
-  },
-  {
-    firstNameRu: 'Светлана',
-    lastNameRu: 'Кабирова',
-    firstNameEn: 'Svetlana',
-    lastNameEn: 'Kabirova',
-    photoFilename: 'Светлана Кабирова.webp'
-  },
-  {
-    firstNameRu: 'Кевин',
-    lastNameRu: 'Ханда',
-    firstNameEn: 'Kevin',
-    lastNameEn: 'Khanda',
-    photoFilename: 'Кевин Ханда.webp'
-  },
-  {
-    firstNameRu: 'Ринат',
-    lastNameRu: 'Мулахметов',
-    firstNameEn: 'Rinat',
-    lastNameEn: 'Mulakhmetov',
-    photoFilename: 'Ринат Мулахметов.webp'
+    firstNameRu: 'Антон',
+    lastNameRu: 'Зуев',
+    firstNameEn: 'Anton',
+    lastNameEn: 'Zuev',
+    photoFilename: 'Антон Зуев.webp'
   },
   {
     firstNameRu: 'Даниил',
@@ -128,18 +93,11 @@ const PATRONS: PersonInfo[] = [
     photoFilename: 'Данил Фронтс.webp'
   },
   {
-    firstNameRu: 'Алексей',
-    lastNameRu: 'Потёмкин',
-    firstNameEn: 'Alexey',
-    lastNameEn: 'Potemkin',
-    photoFilename: 'Алексей Потёмкин.webp'
-  },
-  {
-    firstNameRu: 'Антон',
-    lastNameRu: 'Зуев',
-    firstNameEn: 'Anton',
-    lastNameEn: 'Zuev',
-    photoFilename: 'Антон Зув.webp'
+    firstNameRu: 'Дмитрий',
+    lastNameRu: 'Десяткин',
+    firstNameEn: 'Dmitriy',
+    lastNameEn: 'Desyatkin',
+    photoFilename: 'Дмитрий Десяткин.webp'
   },
   {
     firstNameRu: 'Иван',
@@ -149,18 +107,11 @@ const PATRONS: PersonInfo[] = [
     photoFilename: 'Иван Лягаев.webp'
   },
   {
-    firstNameRu: 'София Мария Ло Чичеро',
-    lastNameRu: 'Вайна',
-    firstNameEn: 'Sofia Maria Lo Chichero',
-    lastNameEn: 'Vayna',
-    photoFilename: 'София Мария Ло Чичеро.webp'
-  },
-  {
-    firstNameRu: 'Дмитрий',
-    lastNameRu: 'Десяткин',
-    firstNameEn: 'Dmitriy',
-    lastNameEn: 'Desyatkin',
-    photoFilename: 'Дмитрий Десяткин.webp'
+    firstNameRu: 'Кевин',
+    lastNameRu: 'Ханда',
+    firstNameEn: 'Kevin',
+    lastNameEn: 'Khanda',
+    photoFilename: 'Кевин Ханда.webp'
   },
   {
     firstNameRu: 'Мадина',
@@ -170,12 +121,61 @@ const PATRONS: PersonInfo[] = [
     photoFilename: 'Мадина Гафарова.webp'
   },
   {
+    firstNameRu: 'Никита',
+    lastNameRu: 'Алексеев',
+    firstNameEn: 'Nikita',
+    lastNameEn: 'Alekseev',
+    photoFilename: 'Никита Алексеев.webp'
+  },
+  {
+    firstNameRu: 'Ринат',
+    lastNameRu: 'Мулахметов',
+    firstNameEn: 'Rinat',
+    lastNameEn: 'Mulakhmetov',
+    photoFilename: 'Ринат Мулахметов.webp'
+  },
+  {
     firstNameRu: 'Сергей',
     lastNameRu: 'Малюткин',
     firstNameEn: 'Sergey',
     lastNameEn: 'Malyutkin',
     photoFilename: 'Сергей Малюткин.webp'
-  }
+  },
+  {
+    firstNameRu: 'Светлана',
+    lastNameRu: 'Кабирова',
+    firstNameEn: 'Svetlana',
+    lastNameEn: 'Kabirova',
+    photoFilename: 'Светлана Кабирова.webp'
+  },
+  {
+    firstNameRu: 'София Мария Ло Чичеро',
+    lastNameRu: 'Вайна',
+    firstNameEn: 'Sofia Maria Lo Chichero',
+    lastNameEn: 'Vayna',
+    photoFilename: 'София Мария Ло Чичеро Вайна.webp'
+  },
+  {
+    firstNameRu: 'Юрий',
+    lastNameRu: 'Гаврилин',
+    firstNameEn: 'Yuriy',
+    lastNameEn: 'Gavrilin',
+    photoFilename: 'Юрий Гаврилин.webp'
+  },
+  {
+    firstNameRu: 'Владислав',
+    lastNameRu: 'Куренков',
+    firstNameEn: 'Vladislav',
+    lastNameEn: 'Kurenkov',
+    photoFilename: 'Владислав Куренков.webp'
+  },
+  {
+    firstNameRu: 'Булат',
+    lastNameRu: 'Максудов',
+    firstNameEn: 'Bulat',
+    lastNameEn: 'Maksudov',
+    photoFilename: 'Булат Максудов.webp'
+  },
 ]
 
 const TRANSLATIONS = {
