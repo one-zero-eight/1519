@@ -201,8 +201,7 @@ const TRANSLATIONS = {
     Duration: 'в течение 6 месяцев',
     DeadlinePeriod: (
       <>
-        01.09.2025
-        <br />–<br />
+        01.09.2025–<br />
         21.09.2025
       </>
     ),
@@ -275,8 +274,7 @@ const TRANSLATIONS = {
     Duration: 'for 6 months',
     DeadlinePeriod: (
       <>
-        01.09.2025
-        <br />–<br />
+        01.09.2025–<br />
         21.09.2025
       </>
     ),
@@ -426,13 +424,13 @@ export function Page({ lang }: PageProps) {
                 srcPng2x={patterns2_256_png}
                 srcWebp={patterns2_128_webp}
                 srcWebp2x={patterns2_256_webp}
-                className="scale-x-[-1] h-full w-auto absolute left-0 bottom-0"
+                className="scale-x-[-1] h-full w-auto absolute left-[-7px] bottom-0"
               />
             </div>
             <div className="flex flex-col self-end">{t.DeadlineText}</div>
           </div>
           <Dot/>
-          <p className="leading-none text-center">{t.DeadlinePeriod}</p>
+          <p className="leading-none text-left">{t.DeadlinePeriod}</p>
         </div>
         <Picture
           w={128}
