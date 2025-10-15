@@ -387,7 +387,7 @@ export function Page({ lang }: PageProps) {
               />
             </div>
           </div>
-          <h3 className="opacity-25">{t.ScholarshipDescription}</h3>
+          <h3 className="opacity-25 leading-tight">{t.ScholarshipDescription}</h3>
         </div>
         <Link
           to="/applicant"
