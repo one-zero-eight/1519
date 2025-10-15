@@ -35,7 +35,7 @@ This is the API for 1519 stipend pipeline.
    ```
 3. Start development server:
    ```bash
-   uv run python -m src --reload
+   uv run -m src --reload
    ```
    > Follow provided instructions if needed
 4. Open in the browser: http://localhost:8000

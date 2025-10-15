@@ -1,6 +1,6 @@
 bun.lockb
 docker-compose.yaml
-.env.example
+.example.env
 .tanstack/
 node_modules/
 Dockerfile

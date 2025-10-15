@@ -2,9 +2,11 @@
 name = "stipend-1519"
 version = "0.1.0"
 description = ""
-authors = ["one-zero-eight <https://t.me/one_zero_eight>"]
+authors = [{ name = "one-zero-eight" }]
+urls = { homepage = "https://t.me/one_zero_eight" }
 readme = "README.md"
 requires-python = ">=3.12"
+
 dependencies = [
     "aiosqlite>=0.21.0",
     "colorlog>=6.9.0",
@@ -21,11 +23,8 @@ dependencies = [
     "xlsxwriter>=3.2.2",
 ]
 
-[tool.uv]
-package = false
-
 [tool.ruff]
 line-length = 120
-lint.ignore = ["PLR"]
 lint.extend-select = ["I", "UP", "PL"]
-target-version = "py312"
+lint.extend-ignore = ["PLC0415", "PLR"]
+target-version = "py313"
