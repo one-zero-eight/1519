@@ -505,7 +505,7 @@ export function Page({ lang }: PageProps) {
               href={`https://t.me/${PATRON_TG_USERNAME}?text=${encodeURIComponent(t.PatronMessageDraft)}`}
               target="_blank"
               rel="noopener noreferrer"
-              className="cursor-pointer text-center text-sm md:text-base leading-none flex flex-col items-center justify-center size-[120px] mx-auto rounded-full bg-white border border-black pb-3"
+              className="cursor-pointer text-center text-sm md:text-base leading-none flex flex-col items-center justify-center size-[120px] mx-auto rounded-full bg-white border border-black pb-3 hover:scale-110 transition-[scale] duration-300"
             >
               <Picture
                 w={128}
