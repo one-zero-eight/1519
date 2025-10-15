@@ -476,8 +476,8 @@ export function Page({ lang }: PageProps) {
       <section>
         <SectionIntro className="mb-20">
           <div className="flex items-end justify-center">
-            <div className="relative h-[80px] md:h-[100px]">
-              <t.PatronsLetter className="inline-block h-full w-auto" />
+            <div className="relative h-[80px] md:h-[100px] mr-[16px]">
+              <t.PatronsLetter className="inline-block h-full w-auto relative z-1" />
               <Picture
                 w={128}
                 h={128}
@@ -485,7 +485,7 @@ export function Page({ lang }: PageProps) {
                 srcPng2x={patterns3_256_png}
                 srcWebp={patterns3_128_webp}
                 srcWebp2x={patterns3_256_webp}
-                className="h-full w-auto absolute right-0 bottom-0"
+                className="h-full w-auto absolute right-[-16px] bottom-0"
               />
             </div>
             <span className="text-lg md:text-2xl">{t.PatronsText}</span>
