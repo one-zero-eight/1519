@@ -201,8 +201,7 @@ const TRANSLATIONS = {
     Duration: 'в течение 6 месяцев',
     DeadlinePeriod: (
       <>
-        01.09.2025
-        <br />–<br />
+        01.09.2025–<br />
         21.09.2025
       </>
     ),
@@ -275,8 +274,7 @@ const TRANSLATIONS = {
     Duration: 'for 6 months',
     DeadlinePeriod: (
       <>
-        01.09.2025
-        <br />–<br />
+        01.09.2025–<br />
         21.09.2025
       </>
     ),
@@ -389,7 +387,7 @@ export function Page({ lang }: PageProps) {
               />
             </div>
           </div>
-          <h3 className="opacity-25">{t.ScholarshipDescription}</h3>
+          <h3 className="opacity-25 leading-tight">{t.ScholarshipDescription}</h3>
         </div>
         <Link
           to="/applicant"
@@ -426,13 +424,13 @@ export function Page({ lang }: PageProps) {
                 srcPng2x={patterns2_256_png}
                 srcWebp={patterns2_128_webp}
                 srcWebp2x={patterns2_256_webp}
-                className="scale-x-[-1] h-full w-auto absolute left-0 bottom-0"
+                className="scale-x-[-1] h-full w-auto absolute left-[-7px] bottom-0"
               />
             </div>
             <div className="flex flex-col self-end">{t.DeadlineText}</div>
           </div>
           <Dot/>
-          <p className="leading-none text-center">{t.DeadlinePeriod}</p>
+          <p className="leading-none text-left">{t.DeadlinePeriod}</p>
         </div>
         <Picture
           w={128}
@@ -476,8 +474,8 @@ export function Page({ lang }: PageProps) {
       <section>
         <SectionIntro className="mb-20">
           <div className="flex items-end justify-center">
-            <div className="relative h-[80px] md:h-[100px]">
-              <t.PatronsLetter className="inline-block h-full w-auto" />
+            <div className="relative h-[80px] md:h-[100px] mr-[16px]">
+              <t.PatronsLetter className="inline-block h-full w-auto relative z-1" />
               <Picture
                 w={128}
                 h={128}
@@ -485,7 +483,7 @@ export function Page({ lang }: PageProps) {
                 srcPng2x={patterns3_256_png}
                 srcWebp={patterns3_128_webp}
                 srcWebp2x={patterns3_256_webp}
-                className="h-full w-auto absolute right-0 bottom-0"
+                className="h-full w-auto absolute right-[-16px] bottom-0"
               />
             </div>
             <span className="text-lg md:text-2xl">{t.PatronsText}</span>
@@ -505,7 +503,7 @@ export function Page({ lang }: PageProps) {
               href={`https://t.me/${PATRON_TG_USERNAME}?text=${encodeURIComponent(t.PatronMessageDraft)}`}
               target="_blank"
               rel="noopener noreferrer"
-              className="cursor-pointer text-center text-sm md:text-base leading-none flex flex-col items-center justify-center size-[120px] mx-auto rounded-full bg-white border border-black pb-3"
+              className="cursor-pointer text-center text-sm md:text-base leading-none flex flex-col items-center justify-center size-[120px] mx-auto rounded-full bg-white border border-black pb-3 hover:scale-110 transition-[scale] duration-300"
             >
               <Picture
                 w={128}
