@@ -198,12 +198,12 @@ const TRANSLATIONS = {
         12 000 руб/месяц
       </>
     ),
-    Duration: 'в течение 6 месяцев',
+    Duration: 'в течение 9 месяцев',
     DeadlinePeriod: (
       <>
-        01.09.2025–
+        20.10.2025–
         <br />
-        21.09.2025
+        10.11.2025
       </>
     ),
     DeadlineText: (
@@ -272,12 +272,12 @@ const TRANSLATIONS = {
         12 000 rub/month
       </>
     ),
-    Duration: 'for 6 months',
+    Duration: 'for 9 months',
     DeadlinePeriod: (
       <>
-        01.09.2025–
+        20.10.2025–
         <br />
-        21.09.2025
+        10.11.2025
       </>
     ),
     DeadlineText: (
