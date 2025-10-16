@@ -1,14 +1,14 @@
+import Logo108 from '@/assets/landing/108.svg?react'
 import Text1519 from '@/assets/landing/1519.svg?react'
 import LogoIu from '@/assets/landing/iu.svg?react'
-import Logo108 from '@/assets/landing/108.svg?react'
 import LetterC from '@/assets/landing/letter-C.svg?react'
 import LetterD from '@/assets/landing/letter-D.svg?react'
 import LetterM from '@/assets/landing/letter-M.svg?react'
 import LetterO from '@/assets/landing/letter-O.svg?react'
 import LetterP from '@/assets/landing/letter-P.svg?react'
+import { Person } from '@/components/landing/Person'
 import { Picture } from '@/components/landing/Picture'
 import { SectionIntro } from '@/components/landing/SectionIntro'
-import { Person } from '@/components/landing/Person'
 
 import patterns1_128_png from '@/assets/landing/patterns/patterns-1_128.png'
 import patterns1_128_webp from '@/assets/landing/patterns/patterns-1_128.webp'
@@ -60,7 +60,7 @@ const ORGANIZERS: PersonInfo[] = [
     firstNameEn: 'Bulat',
     lastNameEn: 'Maksudov',
     photoFilename: 'Булат Максудов.webp'
-  },
+  }
 ]
 
 const PATRONS: PersonInfo[] = [
@@ -175,7 +175,7 @@ const PATRONS: PersonInfo[] = [
     firstNameEn: 'Bulat',
     lastNameEn: 'Maksudov',
     photoFilename: 'Булат Максудов.webp'
-  },
+  }
 ]
 
 const TRANSLATIONS = {
@@ -201,7 +201,8 @@ const TRANSLATIONS = {
     Duration: 'в течение 6 месяцев',
     DeadlinePeriod: (
       <>
-        01.09.2025–<br />
+        01.09.2025–
+        <br />
         21.09.2025
       </>
     ),
@@ -274,7 +275,8 @@ const TRANSLATIONS = {
     Duration: 'for 6 months',
     DeadlinePeriod: (
       <>
-        01.09.2025–<br />
+        01.09.2025–
+        <br />
         21.09.2025
       </>
     ),
@@ -410,7 +412,7 @@ export function Page({ lang }: PageProps) {
         </SectionIntro>
         <div className="text-center flex flex-col items-center gap-6">
           <p className="leading-none">{t.ScholarshipAmount}</p>
-          <Dot/>
+          <Dot />
           <p className="leading-none">{t.Duration}</p>
         </div>
         <div className="text-lg md:text-2xl grid grid-cols-[1fr_auto_1fr] items-center w-fit mx-auto gap-6 md:gap-10 my-20">
@@ -429,7 +431,7 @@ export function Page({ lang }: PageProps) {
             </div>
             <div className="flex flex-col self-end">{t.DeadlineText}</div>
           </div>
-          <Dot/>
+          <Dot />
           <p className="leading-none text-left">{t.DeadlinePeriod}</p>
         </div>
         <Picture
@@ -537,20 +539,18 @@ export function Page({ lang }: PageProps) {
       </section>
       <div className="self-center h-9 mt-20 grid grid-cols-[1fr_auto_1fr] items-center w-fit gap-6 md:gap-10">
         <LogoIu className="w-auto h-full justify-self-end" />
-        <Dot/>
-        <Logo108 className='justify-self-start w-auto h-full' />
+        <Dot />
+        <Logo108 className="justify-self-start w-auto h-full" />
       </div>
       <p className="text-center opacity-25 mt-20">
-        <a 
-          href="https://t.me/one_zero_eight" 
-          target="_blank" rel="noopener noreferrer"
-        >{t.MadeBy108}</a>
+        <a href="https://t.me/one_zero_eight" target="_blank" rel="noopener noreferrer">
+          {t.MadeBy108}
+        </a>
       </p>
     </div>
   )
 }
 
-
 function Dot() {
-  return <span className="inline-block w-2 h-2 bg-black rounded-full"/>
+  return <span className="inline-block w-2 h-2 bg-black rounded-full" />
 }

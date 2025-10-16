@@ -17,10 +17,10 @@ export function Person({ photoFilename, firstName, lastName }: PersonProps) {
         alt={`${firstName} ${lastName}`}
         loading="lazy"
         className="bg-white size-[120px] rounded-full object-contain"
-        onError={e => {
-          const target = e.currentTarget;
+        onError={(e) => {
+          const target = e.currentTarget
           if (target.src !== fallbackPhoto) {
-            target.src = fallbackPhoto;
+            target.src = fallbackPhoto
           }
         }}
       />
