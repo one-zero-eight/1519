@@ -55,8 +55,8 @@ async def submit_application_route(
     if (application_same_sessions_and_tw >= 1 and existing is None) or application_same_sessions_and_tw > 1:
         raise HTTPException(400, "You have already submitted an application for this timewindow")
 
-    if form.cv_file is None or form.transcript_file is None or form.motivational_letter_file is None:
-        raise HTTPException(status_code=400, detail="CV, transcript, and motivational letter files are required")
+    if form.cv_file is None or form.motivational_letter_file is None:
+        raise HTTPException(status_code=400, detail="CV, and motivational letter files are required")
 
     on_fs_filenames = {
         "cv.pdf": None,
