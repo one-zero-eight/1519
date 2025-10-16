@@ -1,11 +1,18 @@
 import { createRootRoute, Outlet } from '@tanstack/react-router'
 import { TanStackRouterDevtools } from '@tanstack/react-router-devtools'
+import { useAutoFavicon } from '@/lib/hooks/useAutoFavicon'
 
-export const Route = createRootRoute({
-  component: () => (
+const RootComponent = () => {
+  useAutoFavicon()
+
+  return (
     <>
       <Outlet />
       <TanStackRouterDevtools />
     </>
   )
+}
+
+export const Route = createRootRoute({
+  component: RootComponent
 })
