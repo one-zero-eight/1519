@@ -1,6 +1,6 @@
 import InnoButton from '@/components/ui/shared/InnoButton'
 import { submitApplication, type SubmitFormData } from '@/lib/api/applicant'
-import { Alert, CircularProgress, TextField } from '@mui/material'
+import { Alert, Checkbox, CircularProgress, FormControlLabel, TextField } from '@mui/material'
 import React, { useEffect, useState } from 'react'
 
 interface ApplicantFormProps {
@@ -22,6 +22,7 @@ export default function ApplicantForm({ onSuccess, initialValues }: ApplicantFor
     almost_a_student_file?: File
   }>({})
 
+  const [isFirstYear, setIsFirstYear] = useState(false)
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState<string | null>(null)
   const [success, setSuccess] = useState(false)
@@ -55,6 +56,27 @@ export default function ApplicantForm({ onSuccess, initialValues }: ApplicantFor
       }
     }
 
+  const handleFirstYearChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const checked = e.target.checked
+    setIsFirstYear(checked)
+
+    // Если отмечен как первокурсник, удаляем файл транскрипта
+    if (checked) {
+      setFiles((prev) => ({
+        ...prev,
+        transcript_file: undefined
+      }))
+
+      // Очищаем input элемент
+      const transcriptInput = document.querySelector(
+        'input[accept=".xlsx,.xls"]'
+      ) as HTMLInputElement
+      if (transcriptInput) {
+        transcriptInput.value = ''
+      }
+    }
+  }
+
   const validateEmail = (email: string): boolean => {
     const emailRegex = /^[a-zA-Z0-9_.+-]+@(innopolis\.(university|ru))$/
     return emailRegex.test(email)
@@ -67,7 +89,8 @@ export default function ApplicantForm({ onSuccess, initialValues }: ApplicantFor
       errors.push('CV file is required')
     }
 
-    if (!files.transcript_file) {
+    // Транскрипт обязателен только если не первокурсник
+    if (!isFirstYear && !files.transcript_file) {
       errors.push('Transcript file is required')
     }
 
@@ -102,12 +125,35 @@ export default function ApplicantForm({ onSuccess, initialValues }: ApplicantFor
         throw new Error(`Required files missing: ${fileErrors.join(', ')}`)
       }
 
-      const submitData: SubmitFormData = {
-        ...formData,
-        ...files
+      // Создаем FormData для отправки в формате, ожидаемом бэкендом
+      const formDataToSend = new FormData()
+
+      // Добавляем текстовые поля как form fields
+      formDataToSend.append('email', formData.email)
+      formDataToSend.append('full_name', formData.full_name)
+
+      // Добавляем файлы с правильными именами полей
+      if (files.cv_file) {
+        formDataToSend.append('cv_file', files.cv_file)
+      }
+      if (files.motivational_letter_file) {
+        formDataToSend.append('motivational_letter_file', files.motivational_letter_file)
       }
 
-      const result = await submitApplication(submitData)
+      // Добавляем транскрипт только если не первокурсник И файл есть
+      if (!isFirstYear && files.transcript_file) {
+        formDataToSend.append('transcript_file', files.transcript_file)
+      }
+
+      // Добавляем опциональные файлы
+      if (files.recommendation_letter_file) {
+        formDataToSend.append('recommendation_letter_file', files.recommendation_letter_file)
+      }
+      if (files.almost_a_student_file) {
+        formDataToSend.append('almost_a_student_file', files.almost_a_student_file)
+      }
+
+      const result = await submitApplication(formDataToSend)
       setSuccess(true)
       onSuccess?.(result)
     } catch (err) {
@@ -121,8 +167,8 @@ export default function ApplicantForm({ onSuccess, initialValues }: ApplicantFor
   const isFormValid = () => {
     const emailValid = validateEmail(formData.email)
     const nameValid = formData.full_name.trim().length > 0
-    const requiredFilesPresent =
-      files.cv_file && files.transcript_file && files.motivational_letter_file
+    const transcriptValid = isFirstYear || files.transcript_file
+    const requiredFilesPresent = files.cv_file && transcriptValid && files.motivational_letter_file
 
     return emailValid && nameValid && requiredFilesPresent
   }
@@ -208,7 +254,7 @@ export default function ApplicantForm({ onSuccess, initialValues }: ApplicantFor
       <div className="space-y-4">
         <h3 className="text-base sm:text-lg font-semibold">Required Documents</h3>
 
-        <div className="space-y-3">
+        <div className="space-y-4">
           <div>
             <label className="mb-2 block text-xs sm:text-sm font-medium">
               CV <b>(.pdf)</b>
@@ -220,19 +266,57 @@ export default function ApplicantForm({ onSuccess, initialValues }: ApplicantFor
               onChange={handleFileChange('cv_file')}
               className="block w-full text-xs sm:text-sm text-gray-500 file:mr-2 sm:file:mr-4 file:rounded-full file:border-0 file:bg-blue-50 file:px-2 sm:file:px-4 file:py-2 file:text-xs sm:file:text-sm file:font-semibold file:text-blue-700 hover:file:bg-blue-100"
             />
+            <p className="mt-2 text-xs sm:text-sm text-gray-600 leading-relaxed">
+              A résumé that may briefly include hackathons, academic achievements, work experience,
+              and any other information about extracurricular activities.
+            </p>
           </div>
 
           <div>
-            <label className="mb-2 block text-xs sm:text-sm font-medium">
-              Transcript <b>(.xlsx)</b>
-              <span className="text-red-500"> *</span>
-            </label>
+            <div className="mb-2">
+              <div className="flex items-center gap-2">
+                <label className="text-xs sm:text-sm font-medium">
+                  Transcript <b>(.xlsx)</b>
+                  {!isFirstYear && <span className="text-red-500"> *</span>}
+                </label>
+                <FormControlLabel
+                  control={
+                    <Checkbox
+                      checked={isFirstYear}
+                      onChange={handleFirstYearChange}
+                      size="small"
+                      sx={{
+                        '& .MuiSvgIcon-root': { fontSize: 20 }
+                      }}
+                    />
+                  }
+                  label="I don't have grades now"
+                  sx={{
+                    margin: 0,
+                    '& .MuiFormControlLabel-label': {
+                      fontSize: '0.75rem',
+                      '@media (min-width: 640px)': {
+                        fontSize: '0.875rem'
+                      }
+                    }
+                  }}
+                />
+              </div>
+            </div>
             <input
               type="file"
               accept=".xlsx,.xls"
               onChange={handleFileChange('transcript_file')}
-              className="block w-full text-xs sm:text-sm text-gray-500 file:mr-2 sm:file:mr-4 file:rounded-full file:border-0 file:bg-blue-50 file:px-2 sm:file:px-4 file:py-2 file:text-xs sm:file:text-sm file:font-semibold file:text-blue-700 hover:file:bg-blue-100"
+              disabled={isFirstYear}
+              className={`block w-full text-xs sm:text-sm text-gray-500 file:mr-2 sm:file:mr-4 file:rounded-full file:border-0 file:bg-blue-50 file:px-2 sm:file:px-4 file:py-2 file:text-xs sm:file:text-sm file:font-semibold file:text-blue-700 hover:file:bg-blue-100 ${
+                isFirstYear ? 'opacity-50 cursor-not-allowed' : ''
+              }`}
             />
+            <p className="mt-2 text-xs sm:text-sm text-gray-600 leading-relaxed">
+              {isFirstYear
+                ? "As a first year student, you don't need to upload a transcript."
+                : "Here you should include all your grades with a separately calculated average score. You need to upload an Excel spreadsheet, and don't forget to specify the credits and the GPA weighted by them."}
+            </p>
           </div>
 
           <div>
@@ -246,6 +330,10 @@ export default function ApplicantForm({ onSuccess, initialValues }: ApplicantFor
               onChange={handleFileChange('motivational_letter_file')}
               className="block w-full text-xs sm:text-sm text-gray-500 file:mr-2 sm:file:mr-4 file:rounded-full file:border-0 file:bg-blue-50 file:px-2 sm:file:px-4 file:py-2 file:text-xs sm:file:text-sm file:font-semibold file:text-blue-700 hover:file:bg-blue-100"
             />
+            <p className="mt-2 text-xs sm:text-sm text-gray-600 leading-relaxed">
+              Describe your background, achievements, and career goals, if any. Also, explain why
+              this scholarship could be particularly beneficial for you.
+            </p>
           </div>
 
           <div>
@@ -258,6 +346,9 @@ export default function ApplicantForm({ onSuccess, initialValues }: ApplicantFor
               onChange={handleFileChange('recommendation_letter_file')}
               className="block w-full text-xs sm:text-sm text-gray-500 file:mr-2 sm:file:mr-4 file:rounded-full file:border-0 file:bg-blue-50 file:px-2 sm:file:px-4 file:py-2 file:text-xs sm:file:text-sm file:font-semibold file:text-blue-700 hover:file:bg-blue-100"
             />
+            <p className="mt-2 text-xs sm:text-sm text-gray-600 leading-relaxed">
+              Optional. From a professor or a supervisor from your workplace/internship.
+            </p>
           </div>
 
           <div>
@@ -270,6 +361,12 @@ export default function ApplicantForm({ onSuccess, initialValues }: ApplicantFor
               onChange={handleFileChange('almost_a_student_file')}
               className="block w-full text-xs sm:text-sm text-gray-500 file:mr-2 sm:file:mr-4 file:rounded-full file:border-0 file:bg-blue-50 file:px-2 sm:file:px-4 file:py-2 file:text-xs sm:file:text-sm file:font-semibold file:text-blue-700 hover:file:bg-blue-100"
             />
+            <p className="mt-2 text-xs sm:text-sm text-gray-600 leading-relaxed">
+              Optional. We have often experienced situations where we were just a few points short
+              of receiving the maximum scholarship from the university—for example, missing an A by
+              a couple of points due to absences or not finishing a solution during midterms. If you
+              have had a similar experience, please share it.
+            </p>
           </div>
         </div>
       </div>

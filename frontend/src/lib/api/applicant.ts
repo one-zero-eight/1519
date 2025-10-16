@@ -12,32 +12,12 @@ export interface SubmitFormData {
   almost_a_student_file?: File
 }
 
-export async function submitApplication(formData: SubmitFormData): Promise<Application> {
-  const data = new FormData()
-
-  data.append('email', formData.email)
-  data.append('full_name', formData.full_name)
-
-  if (formData.cv_file) {
-    data.append('cv_file', formData.cv_file)
-  }
-  if (formData.transcript_file) {
-    data.append('transcript_file', formData.transcript_file)
-  }
-  if (formData.motivational_letter_file) {
-    data.append('motivational_letter_file', formData.motivational_letter_file)
-  }
-  if (formData.recommendation_letter_file) {
-    data.append('recommendation_letter_file', formData.recommendation_letter_file)
-  }
-  if (formData.almost_a_student_file) {
-    data.append('almost_a_student_file', formData.almost_a_student_file)
-  }
-
+export async function submitApplication(formData: FormData): Promise<Application> {
   const res = await fetch(`${VITE_PUBLIC_API}/applicant/submit`, {
     method: 'POST',
-    body: data,
+    body: formData,
     credentials: 'include'
+    // НЕ добавляем Content-Type заголовок - браузер автоматически установит multipart/form-data с boundary
   })
 
   if (!res.ok) {

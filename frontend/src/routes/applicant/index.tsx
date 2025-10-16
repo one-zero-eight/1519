@@ -78,14 +78,11 @@ function RouteComponent() {
               {application ? 'Edit Your Application' : 'Submit Your Application'}
             </h2>
             <p className="mx-auto max-w-xs sm:max-w-2xl text-gray-600 text-sm sm:text-base">
-              Please fill out the form below to {application ? 'edit' : 'submit'} your scholarship
-              application.
-              <br />
-              <strong>File requirements:</strong>{' '}
-              <u>
-                CV, Motivational Letter, Recommendation Letter, and "Almost A Student" documents
-                must be in PDF format. Transcript must be in Excel format (XLSX/XLS).
-              </u>
+              {application
+                ? 'Edit your application'
+                : 'Please fill out the form below to submit your scholarship application. Remember that\n' +
+                  '              your application will be reviewed by real people who genuinely want to get to know\n' +
+                  '              you. Think twice before submitting a fully AI-generated content.'}
             </p>
           </div>
           <ApplicantForm
