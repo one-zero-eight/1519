@@ -38,5 +38,12 @@ export async function isAdminRedirect() {
       }
     }
     return null
-  } catch (error) {}
+  } catch (error) {
+    if (error instanceof HttpError && (error.status == 401 || error.status == 403)) {
+      throw redirect({
+        to: '/auth'
+      })
+    }
+    throw error
+  }
 }
