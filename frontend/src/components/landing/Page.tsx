@@ -259,9 +259,9 @@ const TRANSLATIONS = {
       <>
         and mentoring
         <br />
-        for 1st-3rd year bachelor students of Innopolis University
+        for 1st-3rd year bachelor students of
         <br />
-        students from alumni
+        Innopolis University students from alumni
       </>
     ),
     Apply: 'Apply',

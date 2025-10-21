@@ -84,6 +84,11 @@ function RouteComponent() {
                   '              your application will be reviewed by real people who genuinely want to get to know\n' +
                   '              you. Think twice before submitting a fully AI-generated content.'}
             </p>
+            {application === null &&
+                <p className="mx-auto max-w-xs sm:max-w-2xl text-gray-600 text-sm sm:text-base">
+                  Only 1st-3rd year bachelor students of Innopolis University can apply
+                </p>
+            }
           </div>
           <ApplicantForm
             onSuccess={handleApplicationSubmitted}
