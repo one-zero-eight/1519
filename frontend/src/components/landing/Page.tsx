@@ -183,7 +183,7 @@ const TRANSLATIONS = {
     Scholarship: 'Стипендия',
     ScholarshipDescription: (
       <>
-        Для студентов-бакалавров
+        Для студентов-бакалавров 1-3 курса
         <br />
         Университета Иннополис
         <br />
@@ -259,7 +259,7 @@ const TRANSLATIONS = {
       <>
         and mentoring
         <br />
-        for Innopolis University bachelor
+        for 1st-3rd year bachelor students of Innopolis University
         <br />
         students from alumni
       </>
