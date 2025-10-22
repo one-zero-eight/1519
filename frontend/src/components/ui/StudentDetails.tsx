@@ -61,6 +61,16 @@ export default function StudentDetails({
     }
   }, [application, rating])
 
+  useEffect(() => {
+    if (edit) {
+      const timeout = setTimeout(() => {
+        onSave(edit)
+      }, 2000)
+
+      return () => clearTimeout(timeout)
+    }
+  }, [JSON.stringify(edit?.docs), edit?.comment]);
+
   if (!edit) {
     return <div>Loading...</div>
   }
