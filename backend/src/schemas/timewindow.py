@@ -8,11 +8,11 @@ from src.schemas.pydantic_base import BaseSchema
 class TimeWindowResponse(BaseSchema):
     id: int
     title: str
-    start: datetime.datetime
-    end: datetime.datetime
+    start: datetime.date
+    end: datetime.date
 
 
 class CreateTimeWindowRequest(BaseSchema):
     title: str
-    start: datetime.datetime
-    end: datetime.datetime
+    start: datetime.date
+    end: datetime.date

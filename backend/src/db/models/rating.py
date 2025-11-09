@@ -6,7 +6,7 @@ from typing import TYPE_CHECKING
 from sqlalchemy import JSON, ForeignKey, func
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 
-from src.db.models import Base
+from src.db import Base
 from src.schemas.rating import Rating
 
 if TYPE_CHECKING:
