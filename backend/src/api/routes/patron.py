@@ -65,9 +65,9 @@ def get_rated_applications_route(
 
     rated_by_patron = session.query(PatronRateApplication).filter(PatronRateApplication.patron_id == patron.id).all()
     if show_only_current:
-        rated_by_patron = list(filter(lambda rate: current_timewindow.start <= rate.application.submitted_at.date() <= current_timewindow.end, rated_by_patron))
+        rated_by_patron = list(filter(lambda rate: current_timewindow.start <= rate.application.submitted_at <= current_timewindow.end, rated_by_patron))
     if show_last_timewindow:
-        rated_by_patron = list(filter(lambda rate: last_timewindow.start <= rate.application.submitted_at.date() <= last_timewindow.end, rated_by_patron))
+        rated_by_patron = list(filter(lambda rate: last_timewindow.start <= rate.application.submitted_at <= last_timewindow.end, rated_by_patron))
     return [PatronRateApplicationResponse.model_validate(r, from_attributes=True) for r in rated_by_patron]
 
 
@@ -89,9 +89,9 @@ def get_all_applications_route(
 
     all_applications = session.query(Application).order_by(Application.submitted_at).all()
     if show_only_current:
-        all_applications = list(filter(lambda application: current_timewindow.start <= application.submitted_at.date() <= current_timewindow.end, all_applications))
+        all_applications = list(filter(lambda application: current_timewindow.start <= application.submitted_at <= current_timewindow.end, all_applications))
     if show_last_timewindow:
-        all_applications = list(filter(lambda application: last_timewindow.start <= application.submitted_at.date() <= last_timewindow.end, all_applications))
+        all_applications = list(filter(lambda application: last_timewindow.start <= application.submitted_at <= last_timewindow.end, all_applications))
     return [ApplicationResponse.model_validate(a, from_attributes=True) for a in all_applications]
 
 
@@ -174,9 +174,9 @@ def get_ranking_route(
         return PatronRankingResponse(patron_id=patron.id, applications=[])
 
     if show_only_current:
-        ranked_applications = list(filter(lambda rank: current_timewindow.start <= rank.application.submitted_at.date() <= current_timewindow.end, ranked_applications))
+        ranked_applications = list(filter(lambda rank: current_timewindow.start <= rank.application.submitted_at <= current_timewindow.end, ranked_applications))
     if show_last_timewindow:
-        ranked_applications = list(filter(lambda rank: last_timewindow.start <= rank.application.submitted_at.date() <= last_timewindow.end, ranked_applications))
+        ranked_applications = list(filter(lambda rank: last_timewindow.start <= rank.application.submitted_at <= last_timewindow.end, ranked_applications))
 
     application_ids = [r.application_id for r in ranked_applications]
     db_applications = session.query(Application).filter(Application.id.in_(application_ids)).all()

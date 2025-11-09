@@ -11,7 +11,7 @@ def get_current_timewindow(session: Session = Depends(get_db_session)) -> TimeWi
     """
     Returns timewindow related to current date
     """
-    today = datetime.date.today()
+    today = datetime.datetime.now(datetime.UTC)
     return session.query(TimeWindow).filter(TimeWindow.start <= today, today <= TimeWindow.end).first()
 
 
@@ -19,5 +19,5 @@ def get_last_timewindow(session: Session = Depends(get_db_session)) -> TimeWindo
     """
     Returns last timewindow. Last timewindow may be current one, but not future one
     """
-    today = datetime.date.today()
+    today = datetime.datetime.now(datetime.UTC)
     return session.query(TimeWindow).filter(TimeWindow.start <= today).order_by(TimeWindow.start.desc()).first()

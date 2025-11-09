@@ -2,7 +2,6 @@ from __future__ import annotations
 
 from sqlalchemy import create_engine, text
 from sqlalchemy.orm import (
-    declarative_base,
     sessionmaker,
 )
 
@@ -13,7 +12,6 @@ engine = create_engine(
     connect_args={"check_same_thread": False},
 )
 SessionLocal = sessionmaker(bind=engine, autoflush=False, autocommit=False)
-Base = declarative_base()
 
 with engine.connect() as conn:
     conn.execute(text("PRAGMA foreign_keys = ON"))

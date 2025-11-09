@@ -3,10 +3,10 @@ from __future__ import annotations
 import datetime
 from typing import TYPE_CHECKING
 
-from sqlalchemy import Date
+from sqlalchemy import DateTime
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 
-from src.db import Base
+from src.db.models import Base
 
 if TYPE_CHECKING:
     from src.db.models.applicant import Application
@@ -28,12 +28,12 @@ class TimeWindow(Base):
         nullable=False,
     )
 
-    start: Mapped[datetime.date] = mapped_column(
-        Date,
+    start: Mapped[datetime.datetime] = mapped_column(
+        DateTime,
         nullable=False,
     )
-    end: Mapped[datetime.date] = mapped_column(
-        Date,
+    end: Mapped[datetime.datetime] = mapped_column(
+        DateTime,
         nullable=False,
     )
 
