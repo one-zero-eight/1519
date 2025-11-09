@@ -6,6 +6,7 @@ from sqlalchemy.orm import Session
 
 from src.db.models import Application, Patron, PatronDailyStats, PatronRanking, PatronRateApplication, TimeWindow
 from src.dependencies import get_current_timewindow, get_db_session, patron_auth
+from src.dependencies.timewindow import get_last_timewindow
 from src.schemas import (
     ApplicationResponse,
     Docs,
@@ -48,31 +49,49 @@ def get_me_route(patron: Patron = Depends(patron_auth)) -> PatronResponse:
 
 @router.get("/me/rated-applications", generate_unique_id_function=lambda _: "get_rated_applications")
 def get_rated_applications_route(
-    show_only_current: bool = True,
-    timewindow: TimeWindow | None = Depends(get_current_timewindow),
+    show_only_current: bool = False,
+    show_last_timewindow: bool = True,
+    current_timewindow: TimeWindow | None = Depends(get_current_timewindow),
+    last_timewindow: TimeWindow | None = Depends(get_last_timewindow),
     patron: Patron = Depends(patron_auth),
     session: Session = Depends(get_db_session),
 ) -> list[PatronRateApplicationResponse]:
-    if show_only_current and timewindow is None:
+    if show_only_current and show_last_timewindow:
+        raise HTTPException(400, "You can only set one of `show_last_timewindow`, `show_only_current`")
+    if show_only_current and current_timewindow is None:
         raise HTTPException(400, "No current timewindow")
+    if show_last_timewindow and last_timewindow is None:
+        raise HTTPException(400, "No last timewindow")
+
     rated_by_patron = session.query(PatronRateApplication).filter(PatronRateApplication.patron_id == patron.id).all()
     if show_only_current:
-        rated_by_patron = list(filter(lambda rate: timewindow.start <= rate.application.submitted_at.date() <= timewindow.end, rated_by_patron))
+        rated_by_patron = list(filter(lambda rate: current_timewindow.start <= rate.application.submitted_at.date() <= current_timewindow.end, rated_by_patron))
+    if show_last_timewindow:
+        rated_by_patron = list(filter(lambda rate: last_timewindow.start <= rate.application.submitted_at.date() <= last_timewindow.end, rated_by_patron))
     return [PatronRateApplicationResponse.model_validate(r, from_attributes=True) for r in rated_by_patron]
 
 
 @router.get("/applications", generate_unique_id_function=lambda _: "get_all_applications")
 def get_all_applications_route(
-    show_only_current: bool = True,
-    timewindow: TimeWindow | None = Depends(get_current_timewindow),
+    show_last_timewindow: bool = True,
+    show_only_current: bool = False,
+    current_timewindow: TimeWindow | None = Depends(get_current_timewindow),
+    last_timewindow: TimeWindow | None = Depends(get_last_timewindow),
     _: Patron = Depends(patron_auth),
     session: Session = Depends(get_db_session),
 ) -> list[ApplicationResponse]:
-    if show_only_current and timewindow is None:
+    if show_only_current and show_last_timewindow:
+        raise HTTPException(400, "You can only set one of `show_last_timewindow`, `show_only_current`")
+    if show_only_current and current_timewindow is None:
         raise HTTPException(400, "No current timewindow")
+    if show_last_timewindow and last_timewindow is None:
+        raise HTTPException(400, "No last timewindow")
+
     all_applications = session.query(Application).order_by(Application.submitted_at).all()
     if show_only_current:
-        all_applications = list(filter(lambda application: timewindow.start <= application.submitted_at.date() <= timewindow.end, all_applications))
+        all_applications = list(filter(lambda application: current_timewindow.start <= application.submitted_at.date() <= current_timewindow.end, all_applications))
+    if show_last_timewindow:
+        all_applications = list(filter(lambda application: last_timewindow.start <= application.submitted_at.date() <= last_timewindow.end, all_applications))
     return [ApplicationResponse.model_validate(a, from_attributes=True) for a in all_applications]
 
 
@@ -131,13 +150,19 @@ def rate_application_route(
 
 @router.get("/ranking")
 def get_ranking_route(
-    show_only_current: bool = True,
-    timewindow: TimeWindow | None = Depends(get_current_timewindow),
+    show_last_timewindow: bool = True,
+    show_only_current: bool = False,
+    current_timewindow: TimeWindow | None = Depends(get_current_timewindow),
+    last_timewindow: TimeWindow | None = Depends(get_last_timewindow),
     patron: Patron = Depends(patron_auth),
     session: Session = Depends(get_db_session),
 ) -> PatronRankingResponse:
-    if show_only_current and timewindow is None:
+    if show_only_current and show_last_timewindow:
+        raise HTTPException(400, "You can only set one of `show_last_timewindow`, `show_only_current`")
+    if show_only_current and current_timewindow is None:
         raise HTTPException(400, "No current timewindow")
+    if show_last_timewindow and last_timewindow is None:
+        raise HTTPException(400, "No last timewindow")
 
     ranked_applications = (
         session.query(PatronRanking)
@@ -149,7 +174,9 @@ def get_ranking_route(
         return PatronRankingResponse(patron_id=patron.id, applications=[])
 
     if show_only_current:
-        ranked_applications = list(filter(lambda rank: timewindow.start <= rank.application.submitted_at.date() <= timewindow.end, ranked_applications))
+        ranked_applications = list(filter(lambda rank: current_timewindow.start <= rank.application.submitted_at.date() <= current_timewindow.end, ranked_applications))
+    if show_last_timewindow:
+        ranked_applications = list(filter(lambda rank: last_timewindow.start <= rank.application.submitted_at.date() <= last_timewindow.end, ranked_applications))
 
     application_ids = [r.application_id for r in ranked_applications]
     db_applications = session.query(Application).filter(Application.id.in_(application_ids)).all()
