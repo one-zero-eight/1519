@@ -45,12 +45,13 @@ function Sidebar({ items, onSelected, selectedId }: SidebarProps) {
   return (
     <Box
       sx={{
-        minHeight: '100%',
+        height: '100vh',
         bgcolor: '#374151',
         p: 2,
         color: 'white',
-        overflow: 'auto',
-        width: '100%'
+        width: '100%',
+        display: 'flex',
+        flexDirection: 'column'
       }}
     >
       <CheckboxFilter
@@ -81,8 +82,31 @@ function Sidebar({ items, onSelected, selectedId }: SidebarProps) {
           display: 'flex',
           flexDirection: 'column',
           alignItems: 'center',
-          justifyContent: 'center',
-          gap: 2
+          justifyContent: 'flex-start',
+          gap: 2,
+          flex: 1, // Take remaining space
+          paddingTop: '1rem',
+          paddingRight: '0.5rem',
+          overflowY: 'auto',
+          overflowX: 'hidden',
+          scrollBehavior: 'smooth',
+          '&::-webkit-scrollbar': {
+            width: '8px',
+          },
+          '&::-webkit-scrollbar-track': {
+            background: 'rgba(255, 255, 255, 0.1)',
+            borderRadius: '4px',
+          },
+          '&::-webkit-scrollbar-thumb': {
+            background: 'rgba(255, 255, 255, 0.3)',
+            borderRadius: '4px',
+            '&:hover': {
+              background: 'rgba(255, 255, 255, 0.5)',
+            },
+          },
+          // Firefox
+          scrollbarWidth: 'thin',
+          scrollbarColor: 'rgba(255, 255, 255, 0.3) rgba(255, 255, 255, 0.1)',
         }}
       >
         {filteredItems.map((item) => (
@@ -118,7 +142,7 @@ function Sidebar({ items, onSelected, selectedId }: SidebarProps) {
         ))}
       </Stack>
 
-      <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2, mt: 2 }}>
+      <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2, mt: 2, flexShrink: 0 }}>
         <hr style={{ margin: '16px 0', borderColor: 'white', fontWeight: 'bold' }} />
         <Link to="/patron/ranking" style={{ textDecoration: 'none' }}>
           <InnoButton sx={{ width: '100%' }}>Rank students</InnoButton>
