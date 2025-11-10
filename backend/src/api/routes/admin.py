@@ -374,6 +374,9 @@ def create_timewindow_route(
     """
     Create timewindow during which applications can be sent
     """
+    if data.start >= data.end:
+        raise HTTPException(status_code=400, detail="Timewindow start must be before end")
+
     overlapping = session.query(TimeWindow).filter(
         TimeWindow.start <= data.end,
         TimeWindow.end >= data.start
@@ -426,6 +429,9 @@ def update_timewindow(
     timewindow = session.query(TimeWindow).get(timewindow_id)
     if not timewindow:
         raise HTTPException(status_code=404, detail="Timewindow not found")
+
+    if data.start >= data.end:
+        raise HTTPException(status_code=400, detail="Timewindow start must be before end")
 
     overlapping = session.query(TimeWindow).filter(
         TimeWindow.id != timewindow_id,
