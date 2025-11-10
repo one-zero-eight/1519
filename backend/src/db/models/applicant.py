@@ -7,6 +7,7 @@ from sqlalchemy import ForeignKey, func
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 
 from src.db.models import Base
+from src.db.models.types import UTCDateTime
 
 if TYPE_CHECKING:
     from src.db.models.patron import Patron
@@ -19,7 +20,7 @@ class Application(Base):
 
     id: Mapped[int] = mapped_column(primary_key=True, autoincrement=True)
 
-    submitted_at: Mapped[datetime.datetime] = mapped_column(server_default=func.now())
+    submitted_at: Mapped[datetime.datetime] = mapped_column(UTCDateTime, server_default=func.now())
     "Time when the application was submitted"
 
     session_id: Mapped[str] = mapped_column()

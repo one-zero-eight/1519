@@ -3,10 +3,10 @@ from __future__ import annotations
 import datetime
 from typing import TYPE_CHECKING
 
-from sqlalchemy import DateTime
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 
 from src.db.models import Base
+from src.db.models.types import UTCDateTime
 
 if TYPE_CHECKING:
     from src.db.models.applicant import Application
@@ -29,11 +29,11 @@ class TimeWindow(Base):
     )
 
     start: Mapped[datetime.datetime] = mapped_column(
-        DateTime,
+        UTCDateTime,
         nullable=False,
     )
     end: Mapped[datetime.datetime] = mapped_column(
-        DateTime,
+        UTCDateTime,
         nullable=False,
     )
 

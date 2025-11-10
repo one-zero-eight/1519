@@ -440,12 +440,15 @@ def create_timewindow_route(
     """
     Create timewindow during which applications can be sent
     """
-    if data.start >= data.end:
+    start_utc = data.start.astimezone(UTC)
+    end_utc = data.end.astimezone(UTC)
+
+    if start_utc >= end_utc:
         raise HTTPException(status_code=400, detail="Timewindow start must be before end")
 
     overlapping = session.query(TimeWindow).filter(
-        TimeWindow.start <= data.end,
-        TimeWindow.end >= data.start
+        TimeWindow.start <= end_utc,
+        TimeWindow.end >= start_utc
     ).first()
 
     if overlapping:
@@ -453,8 +456,8 @@ def create_timewindow_route(
 
     new_timewindow = TimeWindow(
         title=data.title,
-        start=data.start,
-        end=data.end,
+        start=start_utc,
+        end=end_utc,
     )
     session.add(new_timewindow)
     session.commit()
@@ -492,17 +495,20 @@ def update_timewindow(
     _: Patron = Depends(admin_auth),
     session: Session = Depends(get_db_session),
 ) -> TimeWindowResponse:
+    start_utc = data.start.astimezone(UTC) if data.start else None
+    end_utc = data.end.astimezone(UTC) if data.end else None
+
     timewindow = session.query(TimeWindow).get(timewindow_id)
     if not timewindow:
         raise HTTPException(status_code=404, detail="Timewindow not found")
 
-    if data.start >= data.end:
+    if (start_utc or timewindow.start) >= (end_utc or timewindow.end):
         raise HTTPException(status_code=400, detail="Timewindow start must be before end")
 
     overlapping = session.query(TimeWindow).filter(
         TimeWindow.id != timewindow_id,
-        TimeWindow.start <= (data.end or timewindow.end),
-        TimeWindow.end >= (data.start or timewindow.start),
+        TimeWindow.start <= (end_utc or timewindow.end),
+        TimeWindow.end >= (start_utc or timewindow.start),
     ).first()
 
     if overlapping:
@@ -510,10 +516,10 @@ def update_timewindow(
 
     if data.title is not None:
         timewindow.title = data.title
-    if data.start is not None:
-        timewindow.start = data.start
-    if data.end is not None:
-        timewindow.end = data.end
+    if start_utc is not None:
+        timewindow.start = start_utc
+    if end_utc is not None:
+        timewindow.end = end_utc
 
     session.commit()
     return TimeWindowResponse.model_validate(timewindow, from_attributes=True)
