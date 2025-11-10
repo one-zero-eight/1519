@@ -91,22 +91,22 @@ function Sidebar({ items, onSelected, selectedId }: SidebarProps) {
           overflowX: 'hidden',
           scrollBehavior: 'smooth',
           '&::-webkit-scrollbar': {
-            width: '8px',
+            width: '8px'
           },
           '&::-webkit-scrollbar-track': {
             background: 'rgba(255, 255, 255, 0.1)',
-            borderRadius: '4px',
+            borderRadius: '4px'
           },
           '&::-webkit-scrollbar-thumb': {
             background: 'rgba(255, 255, 255, 0.3)',
             borderRadius: '4px',
             '&:hover': {
-              background: 'rgba(255, 255, 255, 0.5)',
-            },
+              background: 'rgba(255, 255, 255, 0.5)'
+            }
           },
           // Firefox
           scrollbarWidth: 'thin',
-          scrollbarColor: 'rgba(255, 255, 255, 0.3) rgba(255, 255, 255, 0.1)',
+          scrollbarColor: 'rgba(255, 255, 255, 0.3) rgba(255, 255, 255, 0.1)'
         }}
       >
         {filteredItems.map((item) => (

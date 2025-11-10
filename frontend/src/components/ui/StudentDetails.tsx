@@ -69,7 +69,7 @@ export default function StudentDetails({
 
       return () => clearTimeout(timeout)
     }
-  }, [JSON.stringify(edit?.docs), edit?.comment]);
+  }, [JSON.stringify(edit?.docs), edit?.comment])
 
   if (!edit) {
     return <div>Loading...</div>
