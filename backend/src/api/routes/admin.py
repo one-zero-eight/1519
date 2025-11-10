@@ -10,7 +10,8 @@ from sqlalchemy.orm import Session
 
 from src.config import settings
 from src.db.models import Application, Patron, PatronDailyStats, PatronRanking, PatronRateApplication, TimeWindow
-from src.dependencies import admin_auth, get_db_session
+from src.dependencies import admin_auth, get_current_timewindow, get_db_session
+from src.dependencies.timewindow import get_last_timewindow
 from src.schemas import (
     AddPatronRequest,
     ApplicationRankingStats,
@@ -119,9 +120,36 @@ def get_all_patrons(
 
 @router.get("/applications/ranking")
 def get_applications_ranking(
-    _: Patron = Depends(admin_auth), session: Session = Depends(get_db_session)
+    show_last_timewindow: bool = True,
+    show_only_current: bool = False,
+    current_timewindow: TimeWindow | None = Depends(get_current_timewindow),
+    last_timewindow: TimeWindow | None = Depends(get_last_timewindow),
+    _: Patron = Depends(admin_auth),
+    session: Session = Depends(get_db_session),
 ) -> list[ApplicationRankingStats]:
+    if show_only_current and show_last_timewindow:
+        raise HTTPException(400, "You can only set one of `show_last_timewindow`, `show_only_current`")
+    if show_only_current and current_timewindow is None:
+        raise HTTPException(400, "No current timewindow")
+    if show_last_timewindow and last_timewindow is None:
+        raise HTTPException(400, "No last timewindow")
+
     applications = session.query(Application).all()
+    if show_only_current:
+        applications = list(
+            filter(
+                lambda application: current_timewindow.start <= application.submitted_at <= current_timewindow.end,
+                applications,
+            )
+        )
+    if show_last_timewindow:
+        applications = list(
+            filter(
+                lambda application: last_timewindow.start <= application.submitted_at <= last_timewindow.end,
+                applications,
+            )
+        )
+
     result = []
 
     rrf_const = 60  # 60 is a common constant for rrf
@@ -157,12 +185,50 @@ def get_applications_ranking(
 
 @router.get("/applications/export")
 def export_applications(
+    show_last_timewindow: bool = True,
+    show_only_current: bool = False,
+    current_timewindow: TimeWindow | None = Depends(get_current_timewindow),
+    last_timewindow: TimeWindow | None = Depends(get_last_timewindow),
     _: Patron = Depends(admin_auth),
-    session: Session = Depends(get_db_session)
+    session: Session = Depends(get_db_session),
 ) -> StreamingResponse:
     applications = session.query(Application).all()
     all_rankings = session.query(PatronRanking).all()
     all_patrons = session.query(Patron).all()
+
+    if show_only_current and show_last_timewindow:
+        raise HTTPException(400, "You can only set one of `show_last_timewindow`, `show_only_current`")
+    if show_only_current and current_timewindow is None:
+        raise HTTPException(400, "No current timewindow")
+    if show_last_timewindow and last_timewindow is None:
+        raise HTTPException(400, "No last timewindow")
+
+    if show_only_current:
+        applications = list(
+            filter(
+                lambda application: current_timewindow.start <= application.submitted_at <= current_timewindow.end,
+                applications,
+            )
+        )
+        all_rankings = list(
+            filter(
+                lambda ranking: current_timewindow.start <= ranking.application.submitted_at <= current_timewindow.end,
+                all_rankings,
+            )
+        )
+    if show_last_timewindow:
+        applications = list(
+            filter(
+                lambda application: last_timewindow.start <= application.submitted_at <= last_timewindow.end,
+                applications,
+            )
+        )
+        all_rankings = list(
+            filter(
+                lambda ranking: last_timewindow.start <= ranking.application.submitted_at <= last_timewindow.end,
+                all_rankings,
+            )
+        )
 
     applicants_data = []
 
@@ -255,7 +321,7 @@ def delete_application(
 def get_statistics(
     _: Patron = Depends(admin_auth),
     session: Session = Depends(get_db_session),
-    days: int = Query(30, description="Number of days to include in the activity charts")
+    days: int = Query(30, description="Number of days to include in the activity charts"),
 ) -> OverallStats:
     end_date = datetime.now(UTC)
     start_date = end_date - timedelta(days=days)
