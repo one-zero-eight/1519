@@ -16,3 +16,9 @@ class CreateTimeWindowRequest(BaseSchema):
     title: str
     start: datetime.datetime
     end: datetime.datetime
+
+
+class EditTimeWindowRequest(BaseSchema):
+    title: str | None = None
+    start: datetime.datetime | None = None
+    end: datetime.datetime | None = None

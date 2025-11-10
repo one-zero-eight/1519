@@ -14,7 +14,7 @@ from src.schemas.statistics import (
     OverallStats,
     PatronStats,
 )
-from src.schemas.timewindow import CreateTimeWindowRequest, TimeWindowResponse
+from src.schemas.timewindow import CreateTimeWindowRequest, EditTimeWindowRequest, TimeWindowResponse
 
 __all__ = [
     "AddPatronRequest",
@@ -30,6 +30,7 @@ __all__ = [
     "OverallStats",
     "PatronStats",
     "CreateTimeWindowRequest",
+    "EditTimeWindowRequest",
     "TimeWindowResponse",
     "Rating"
 ]

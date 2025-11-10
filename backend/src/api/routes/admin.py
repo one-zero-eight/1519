@@ -18,6 +18,7 @@ from src.schemas import (
     CreateTimeWindowRequest,
     DailyApplicationStats,
     DailyPatronStats,
+    EditTimeWindowRequest,
     OverallStats,
     PatronRankingResponse,
     PatronRateApplicationResponse,
@@ -413,3 +414,34 @@ def delete_timewindow(
     session.delete(timewindow)
     session.commit()
     return {"status": "success", "message": f"Timewindow with ID {timewindow_id} has been deleted"}
+
+
+@router.patch("/timewindows/{timewindow_id}")
+def update_timewindow(
+    timewindow_id: int,
+    data: EditTimeWindowRequest,
+    _: Patron = Depends(admin_auth),
+    session: Session = Depends(get_db_session),
+) -> TimeWindowResponse:
+    timewindow = session.query(TimeWindow).get(timewindow_id)
+    if not timewindow:
+        raise HTTPException(status_code=404, detail="Timewindow not found")
+
+    overlapping = session.query(TimeWindow).filter(
+        TimeWindow.id != timewindow_id,
+        TimeWindow.start <= (data.end or timewindow.end),
+        TimeWindow.end >= (data.start or timewindow.start),
+    ).first()
+
+    if overlapping:
+        raise HTTPException(status_code=400, detail=f"New time window overlaps with existing one ({overlapping.title}, start: {overlapping.start}, end: {overlapping.end})")
+
+    if data.title is not None:
+        timewindow.title = data.title
+    if data.start is not None:
+        timewindow.start = data.start
+    if data.end is not None:
+        timewindow.end = data.end
+
+    session.commit()
+    return TimeWindowResponse.model_validate(timewindow, from_attributes=True)
