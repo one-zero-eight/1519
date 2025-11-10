@@ -131,8 +131,6 @@ async def telegram_callback(request: Request, invite_secret: str | None = None, 
         # update existing patron
         patron.telegram_data = result.telegram_user
         session.commit()
-        # and set session cookie
-        request.session["patron_id"] = patron.id
     else:
         if invite_secret != settings.invite_secret_string.get_secret_value():
             raise HTTPException(status_code=403, detail="Invalid invite string")
@@ -148,6 +146,9 @@ async def telegram_callback(request: Request, invite_secret: str | None = None, 
         session.add(new_patron)
         session.commit()
         patron = new_patron
+        
+    # Set session cookie
+    request.session["patron_id"] = patron.id
 
     return PatronResponse.model_validate(patron, from_attributes=True) if patron else None
 
