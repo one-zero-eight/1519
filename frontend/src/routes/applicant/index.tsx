@@ -8,6 +8,8 @@ import { useEffect, useState } from 'react'
 
 import { createFileRoute } from '@tanstack/react-router'
 
+const SHOULD_CLOSE_APPLICATIONS = true
+
 export const Route = createFileRoute('/applicant/')({
   component: RouteComponent
 })
@@ -63,52 +65,60 @@ function RouteComponent() {
         <h1 className="text-2xl sm:text-4xl font-semibold">Scholarship Application</h1>
       </div>
 
-      {error && (
-        <Alert severity="error" className="mb-4 sm:mb-6 w-full max-w-md sm:max-w-2xl">
-          {error}
+      {SHOULD_CLOSE_APPLICATIONS ? (
+        <Alert severity="info" className="mb-4 sm:mb-6 w-full max-w-md sm:max-w-2xl">
+          Applications are closed.
         </Alert>
-      )}
-
-      {application && !editMode ? (
-        <ApplicationStatus application={application} onEdit={() => setEditMode(true)} />
       ) : (
-        <div className="w-full max-w-md sm:max-w-4xl mx-auto">
-          <div className="mb-6 sm:mb-8 text-center">
-            <h2 className="mb-2 sm:mb-4 text-xl sm:text-2xl font-semibold">
-              {application ? 'Edit Your Application' : 'Submit Your Application'}
-            </h2>
-            <p className="mx-auto max-w-xs sm:max-w-2xl text-gray-600 text-sm sm:text-base">
-              {application
-                ? 'Edit your application'
-                : 'Please fill out the form below to submit your scholarship application. Remember that\n' +
-                  '              your application will be reviewed by real people who genuinely want to get to know\n' +
-                  '              you. Think twice before submitting a fully AI-generated content.'}
-            </p>
-            {application === null && (
-              <p className="mx-auto max-w-xs sm:max-w-2xl text-gray-600 text-sm sm:text-base">
-                Only 1st-3rd year bachelor students of Innopolis University can apply
-              </p>
-            )}
-          </div>
-          <ApplicantForm
-            onSuccess={handleApplicationSubmitted}
-            initialValues={
-              application
-                ? {
-                    email: application.email,
-                    full_name: application.full_name
-                  }
-                : undefined
-            }
-          />
-          {application && (
-            <div className="mt-4 flex justify-center">
-              <button className="text-blue-600 underline" onClick={() => setEditMode(false)}>
-                Cancel
-              </button>
+        <>
+          {error && (
+            <Alert severity="error" className="mb-4 sm:mb-6 w-full max-w-md sm:max-w-2xl">
+              {error}
+            </Alert>
+          )}
+
+          {application && !editMode ? (
+            <ApplicationStatus application={application} onEdit={() => setEditMode(true)} />
+          ) : (
+            <div className="w-full max-w-md sm:max-w-4xl mx-auto">
+              <div className="mb-6 sm:mb-8 text-center">
+                <h2 className="mb-2 sm:mb-4 text-xl sm:text-2xl font-semibold">
+                  {application ? 'Edit Your Application' : 'Submit Your Application'}
+                </h2>
+                <p className="mx-auto max-w-xs sm:max-w-2xl text-gray-600 text-sm sm:text-base">
+                  {application
+                    ? 'Edit your application'
+                    : 'Please fill out the form below to submit your scholarship application. Remember that\n' +
+                      '              your application will be reviewed by real people who genuinely want to get to know\n' +
+                      '              you. Think twice before submitting a fully AI-generated content.'}
+                </p>
+                {application === null && (
+                  <p className="mx-auto max-w-xs sm:max-w-2xl text-gray-600 text-sm sm:text-base">
+                    Only 1st-3rd year bachelor students of Innopolis University can apply
+                  </p>
+                )}
+              </div>
+              <ApplicantForm
+                onSuccess={handleApplicationSubmitted}
+                initialValues={
+                  application
+                    ? {
+                        email: application.email,
+                        full_name: application.full_name
+                      }
+                    : undefined
+                }
+              />
+              {application && (
+                <div className="mt-4 flex justify-center">
+                  <button className="text-blue-600 underline" onClick={() => setEditMode(false)}>
+                    Cancel
+                  </button>
+                </div>
+              )}
             </div>
           )}
-        </div>
+        </>
       )}
     </main>
   )
