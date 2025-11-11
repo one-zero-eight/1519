@@ -473,9 +473,31 @@ def get_timewindows(
     return [TimeWindowResponse.model_validate(tw, from_attributes=True) for tw in timewindows]
 
 
+@router.get("/timewindows/current")
+def get_current_timewindows(
+    _: Patron = Depends(admin_auth),
+    current_timewindow: TimeWindow | None = Depends(get_current_timewindow),
+) -> TimeWindowResponse:
+    if current_timewindow is None:
+        raise HTTPException(status_code=404, detail="No current timewindow")
+    return TimeWindowResponse.model_validate(current_timewindow, from_attributes=True)
+
+
+@router.get("/timewindows/{timewindow_id}")
+def get_one_timewindow(
+    timewindow_id: int,
+    _: Patron = Depends(admin_auth),
+    session: Session = Depends(get_db_session),
+) -> TimeWindowResponse:
+    timewindow = session.query(TimeWindow).get(timewindow_id)
+    if not timewindow:
+        raise HTTPException(status_code=404, detail="Timewindow not found")
+    return TimeWindowResponse.model_validate(timewindow, from_attributes=True)
+
+
 @router.delete("/timewindows/{timewindow_id}")
 def delete_timewindow(
-    timewindow_id: str,
+    timewindow_id: int,
     _: Patron = Depends(admin_auth),
     session: Session = Depends(get_db_session),
 ):
