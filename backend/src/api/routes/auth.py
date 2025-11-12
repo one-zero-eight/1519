@@ -1,3 +1,5 @@
+import os
+
 from fastapi import APIRouter, Depends, HTTPException, Request
 from fastapi_derive_responses import AutoDeriveResponsesAPIRoute
 from pydantic import SecretStr
@@ -132,6 +134,8 @@ async def telegram_callback(request: Request, invite_secret: str | None = None, 
         patron.telegram_data = result.telegram_user
         session.commit()
     else:
+        if os.getenv("ENABLE_REGISTRATION") is None:
+            raise HTTPException(status_code=403, detail="Registration of new patrons is temporary disabled")  # Temporary disable creation of new patron accounts
         if invite_secret != settings.invite_secret_string.get_secret_value():
             raise HTTPException(status_code=403, detail="Invalid invite string")
 
@@ -146,7 +150,7 @@ async def telegram_callback(request: Request, invite_secret: str | None = None, 
         session.add(new_patron)
         session.commit()
         patron = new_patron
-        
+
     # Set session cookie
     request.session["patron_id"] = patron.id
 
