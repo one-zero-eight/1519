@@ -251,7 +251,7 @@ def export_applications(
                 "ID": application.id,
                 "Email": application.email,
                 "Full Name": application.full_name,
-                "Submitted At": application.submitted_at,
+                "Submitted At": application.submitted_at.replace(tzinfo=None),
                 "RRF Score": rrf_score,
                 "Positive Votes": positive_votes,
                 "Negative Votes": negative_votes,
