@@ -210,6 +210,7 @@ def get_ranking_route(
 def put_ranking_route(
     application_ids: list[int] = Body(embed=True),
     patron: Patron = Depends(patron_auth),
+    last_timewindow: TimeWindow | None = Depends(get_last_timewindow),
     session: Session = Depends(get_db_session),
 ) -> PatronRankingResponse:
     existing_applications = session.query(Application).filter(Application.id.in_(application_ids)).all()
@@ -224,4 +225,9 @@ def put_ranking_route(
     update_daily_stats(session, patron.id, ranking_increment=1)
     session.commit()
 
-    return _get_ranking_logic(patron=patron, session=session, show_last_timewindow=True)
+    return _get_ranking_logic(
+        patron=patron,
+        session=session,
+        show_last_timewindow=True,
+        last_timewindow=last_timewindow
+    )
