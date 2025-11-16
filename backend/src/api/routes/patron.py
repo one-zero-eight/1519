@@ -148,14 +148,13 @@ def rate_application_route(
     return PatronRateApplicationResponse.model_validate(rate_obj, from_attributes=True)
 
 
-@router.get("/ranking")
-def get_ranking_route(
-    show_last_timewindow: bool = True,
+def _get_ranking_logic(
+    patron: Patron,
+    session: Session,
+    show_last_timewindow: bool = False,
     show_only_current: bool = False,
-    current_timewindow: TimeWindow | None = Depends(get_current_timewindow),
-    last_timewindow: TimeWindow | None = Depends(get_last_timewindow),
-    patron: Patron = Depends(patron_auth),
-    session: Session = Depends(get_db_session),
+    current_timewindow: TimeWindow | None = None,
+    last_timewindow: TimeWindow | None = None,
 ) -> PatronRankingResponse:
     if show_only_current and show_last_timewindow:
         raise HTTPException(400, "You can only set one of `show_last_timewindow`, `show_only_current`")
@@ -167,7 +166,7 @@ def get_ranking_route(
     ranked_applications = (
         session.query(PatronRanking)
         .filter_by(patron_id=patron.id)
-        .order_by(PatronRanking.rank)  # Ensure order is preserved
+        .order_by(PatronRanking.rank)
         .all()
     )
     if not ranked_applications:
@@ -188,13 +187,31 @@ def get_ranking_route(
     )
 
 
+@router.get("/ranking")
+def get_ranking_route(
+    show_last_timewindow: bool = True,
+    show_only_current: bool = False,
+    current_timewindow: TimeWindow | None = Depends(get_current_timewindow),
+    last_timewindow: TimeWindow | None = Depends(get_last_timewindow),
+    patron: Patron = Depends(patron_auth),
+    session: Session = Depends(get_db_session),
+) -> PatronRankingResponse:
+    return _get_ranking_logic(
+        patron=patron,
+        session=session,
+        show_last_timewindow=show_last_timewindow,
+        show_only_current=show_only_current,
+        current_timewindow=current_timewindow,
+        last_timewindow=last_timewindow,
+    )
+
+
 @router.put("/ranking")
 def put_ranking_route(
     application_ids: list[int] = Body(embed=True),
     patron: Patron = Depends(patron_auth),
     session: Session = Depends(get_db_session),
 ) -> PatronRankingResponse:
-    # check for existence of applications
     existing_applications = session.query(Application).filter(Application.id.in_(application_ids)).all()
     if len(existing_applications) != len(application_ids):
         nonexistent = set(application_ids) - {a.id for a in existing_applications}
@@ -205,7 +222,6 @@ def put_ranking_route(
         session.add(PatronRanking(patron_id=patron.id, application_id=application_id, rank=rank))
 
     update_daily_stats(session, patron.id, ranking_increment=1)
-
     session.commit()
 
-    return get_ranking_route(show_only_current=False, patron=patron, session=session)
+    return _get_ranking_logic(patron=patron, session=session, show_last_timewindow=True)
