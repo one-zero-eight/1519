@@ -166,6 +166,7 @@ function RouteComponent() {
       >
         <Sidebar
           items={studentListItems}
+          applications={applications}
           onSelected={(id) => {
             setSelectedApplicationId(id)
             setDrawerOpen(false)
@@ -202,6 +203,7 @@ function RouteComponent() {
           >
             <Sidebar
               items={studentListItems}
+              applications={applications}
               onSelected={setSelectedApplicationId}
               selectedId={selectedApplicationId}
             />

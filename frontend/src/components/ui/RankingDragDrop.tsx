@@ -22,14 +22,14 @@ interface RankingDragDropProps {
 }
 
 const getRankColor = (rank: number) => {
-  if (rank === 0 || rank === 1) return 'bg-green-100 border-green-300'
-  return 'bg-gray-50 border-gray-200'
+  if (rank === 0 || rank === 1) return 'bg-green-900/20 border-green-choice text-green-choice'
+  return 'bg-background border-gray-700 text-foreground'
 }
 
 const getAvailableColor = (rating: 'positive' | 'negative' | 'neutral' | 'unrated' | undefined) => {
-  if (rating === 'positive') return 'bg-green-50 border-green-300'
-  if (rating === 'neutral') return 'bg-yellow-50 border-yellow-300'
-  return 'bg-white border-gray-200'
+  if (rating === 'positive') return 'bg-green-900/20 border-green-choice'
+  if (rating === 'neutral') return 'bg-yellow-900/20 border-yellow-choice'
+  return 'bg-background border-gray-700'
 }
 
 const RankingDragDrop: React.FC<RankingDragDropProps> = ({

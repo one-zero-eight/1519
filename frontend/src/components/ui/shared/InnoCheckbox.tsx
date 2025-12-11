@@ -2,9 +2,9 @@ import { Checkbox } from '@mui/material'
 import { styled } from '@mui/system'
 
 const InnoCheckbox = styled(Checkbox)(() => ({
-  color: '#40BA21',
+  color: '#33ff33',
   '&.Mui-checked': {
-    color: '#40BA21'
+    color: '#33ff33'
   }
 }))
 

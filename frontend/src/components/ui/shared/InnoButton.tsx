@@ -2,10 +2,11 @@ import { Button } from '@mui/material'
 import { styled } from '@mui/system'
 
 const InnoButton = styled(Button)(() => ({
-  backgroundColor: '#40BA21',
-  color: 'white',
+  backgroundColor: '#33ff33',
+  color: 'black',
+  fontWeight: 'bold',
   '&:hover': {
-    backgroundColor: '#40BA21',
+    backgroundColor: '#33ff33',
     opacity: 0.8
   }
 }))

@@ -16,11 +16,11 @@
 }
 
 @theme {
-  --color-foreground: #171717;
-  --color-background: #ededed;
-  --color-red-choice: #c10007;
-  --color-yellow-choice: #d08700;
-  --color-green-choice: #5ea500;
+  --color-foreground: #ededed;
+  --color-background: #0a0a0a;
+  --color-red-choice: #ff3333;
+  --color-yellow-choice: #ffcc00;
+  --color-green-choice: #33ff33;
   --font-landing:
     'FormaDJR', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
 }
@@ -30,8 +30,17 @@
   @apply bg-background text-foreground;
 }
 
+.landing {
+  --color-foreground: #171717;
+  --color-background: #ededed;
+  --color-red-choice: #c10007;
+  --color-yellow-choice: #d08700;
+  --color-green-choice: #5ea500;
+  color: var(--color-foreground);
+}
+
 .background-radial {
-  background: radial-gradient(circle at 50% 40%, #f9fafb 0%, #e5e7eb 50%, #9ca3af 100%);
+  background: radial-gradient(circle at 50% 40%, #1a1a1a 0%, #0a0a0a 50%, #000000 100%);
 }
 
 body {

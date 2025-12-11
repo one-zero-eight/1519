@@ -33,8 +33,8 @@ function RouteComponent() {
   }
   return (
     <main className="min-w-screen background-radial flex min-h-screen items-center justify-center">
-      <section className="flex flex-col items-center justify-between gap-12 rounded-2xl border-2 border-gray-500 bg-white/30 p-12 backdrop-blur-sm">
-        <h1 className="text-5xl font-bold text-black">Sign in</h1>
+      <section className="flex flex-col items-center justify-between gap-12 rounded-2xl border-2 border-gray-700 bg-black/30 p-12 backdrop-blur-sm">
+        <h1 className="text-5xl font-bold text-foreground">Sign in</h1>
         <TextField
           fullWidth
           label="Invite key"

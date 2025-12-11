@@ -1,34 +1,70 @@
 import CheckboxFilter from '@/components/ui/Checkbox-filter'
 import InnoButton from '@/components/ui/shared/InnoButton'
 import { whoami } from '@/lib/api/patron.ts'
-import { PatronResponse, StudentListItem } from '@/lib/types/types'
+import { Application, PatronResponse, StudentListItem } from '@/lib/types/types'
 import ClearIcon from '@mui/icons-material/Clear'
 import DoneOutlineIcon from '@mui/icons-material/DoneOutline'
 import QuestionMarkIcon from '@mui/icons-material/QuestionMark'
 import RadioButtonUncheckedIcon from '@mui/icons-material/RadioButtonUnchecked'
-import { Box, Stack } from '@mui/material'
+import FilterListIcon from '@mui/icons-material/FilterList'
+import { Box, Stack, FormControl, InputLabel, Select, MenuItem, Chip, SelectChangeEvent } from '@mui/material'
 import { Link } from '@tanstack/react-router'
 import { useEffect, useMemo, useState } from 'react'
 
 interface SidebarProps {
   items: StudentListItem[]
+  applications: Application[]
   onSelected: (applicationId: number | null) => void
   selectedId?: number | null
 }
 
-function Sidebar({ items, onSelected, selectedId }: SidebarProps) {
+function Sidebar({ items, applications, onSelected, selectedId }: SidebarProps) {
   const [selectedFilters, setSelectedFilters] = useState<string[]>([])
+  const [documentFilters, setDocumentFilters] = useState<string[]>([])
   const [user, setUser] = useState<PatronResponse | null>(null)
 
   const handleFilterChange = (selected: string[]) => {
     setSelectedFilters(selected)
   }
 
-  const filteredItems = useMemo(() => {
-    if (selectedFilters.length === 0) return items
+  const handleDocumentFilterChange = (event: SelectChangeEvent<typeof documentFilters>) => {
+    const value = event.target.value
+    setDocumentFilters(typeof value === 'string' ? value.split(',') : value)
+  }
 
-    return items.filter((item) => selectedFilters.includes(item.rate))
-  }, [items, selectedFilters])
+  const handleRemoveDocumentFilter = (filterToRemove: string) => {
+    setDocumentFilters((prev) => prev.filter((filter) => filter !== filterToRemove))
+  }
+
+  const documentFilterOptions = [
+    { value: 'transcript', label: 'Transcript' },
+    { value: 'almost_a_student', label: 'Almost a student' },
+    { value: 'recommendation_letter', label: 'Recommendation letter' }
+  ]
+
+  const filteredItems = useMemo(() => {
+    let filtered = items
+
+    // Фильтр по рейтингу
+    if (selectedFilters.length > 0) {
+      filtered = filtered.filter((item) => selectedFilters.includes(item.rate))
+    }
+
+    // Фильтр по документам
+    if (documentFilters.length > 0) {
+      filtered = filtered.filter((item) => {
+        const application = applications.find((app) => app.id === item.application_id)
+        if (!application) return false
+
+        return documentFilters.every((filter) => {
+          const docField = application[filter as keyof Application]
+          return docField !== null && docField !== undefined && docField !== ''
+        })
+      })
+    }
+
+    return filtered
+  }, [items, selectedFilters, documentFilters, applications])
 
   const handlePickStudent = (item: StudentListItem) => {
     onSelected(item.application_id)
@@ -46,9 +82,9 @@ function Sidebar({ items, onSelected, selectedId }: SidebarProps) {
     <Box
       sx={{
         height: '100vh',
-        bgcolor: '#374151',
+        bgcolor: 'background.paper',
         p: 2,
-        color: 'white',
+        color: 'text.primary',
         width: '100%',
         display: 'flex',
         flexDirection: 'column'
@@ -56,13 +92,56 @@ function Sidebar({ items, onSelected, selectedId }: SidebarProps) {
     >
       <CheckboxFilter
         options={[
-          { icon: <ClearIcon />, name: 'negative', color: '#c10007' },
-          { icon: <QuestionMarkIcon />, name: 'neutral', color: '#d08700' },
-          { icon: <DoneOutlineIcon />, name: 'positive', color: '#5ea500' },
-          { icon: <RadioButtonUncheckedIcon />, name: 'unrated', color: '#9ca3af' }
+          { icon: <ClearIcon />, name: 'negative', color: '#ff3333' },
+          { icon: <QuestionMarkIcon />, name: 'neutral', color: '#ffcc00' },
+          { icon: <DoneOutlineIcon />, name: 'positive', color: '#33ff33' },
+          { icon: <RadioButtonUncheckedIcon />, name: 'unrated', color: 'text.secondary' }
         ]}
         onChange={handleFilterChange}
       />
+      
+      {/* Document Filter Dropdown */}
+      <FormControl fullWidth sx={{ mt: 2 }}>
+        <InputLabel 
+          id="document-filter-label"
+          sx={{ color: 'white', '&.Mui-focused': { color: 'white' } }}
+        >
+          Filter by documents
+        </InputLabel>
+        <Select
+          labelId="document-filter-label"
+          multiple
+          value={documentFilters}
+          onChange={handleDocumentFilterChange}
+          label="Filter by documents"
+          sx={{
+            color: 'white',
+            '& .MuiOutlinedInput-notchedOutline': { borderColor: 'rgba(255, 255, 255, 0.3)' },
+            '&:hover .MuiOutlinedInput-notchedOutline': { borderColor: 'rgba(255, 255, 255, 0.5)' },
+            '&.Mui-focused .MuiOutlinedInput-notchedOutline': { borderColor: 'white' },
+            '& .MuiSvgIcon-root': { color: 'white' }
+          }}
+          MenuProps={{
+            PaperProps: {
+              sx: {
+                bgcolor: '#4b5563',
+                '& .MuiMenuItem-root': {
+                  color: 'white',
+                  '&:hover': { bgcolor: '#5a6268' },
+                  '&.Mui-selected': { bgcolor: '#6b7280' }
+                }
+              }
+            }
+          }}
+        >
+          {documentFilterOptions.map((option) => (
+            <MenuItem key={option.value} value={option.value}>
+              {option.label}
+            </MenuItem>
+          ))}
+        </Select>
+      </FormControl>
+      
       <hr style={{ marginTop: 16, marginBottom: 16, borderColor: 'white', fontWeight: 'bold' }} />
       <h4
         style={{
@@ -76,6 +155,30 @@ function Sidebar({ items, onSelected, selectedId }: SidebarProps) {
       >
         Student list
       </h4>
+      
+      {/* Document Filter Chips */}
+      {documentFilters.length > 0 && (
+        <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 1, mb: 2 }}>
+          {documentFilters.map((filter) => (
+            <Chip
+              key={filter}
+              label={documentFilterOptions.find(opt => opt.value === filter)?.label || filter}
+              onDelete={() => handleRemoveDocumentFilter(filter)}
+              deleteIcon={<ClearIcon sx={{ color: 'white !important' }} />}
+              sx={{
+                bgcolor: '#6b7280',
+                color: 'white',
+                '& .MuiChip-deleteIcon': {
+                  color: 'white',
+                  '&:hover': {
+                    color: '#ef4444'
+                  }
+                }
+              }}
+            />
+          ))}
+        </Box>
+      )}
       <Stack
         sx={{
           mt: 2,
