@@ -11,6 +11,13 @@ services:
       FORWARDED_ALLOW_IPS: "*"
       TZ: "Europe/Moscow"
       RECREATE_DATABASE: ${RECREATE_DATABASE:-false}
+    deploy:
+      # Change limits if project needs more RAM, though try to stay within limits
+      resources:
+        limits:
+          memory: 1g
+        reservations:
+          memory: 500m
 
 volumes:
   data:
