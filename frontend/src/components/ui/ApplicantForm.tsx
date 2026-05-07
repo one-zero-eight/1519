@@ -9,6 +9,8 @@ interface ApplicantFormProps {
 }
 
 export default function ApplicantForm({ onSuccess, initialValues }: ApplicantFormProps) {
+  const transcriptInputAccept = '.xlsx'
+
   const [formData, setFormData] = useState<SubmitFormData>({
     email: initialValues?.email || '',
     full_name: initialValues?.full_name || ''
@@ -48,12 +50,25 @@ export default function ApplicantForm({ onSuccess, initialValues }: ApplicantFor
   const handleFileChange =
     (field: keyof typeof files) => (e: React.ChangeEvent<HTMLInputElement>) => {
       const file = e.target.files?.[0]
-      if (file) {
+      if (!file) {
+        return
+      }
+
+      if (field === 'transcript_file' && !file.name.toLowerCase().endsWith('.xlsx')) {
+        setError('Transcript must be uploaded as a .xlsx file. Legacy .xls files are not supported.')
+        e.target.value = ''
         setFiles((prev) => ({
           ...prev,
-          [field]: file
+          transcript_file: undefined
         }))
+        return
       }
+
+      setError(null)
+      setFiles((prev) => ({
+        ...prev,
+        [field]: file
+      }))
     }
 
   const handleFirstYearChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -69,7 +84,7 @@ export default function ApplicantForm({ onSuccess, initialValues }: ApplicantFor
 
       // Очищаем input элемент
       const transcriptInput = document.querySelector(
-        'input[accept=".xlsx,.xls"]'
+        `input[accept="${transcriptInputAccept}"]`
       ) as HTMLInputElement
       if (transcriptInput) {
         transcriptInput.value = ''
@@ -91,7 +106,7 @@ export default function ApplicantForm({ onSuccess, initialValues }: ApplicantFor
 
     // Транскрипт обязателен только если не первокурсник
     if (!isFirstYear && !files.transcript_file) {
-      errors.push('Transcript file is required')
+      errors.push('Transcript file in .xlsx format is required')
     }
 
     if (!files.motivational_letter_file) {
@@ -276,7 +291,7 @@ export default function ApplicantForm({ onSuccess, initialValues }: ApplicantFor
             <div className="mb-2">
               <div className="flex items-center gap-2">
                 <label className="text-xs sm:text-sm font-medium">
-                  Transcript <b>(.xlsx)</b>
+                  Transcript <b>(.xlsx only)</b>
                   {!isFirstYear && <span className="text-red-500"> *</span>}
                 </label>
                 <FormControlLabel
@@ -305,7 +320,7 @@ export default function ApplicantForm({ onSuccess, initialValues }: ApplicantFor
             </div>
             <input
               type="file"
-              accept=".xlsx,.xls"
+              accept={transcriptInputAccept}
               onChange={handleFileChange('transcript_file')}
               disabled={isFirstYear}
               className={`block w-full text-xs sm:text-sm text-gray-500 file:mr-2 sm:file:mr-4 file:rounded-full file:border-0 file:bg-blue-50 file:px-2 sm:file:px-4 file:py-2 file:text-xs sm:file:text-sm file:font-semibold file:text-blue-700 hover:file:bg-blue-100 ${
@@ -315,7 +330,7 @@ export default function ApplicantForm({ onSuccess, initialValues }: ApplicantFor
             <p className="mt-2 text-xs sm:text-sm text-gray-600 leading-relaxed">
               {isFirstYear
                 ? "As a first year student, you don't need to upload a transcript."
-                : "Here you should include all your grades with a separately calculated average score. You need to upload an Excel spreadsheet, and don't forget to specify the credits and the GPA weighted by them."}
+                : "Here you should include all your grades with a separately calculated average score. Upload the transcript as a .xlsx spreadsheet, and don't forget to specify the credits and the GPA weighted by them. Legacy .xls files can't be submitted and should be converted to .xlsx first."}
             </p>
           </div>
 

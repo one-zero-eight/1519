@@ -125,7 +125,7 @@ function RouteComponent() {
   }, [selectedDoc, selectedApplication])
 
   function isExcelFile(path: string | null) {
-    return path && (path.endsWith('.xlsx') || path.endsWith('.xls'))
+    return path ? path.toLowerCase().endsWith('.xlsx') : false
   }
 
   return (

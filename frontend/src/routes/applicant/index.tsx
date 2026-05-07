@@ -8,7 +8,7 @@ import { useEffect, useState } from 'react'
 
 import { createFileRoute } from '@tanstack/react-router'
 
-const SHOULD_CLOSE_APPLICATIONS = true
+const SHOULD_CLOSE_APPLICATIONS = false
 
 export const Route = createFileRoute('/applicant/')({
   component: RouteComponent

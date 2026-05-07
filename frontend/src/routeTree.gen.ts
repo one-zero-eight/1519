@@ -64,10 +64,10 @@ export interface FileRoutesByFullPath {
   '/en': typeof EnRoute
   '/patron/admin-ranking': typeof PatronAdminRankingRoute
   '/patron/ranking': typeof PatronRankingRoute
-  '/applicant': typeof ApplicantIndexRoute
-  '/auth': typeof AuthIndexRoute
-  '/maecenas': typeof MaecenasIndexRoute
-  '/patron': typeof PatronIndexRoute
+  '/applicant/': typeof ApplicantIndexRoute
+  '/auth/': typeof AuthIndexRoute
+  '/maecenas/': typeof MaecenasIndexRoute
+  '/patron/': typeof PatronIndexRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
@@ -97,10 +97,10 @@ export interface FileRouteTypes {
     | '/en'
     | '/patron/admin-ranking'
     | '/patron/ranking'
-    | '/applicant'
-    | '/auth'
-    | '/maecenas'
-    | '/patron'
+    | '/applicant/'
+    | '/auth/'
+    | '/maecenas/'
+    | '/patron/'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
@@ -153,28 +153,28 @@ declare module '@tanstack/react-router' {
     '/patron/': {
       id: '/patron/'
       path: '/patron'
-      fullPath: '/patron'
+      fullPath: '/patron/'
       preLoaderRoute: typeof PatronIndexRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/maecenas/': {
       id: '/maecenas/'
       path: '/maecenas'
-      fullPath: '/maecenas'
+      fullPath: '/maecenas/'
       preLoaderRoute: typeof MaecenasIndexRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/auth/': {
       id: '/auth/'
       path: '/auth'
-      fullPath: '/auth'
+      fullPath: '/auth/'
       preLoaderRoute: typeof AuthIndexRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/applicant/': {
       id: '/applicant/'
       path: '/applicant'
-      fullPath: '/applicant'
+      fullPath: '/applicant/'
       preLoaderRoute: typeof ApplicantIndexRouteImport
       parentRoute: typeof rootRouteImport
     }

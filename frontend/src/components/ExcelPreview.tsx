@@ -1,28 +1,49 @@
+import { readSheet } from 'read-excel-file/browser'
 import React, { useEffect, useState } from 'react'
-import * as XLSX from 'xlsx'
 
 interface ExcelPreviewProps {
   fileUrl: string
 }
 
+type ExcelCell = string | number | boolean | Date | null | undefined
+
 const ExcelPreview: React.FC<ExcelPreviewProps> = ({ fileUrl }) => {
-  const [data, setData] = useState<any[][] | null>(null)
+  const [data, setData] = useState<ExcelCell[][] | null>(null)
   const [error, setError] = useState<string | null>(null)
 
   useEffect(() => {
     if (!fileUrl) return
+
+    let isCancelled = false
+
     setData(null)
     setError(null)
-    fetch(fileUrl, { credentials: 'include' })
-      .then((res) => res.arrayBuffer())
-      .then((buffer) => {
-        const workbook = XLSX.read(buffer, { type: 'array' })
-        const firstSheetName = workbook.SheetNames[0]
-        const worksheet = workbook.Sheets[firstSheetName]
-        const json = XLSX.utils.sheet_to_json(worksheet, { header: 1 })
-        setData(json as any[][])
-      })
-      .catch(() => setError('Failed to load or parse Excel file'))
+
+    const loadExcel = async () => {
+      try {
+        const res = await fetch(fileUrl, { credentials: 'include' })
+        if (!res.ok) {
+          throw new Error('Failed to fetch Excel file')
+        }
+
+        const blob = await res.blob()
+        const rows = await readSheet(blob)
+
+        if (!isCancelled) {
+          setData(rows)
+        }
+      } catch {
+        if (!isCancelled) {
+          setError('Failed to load or parse Excel file')
+        }
+      }
+    }
+
+    void loadExcel()
+
+    return () => {
+      isCancelled = true
+    }
   }, [fileUrl])
 
   if (error) return <div className="text-red-600">{error}</div>

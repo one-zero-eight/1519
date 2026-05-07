@@ -26,9 +26,9 @@
     "@tanstack/router-plugin": "^1.167.35",
     "react": "^19.2.6",
     "react-dom": "^19.2.6",
+    "read-excel-file": "^8.0.3",
     "tailwindcss": "^4.2.4",
-    "vite-plugin-svgr": "^4.5.0",
-    "xlsx": "^0.18.5"
+    "vite-plugin-svgr": "^4.5.0"
   },
   "devDependencies": {
     "@tanstack/eslint-config": "^0.1.0",
