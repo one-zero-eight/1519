@@ -191,7 +191,7 @@ docker-compose exec postgres psql -U postgres -d scholarship_db
 ```bash
 # Clear cache and reinstall
 rm -rf node_modules package-lock.json
-npm install
+pnpm install
 
 # Clear Vite cache
 rm -rf frontend/node_modules/.vite
