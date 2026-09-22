@@ -1,5 +1,5 @@
 services:
-  api:
+  1519-api:
     build: .
     volumes:
       - "./settings.yaml:/app/settings.yaml:ro" # Read-only settings file

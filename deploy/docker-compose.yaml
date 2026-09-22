@@ -6,7 +6,7 @@ services:
     volumes:
       - ./nginx-server.conf:/etc/nginx/conf.d/default.conf
 
-  api:
+  1519-api:
     build: ../backend
     volumes:
       - "../backend/settings.yaml:/app/settings.yaml:ro" # Read-only settings file
